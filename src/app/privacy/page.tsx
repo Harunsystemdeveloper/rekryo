@@ -15,7 +15,7 @@ export default function PrivacyPage() {
 
           <h2 className="text-xl font-semibold mt-8">1. Vilka vi är</h2>
           <p>
-            MatchConnect är en AI-driven jobbmatchningsplattform som hjälper jobbsökare
+            Rekryo är en AI-driven jobbmatchningsplattform som hjälper jobbsökare
             och rekryterare att hitta varandra. Vi tar din integritet på allvar.
           </p>
 
@@ -57,7 +57,7 @@ export default function PrivacyPage() {
 
           <h2 className="text-xl font-semibold mt-8">6. Kontakt</h2>
           <p>
-            Vid frågor om din integritet, kontakta oss på privacy@matchconnect.se.
+            Vid frågor om din integritet, kontakta oss på privacy@rekryo.com.
           </p>
         </div>
       </main>

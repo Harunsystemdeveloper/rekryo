@@ -33,7 +33,7 @@ export function StepAvatar({ profile, onNext, onBack }: { profile: Profile; onNe
     if (uploadError) { toast.error('Uppladdning misslyckades', { description: uploadError.message }); setLoading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path)
     await supabase.from('profiles').update({ avatar_url: publicUrl, onboarding_complete: true, updated_at: new Date().toISOString() }).eq('id', profile.id)
-    toast.success('Profil skapad! Välkommen till MatchConnect.')
+    toast.success('Profil skapad! Välkommen till Rekryo.')
     onNext()
   }
 

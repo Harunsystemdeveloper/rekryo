@@ -1,5 +1,5 @@
 -- 0001_initial.sql
--- Skapar de grundläggande datamodellerna för MatchConnect
+-- Skapar de grundläggande datamodellerna för Rekryo
 
 create table if not exists profiles (
   id uuid primary key references auth.users(id) on delete cascade,

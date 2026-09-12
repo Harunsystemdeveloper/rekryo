@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
-export const alt = 'MatchConnect – AI-driven jobbmatchning'
+export const alt = 'Rekryo – AI-driven jobbmatchning'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -70,7 +70,7 @@ export default function OgImage() {
             💼
           </div>
           <span style={{ color: '#fff', fontSize: '28px', fontWeight: '700' }}>
-            MatchConnect
+            Rekryo
           </span>
         </div>
 

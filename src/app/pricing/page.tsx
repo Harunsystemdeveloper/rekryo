@@ -6,7 +6,7 @@ import { Footer } from '@/components/footer'
 import { CheckCircle, ArrowRight, Zap, Users } from 'lucide-react'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Priser – MatchConnect' }
+export const metadata: Metadata = { title: 'Priser – Rekryo' }
 
 const seekerFeatures = [
   'Ladda upp CV och få AI-analys direkt',
@@ -45,7 +45,7 @@ export default function PricingPage() {
           <span className="gradient-text">alltid</span>
         </h1>
         <p className="text-muted-foreground text-lg max-w-lg mx-auto leading-relaxed">
-          MatchConnect är gratis för både jobbsökare och rekryterare. Inga dolda avgifter, inget kreditkort.
+          Rekryo är gratis för både jobbsökare och rekryterare. Inga dolda avgifter, inget kreditkort.
         </p>
       </section>
 

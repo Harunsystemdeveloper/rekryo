@@ -11,7 +11,7 @@ export function Footer() {
               <div className="flex h-8 w-8 items-center justify-center rounded-xl gradient-primary shadow-sm">
                 <Briefcase className="h-4 w-4 text-white" />
               </div>
-              <span className="gradient-text text-lg">MatchConnect</span>
+              <span className="gradient-text text-lg">Rekryo</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
               AI-driven jobbmatchning som kopplar rätt kompetens med rätt möjlighet på den svenska arbetsmarknaden.
@@ -40,7 +40,7 @@ export function Footer() {
 
         <div className="border-t border-border/50 mt-10 pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} MatchConnect. Alla rättigheter förbehållna.
+            © {new Date().getFullYear()} Rekryo. Alla rättigheter förbehållna.
           </p>
           <p className="text-xs text-muted-foreground">
             Byggd med <span className="gradient-text font-medium">AI</span> för den svenska arbetsmarknaden

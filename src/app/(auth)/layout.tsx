@@ -46,7 +46,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           }}>
             <Briefcase size={18} color="white" />
           </div>
-          <span style={{ color: 'white', fontWeight: 700, fontSize: '20px' }}>MatchConnect</span>
+          <span style={{ color: 'white', fontWeight: 700, fontSize: '20px' }}>Rekryo</span>
         </Link>
 
         {/* Main content */}
@@ -59,7 +59,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <span style={{ color: '#a5b4fc' }}>med AI-precision</span>
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: 1.7, maxWidth: '300px' }}>
-            MatchConnect analyserar kompetenser och erfarenhet för att skapa perfekta matchningar på svenska arbetsmarknaden.
+            Rekryo analyserar kompetenser och erfarenhet för att skapa perfekta matchningar på svenska arbetsmarknaden.
           </p>
 
           {/* Recruiter value props */}
@@ -112,7 +112,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '12px', marginTop: 'auto' }}>
-          © {new Date().getFullYear()} MatchConnect · GDPR-säkert · Sverige
+          © {new Date().getFullYear()} Rekryo · GDPR-säkert · Sverige
         </p>
       </div>
 
@@ -132,7 +132,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             }}>
               <Briefcase size={16} color="white" />
             </div>
-            <span className="gradient-text" style={{ fontWeight: 700, fontSize: '18px' }}>MatchConnect</span>
+            <span className="gradient-text" style={{ fontWeight: 700, fontSize: '18px' }}>Rekryo</span>
           </Link>
         </header>
 
@@ -142,7 +142,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         <footer className="lg:hidden" style={{ padding: '16px', textAlign: 'center' }}>
           <p style={{ fontSize: '12px', color: 'rgba(100,116,139,0.7)' }}>
-            © {new Date().getFullYear()} MatchConnect · GDPR-säkert · Sverige
+            © {new Date().getFullYear()} Rekryo · GDPR-säkert · Sverige
           </p>
         </footer>
       </div>

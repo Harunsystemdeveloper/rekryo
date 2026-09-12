@@ -67,7 +67,7 @@ export function RegisterForm() {
         </div>
         <div className="text-center">
           <h1 className="text-2xl font-bold">Skapa konto</h1>
-          <p className="text-sm text-muted-foreground mt-1">Kom igång med MatchConnect — helt gratis</p>
+          <p className="text-sm text-muted-foreground mt-1">Kom igång med Rekryo — helt gratis</p>
         </div>
       </div>
 

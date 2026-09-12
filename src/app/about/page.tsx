@@ -12,8 +12,8 @@ import {
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Om oss – MatchConnect',
-  description: 'Hur MatchConnect löser kompetensparadoxen på den svenska arbetsmarknaden med AI-driven jobbmatchning.',
+  title: 'Om oss – Rekryo',
+  description: 'Hur Rekryo löser kompetensparadoxen på den svenska arbetsmarknaden med AI-driven jobbmatchning.',
 }
 
 const keyStats = [
@@ -190,7 +190,7 @@ export default function AboutPage() {
               Sverige har ett unikt strukturproblem: massarbetslöshet bland akademiker
               <em> samtidigt</em> som tusentals tjänster inte kan tillsättas.
               Det är inte ett kompetensproblem — det är ett <strong className="text-foreground">matchningsproblem</strong>.
-              MatchConnect löser det med AI.
+              Rekryo löser det med AI.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center animate-in fade-in slide-in-from-bottom-3 duration-700 delay-300">
@@ -349,7 +349,7 @@ export default function AboutPage() {
             <div className="text-center mb-14">
               <Badge variant="outline" className="mb-4 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5">Lösningen</Badge>
               <h2 className="text-3xl sm:text-4xl font-bold">
-                Hur MatchConnect bryter paradoxen
+                Hur Rekryo bryter paradoxen
               </h2>
               <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
                 Istället för att matcha nyckelord mot nyckelord förstår Claude AI hela kandidatprofilen
@@ -385,7 +385,7 @@ export default function AboutPage() {
               <div>
                 <p className="text-sm font-semibold text-violet-600 dark:text-violet-400 mb-1">Drivet av Claude AI (Anthropic)</p>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  MatchConnect använder Anthropics Claude Sonnet — en av de mest kapabla AI-modellerna för textanalys och resonemang.
+                  Rekryo använder Anthropics Claude Sonnet — en av de mest kapabla AI-modellerna för textanalys och resonemang.
                   All analys sker server-side i Sverige, behandlas med GDPR-compliance och lagras aldrig av Anthropic för träning.
                 </p>
               </div>

@@ -7,25 +7,25 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin', 'lat
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin', 'latin-ext'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://matchconnect.se'),
+  metadataBase: new URL('https://rekryo.com'),
   title: {
-    default: 'MatchConnect – AI-driven jobbmatchning',
-    template: '%s | MatchConnect',
+    default: 'Rekryo – AI-driven jobbmatchning',
+    template: '%s | Rekryo',
   },
   description:
     'AI-driven plattform som matchar rätt kandidater med rätt jobb på den svenska arbetsmarknaden.',
   keywords: ['jobbmatchning', 'AI', 'rekrytering', 'karriär', 'Sverige'],
   openGraph: {
-    title: 'MatchConnect – AI-driven jobbmatchning',
+    title: 'Rekryo – AI-driven jobbmatchning',
     description: 'Hitta rätt jobb eller rätt kandidat med hjälp av AI.',
     locale: 'sv_SE',
     type: 'website',
-    url: 'https://matchconnect.se',
-    siteName: 'MatchConnect',
+    url: 'https://rekryo.com',
+    siteName: 'Rekryo',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MatchConnect – AI-driven jobbmatchning',
+    title: 'Rekryo – AI-driven jobbmatchning',
     description: 'Hitta rätt jobb eller rätt kandidat med hjälp av AI.',
   },
 }

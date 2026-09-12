@@ -4,8 +4,8 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-const FROM = 'MatchConnect <noreply@matchconnect.se>'
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://matchconnect.se'
+const FROM = 'Rekryo <noreply@rekryo.com>'
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://rekryo.com'
 
 async function send(options: Parameters<Resend['emails']['send']>[0]) {
   if (!resend) return
@@ -44,7 +44,7 @@ export async function sendNewApplicationEmail({
             Granska ansökan
           </a>
         </p>
-        <p style="color:#666;font-size:13px">MatchConnect · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
+        <p style="color:#666;font-size:13px">Rekryo · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
       </div>
     `,
   })
@@ -92,7 +92,7 @@ export async function sendStatusUpdateEmail({
             Visa jobbet
           </a>
         </p>
-        <p style="color:#666;font-size:13px">MatchConnect · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
+        <p style="color:#666;font-size:13px">Rekryo · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
       </div>
     `,
   })
@@ -113,7 +113,7 @@ export async function sendWelcomeEmail({
   await send({
     from: FROM,
     to: email,
-    subject: 'Välkommen till MatchConnect!',
+    subject: 'Välkommen till Rekryo!',
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#111">
         <h2 style="margin-bottom:8px">Välkommen, ${name}! 🎉</h2>
@@ -127,7 +127,7 @@ export async function sendWelcomeEmail({
             Gå till din dashboard
           </a>
         </p>
-        <p style="color:#666;font-size:13px">MatchConnect · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
+        <p style="color:#666;font-size:13px">Rekryo · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
       </div>
     `,
   })
@@ -150,14 +150,14 @@ export async function sendNewMessageEmail({
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#111">
         <h2 style="margin-bottom:8px">Nytt meddelande 💬</h2>
         <p>Hej ${recipientName},</p>
-        <p><strong>${senderName}</strong> har skickat dig ett meddelande på MatchConnect.</p>
+        <p><strong>${senderName}</strong> har skickat dig ett meddelande på Rekryo.</p>
         <p>
           <a href="${BASE_URL}/messages"
              style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">
             Läs meddelandet
           </a>
         </p>
-        <p style="color:#666;font-size:13px">MatchConnect · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
+        <p style="color:#666;font-size:13px">Rekryo · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
       </div>
     `,
   })

@@ -46,7 +46,7 @@ const RECRUITER_STEPS = [
   },
 ]
 
-const TOUR_KEY = 'matchconnect_tour_done'
+const TOUR_KEY = 'rekryo_tour_done'
 
 export function OnboardingTour({ userType }: { userType: 'job_seeker' | 'recruiter' }) {
   const [visible, setVisible] = useState(false)

@@ -87,7 +87,7 @@ export function Navbar() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary shadow-sm shadow-primary/30">
               <Briefcase className="h-4 w-4 text-white" />
             </div>
-            <span className="gradient-text">MatchConnect</span>
+            <span className="gradient-text">Rekryo</span>
           </Link>
 
           {/* Desktop nav */}

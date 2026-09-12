@@ -15,7 +15,7 @@ export default function TermsPage() {
 
           <h2 className="text-xl font-semibold mt-8">1. Tjänstebeskrivning</h2>
           <p>
-            MatchConnect är en plattform för AI-driven jobbmatchning. Vi erbjuder tjänster
+            Rekryo är en plattform för AI-driven jobbmatchning. Vi erbjuder tjänster
             för både jobbsökare och rekryterare.
           </p>
 
@@ -39,7 +39,7 @@ export default function TermsPage() {
 
           <h2 className="text-xl font-semibold mt-8">5. Begränsning av ansvar</h2>
           <p>
-            MatchConnect ansvarar inte för rekryteringsbeslut som fattas baserat på
+            Rekryo ansvarar inte för rekryteringsbeslut som fattas baserat på
             plattformens AI-analyser. Tjänsten tillhandahålls i befintligt skick.
           </p>
 

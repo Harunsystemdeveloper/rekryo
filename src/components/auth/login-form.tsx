@@ -60,7 +60,7 @@ export function LoginForm() {
         </div>
         <div className="text-center">
           <h1 className="text-2xl font-bold">Välkommen tillbaka</h1>
-          <p className="text-sm text-muted-foreground mt-1">Logga in på ditt MatchConnect-konto</p>
+          <p className="text-sm text-muted-foreground mt-1">Logga in på ditt Rekryo-konto</p>
         </div>
       </div>
 

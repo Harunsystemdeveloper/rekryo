@@ -1,4 +1,4 @@
-# MatchConnect
+# Rekryo
 
 > AI-driven jobbmatchningsplattform för den svenska arbetsmarknaden
 

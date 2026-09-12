@@ -16,7 +16,7 @@ export default function NotFound() {
           <p className="text-8xl font-black gradient-text mb-4">404</p>
           <h1 className="text-2xl font-bold mb-3">Sidan hittades inte</h1>
           <p className="text-muted-foreground mb-8 leading-relaxed">
-            Den här sidan verkar inte finnas — precis som rätt kandidat innan MatchConnect.
+            Den här sidan verkar inte finnas — precis som rätt kandidat innan Rekryo.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button asChild>

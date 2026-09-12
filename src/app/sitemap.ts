@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 
-const BASE = 'https://matchconnect.se'
+const BASE = 'https://rekryo.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

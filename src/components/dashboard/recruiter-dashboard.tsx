@@ -131,7 +131,7 @@ export default async function RecruiterDashboard({ profile }: { profile: Profile
             <CardContent className="pt-6 pb-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <p className="text-lg font-bold">Välkommen till MatchConnect!</p>
+                  <p className="text-lg font-bold">Välkommen till Rekryo!</p>
                   <p className="text-white/80 text-sm mt-1">
                     Skapa din första jobbannons och låt AI hitta rätt kandidater åt dig.
                   </p>

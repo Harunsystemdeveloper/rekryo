@@ -31,7 +31,7 @@ export default function PrivacySettingsPage() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = 'matchconnect-min-data.json'
+      a.download = 'rekryo-min-data.json'
       a.click()
       URL.revokeObjectURL(url)
       toast.success('Din data har laddats ner!')

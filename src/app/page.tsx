@@ -299,7 +299,7 @@ export default function HomePage() {
             <p className="text-base font-medium leading-relaxed">
               <span className="gradient-text font-bold">Slutsats:</span>{' '}
               Det finns tillräckligt med kompetens i Sverige. Systemet för att matcha den är trasigt.
-              {' '}<strong className="text-foreground">MatchConnect löser det med AI.</strong>
+              {' '}<strong className="text-foreground">Rekryo löser det med AI.</strong>
             </p>
           </div>
         </div>
@@ -357,7 +357,7 @@ export default function HomePage() {
             <Badge variant="outline" className="mb-4 text-primary border-primary/30">Funktioner</Badge>
             <h2 className="text-2xl sm:text-3xl font-bold">Allt du behöver för smart matchning</h2>
             <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-              Från CV-analys till intervjuförberedelse — MatchConnect guidar dig hela vägen.
+              Från CV-analys till intervjuförberedelse — Rekryo guidar dig hela vägen.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -457,7 +457,7 @@ export default function HomePage() {
             {[
               {
                 id: 'faq-1',
-                q: 'Kostar det något att använda MatchConnect?',
+                q: 'Kostar det något att använda Rekryo?',
                 a: 'Nej — plattformen är helt gratis för både jobbsökare och rekryterare. Inga dolda avgifter, inget kreditkort behövs.',
               },
               {

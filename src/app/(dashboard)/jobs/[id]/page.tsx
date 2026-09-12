@@ -64,7 +64,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-3.5 w-3.5" />
-            MatchConnect
+            Rekryo
           </Link>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>

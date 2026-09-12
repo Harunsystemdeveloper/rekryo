@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/dashboard', '/seeker/', '/recruiter/', '/api/', '/settings', '/messages', '/applications', '/profile'],
       },
     ],
-    sitemap: 'https://matchconnect.se/sitemap.xml',
+    sitemap: 'https://rekryo.com/sitemap.xml',
   }
 }

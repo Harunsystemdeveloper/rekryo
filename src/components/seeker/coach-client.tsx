@@ -78,7 +78,7 @@ export function CoachClient({ profile }: { profile: Profile }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Hej ${profile.full_name?.split(' ')[0] ?? 'där'}! 👋 Jag är din AI-karriärcoach på MatchConnect.\n\nJag har tillgång till din profil, dina ansökningar och alla aktiva jobb — så jag kan ge dig personliga råd.\n\nVad kan jag hjälpa dig med idag?`,
+      content: `Hej ${profile.full_name?.split(' ')[0] ?? 'där'}! 👋 Jag är din AI-karriärcoach på Rekryo.\n\nJag har tillgång till din profil, dina ansökningar och alla aktiva jobb — så jag kan ge dig personliga råd.\n\nVad kan jag hjälpa dig med idag?`,
     },
   ])
   const [input, setInput] = useState('')

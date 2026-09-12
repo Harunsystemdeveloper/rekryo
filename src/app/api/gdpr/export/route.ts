@@ -62,7 +62,7 @@ export async function GET() {
   return new NextResponse(JSON.stringify(exportData, null, 2), {
     headers: {
       'Content-Type': 'application/json',
-      'Content-Disposition': `attachment; filename="matchconnect-data-${user.id.slice(0, 8)}.json"`,
+      'Content-Disposition': `attachment; filename="rekryo-data-${user.id.slice(0, 8)}.json"`,
     },
   })
 }

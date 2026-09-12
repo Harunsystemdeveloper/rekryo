@@ -33,7 +33,7 @@ export function AnimatedHeroWidget() {
             <div className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
           </div>
           <div className="flex-1 mx-3 h-5 rounded-md bg-muted/60 flex items-center px-3">
-            <span className="text-[10px] text-muted-foreground">matchconnect.se/seeker/jobs</span>
+            <span className="text-[10px] text-muted-foreground">rekryo.com/seeker/jobs</span>
           </div>
           <div className="flex items-center gap-1 transition-all duration-300">
             {phase === 'analyzing' ? (

@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { OnboardingWizard } from '@/components/onboarding/onboarding-wizard'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Konfigurera din profil · MatchConnect' }
+export const metadata: Metadata = { title: 'Konfigurera din profil · Rekryo' }
 
 export default async function OnboardingPage() {
   const supabase = await createClient()
@@ -58,7 +58,7 @@ export default async function OnboardingPage() {
           </div>
           <div>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '13px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', margin: '0 0 4px' }}>
-              Välkommen till MatchConnect
+              Välkommen till Rekryo
             </p>
             <h1 style={{ color: 'white', fontSize: '22px', fontWeight: 800, margin: 0, lineHeight: 1.2 }}>
               {isRecruiter ? 'Börja hitta rätt kandidater' : 'Börja hitta ditt drömjobb'}

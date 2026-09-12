@@ -106,7 +106,7 @@ export async function POST(request: Request) {
   const admin = createAdminClient()
   const { data: profile } = await supabase.from('profiles').select('full_name').eq('id', user.id).single()
 
-  const systemPrompt = `Du är MatchConnects AI-karriärcoach — en personlig assistent för jobbsökare på den svenska arbetsmarknaden.
+  const systemPrompt = `Du är Rekryos AI-karriärcoach — en personlig assistent för jobbsökare på den svenska arbetsmarknaden.
 
 Du hjälper ${profile?.full_name ?? 'användaren'} med:
 - Analysera deras CV och ge konkreta, handlingsbara förbättringstips
