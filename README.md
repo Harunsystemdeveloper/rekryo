@@ -15,7 +15,7 @@ Plattform som kopplar samman jobbsökare med rekryterare via Claude AI — match
 ## Funktioner
 
 ### För jobbsökare
-- Registrering med e-post/lösenord eller Google, guidad onboarding
+- Registrering med e-post/lösenord, guidad onboarding
 - Ladda upp CV (PDF/DOCX) och få AI-analys av kompetenser, erfarenhet, utbildning och styrkor
 - Bläddra och filtrera aktiva jobbannonser
 - AI-matchningspoäng (0–100) med motivering per jobb
