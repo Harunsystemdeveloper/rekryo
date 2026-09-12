@@ -74,8 +74,8 @@ Plattform som kopplar samman jobbsökare med rekryterare via Claude AI — match
 ### Installation
 
 ```bash
-git clone https://github.com/Harunsystemdeveloper/matchconnect.git
-cd matchconnect
+git clone https://github.com/Harunsystemdeveloper/rekryo.git
+cd rekryo
 npm install
 cp .env.example .env.local
 ```
@@ -87,6 +87,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 ANTHROPIC_API_KEY=
+RESEND_API_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
