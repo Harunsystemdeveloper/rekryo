@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     const { analysis, usage } = await analyzeCv(parsed.data.cv_text)
     const normalizedSkills = await normalizeSkills(analysis.skills ?? [])
 
-    await supabase.from('cv_profiles').upsert({
+    const { error: saveError } = await supabase.from('cv_profiles').upsert({
       seeker_id: user.id,
       cv_text: parsed.data.cv_text,
       cv_text_hash: cvHash,
@@ -57,7 +57,12 @@ export async function POST(request: Request) {
       languages: analysis.languages,
       ai_summary: analysis.summary,
       last_analyzed_at: new Date().toISOString(),
-    })
+    }, { onConflict: 'seeker_id' })
+
+    if (saveError) {
+      console.error('CV analysis save error:', saveError)
+      return NextResponse.json({ error: 'Kunde inte spara analysen' }, { status: 500 })
+    }
 
     // AI Act: log the decision (fire-and-forget)
     void logAiDecision({

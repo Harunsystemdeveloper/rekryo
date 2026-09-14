@@ -32,7 +32,7 @@ export default function ProfileView({ profile, cvProfile }: { profile: Profile; 
       const analysis = result.analysis ?? result
       setAnalysisResult(analysis)
 
-      await supabase.from('cv_profiles').upsert({
+      const { error: saveError } = await supabase.from('cv_profiles').upsert({
         seeker_id: user.id,
         cv_text: cvText,
         skills: analysis.skills,
@@ -40,7 +40,8 @@ export default function ProfileView({ profile, cvProfile }: { profile: Profile; 
         education: analysis.education,
         ai_summary: analysis.summary ?? analysis.ai_summary,
         last_analyzed_at: new Date().toISOString(),
-      })
+      }, { onConflict: 'seeker_id' })
+      if (saveError) console.error('CV analysis save error:', saveError)
     } finally {
       setIsAnalyzing(false)
     }

@@ -99,7 +99,7 @@ export function CompanyProfileClient({ profile, company }: { profile: Profile; c
       brand_color: brandColor || null,
       testimonials: testimonials.filter(t => t.name.trim() && t.quote.trim()),
       updated_at: new Date().toISOString(),
-    })
+    }, { onConflict: 'recruiter_id' })
     if (error) toast.error('Kunde inte spara', { description: error.message })
     else toast.success('Företagsprofil sparad!')
     setSaving(false)

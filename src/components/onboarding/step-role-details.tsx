@@ -49,7 +49,7 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
         company_name: data.company_name,
         industry: data.industry ?? null,
         updated_at: new Date().toISOString(),
-      })
+      }, { onConflict: 'recruiter_id' })
       if (error) { toast.error('Kunde inte spara företagsprofil'); setLoading(false); return }
     } else {
       const { error } = await supabase.from('cv_profiles').upsert({
