@@ -83,7 +83,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
 
           {/* Logo — alltid länk till startsidan */}
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl shrink-0">
+          <Link href="/" className="flex items-center gap-2 font-heading font-semibold text-xl shrink-0">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg gradient-primary shadow-sm shadow-primary/30">
               <Briefcase className="h-4 w-4 text-white" />
             </div>
@@ -124,8 +124,10 @@ export function Navbar() {
                 size="icon"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 aria-label="Byt tema"
+                className="relative overflow-hidden"
               >
-                {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
             )}
 
