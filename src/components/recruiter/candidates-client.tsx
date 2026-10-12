@@ -432,7 +432,7 @@ export function CandidatesClient({
             const seeker = app.seeker
             const initials = seeker?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) ?? '?'
             return (
-              <Card key={app.id} className={app.is_shortlisted ? 'ring-2 ring-primary/30' : ''}>
+              <Card key={app.id} className={`panel-hover ${app.is_shortlisted ? 'ring-2 ring-primary/30' : ''}`}>
                 <CardContent className="pt-5 pb-5">
                   <div className="flex flex-col sm:flex-row items-start gap-4">
                     <Avatar className="h-12 w-12 flex-shrink-0">

@@ -102,6 +102,11 @@ export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; use
 
   const hasActiveFilters = search || workType !== 'all' || minSalary
 
+  const notExpiredCount = useMemo(
+    () => jobs.filter(j => !j.deadline || new Date(j.deadline) >= new Date()).length,
+    [jobs]
+  )
+
   return (
     <div className="space-y-6">
       {/* Hero */}
@@ -109,7 +114,7 @@ export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; use
         <div className="relative z-10 px-6 py-8 sm:px-10 sm:py-10 max-w-xl">
           <h1 className="text-2xl sm:text-3xl font-bold">Hitta ditt nästa jobb</h1>
           <p className="text-muted-foreground mt-2">
-            <span className="font-semibold text-foreground">{jobs.length}</span> aktiva annonser just nu — AI:n räknar ut din matchningspoäng automatiskt när du söker.
+            <span className="font-semibold text-foreground">{notExpiredCount}</span> aktiva annonser just nu — AI:n räknar ut din matchningspoäng automatiskt när du söker.
           </p>
         </div>
         <JobSearchIllustration className="pointer-events-none absolute -right-6 -bottom-8 h-56 w-auto opacity-90 hidden sm:block" />

@@ -52,12 +52,12 @@ export default async function RecruiterJobsPage() {
           {jobs.map(job => {
             const appCount = Array.isArray(job.application_count) ? job.application_count[0]?.count ?? 0 : 0
             return (
-              <Card key={job.id}>
+              <Card key={job.id} className="panel-hover">
                 <CardContent className="pt-5 pb-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="font-semibold">{job.title}</h3>
+                        <h3 className="font-semibold text-base">{job.title}</h3>
                         <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[job.status as keyof typeof statusColors]}`}>
                           {statusLabels[job.status as keyof typeof statusLabels]}
                         </span>
@@ -91,7 +91,7 @@ export default async function RecruiterJobsPage() {
                       )}
                     </div>
                     <div className="flex gap-2 flex-shrink-0">
-                      <Button size="sm" variant="outline" asChild>
+                      <Button size="sm" asChild>
                         <Link href={`/recruiter/jobs/${job.id}/candidates`}><Users className="h-3.5 w-3.5 mr-1" />Kandidater</Link>
                       </Button>
                       <Button size="sm" variant="ghost" asChild title="Publik annonsssida">

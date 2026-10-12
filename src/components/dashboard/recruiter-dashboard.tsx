@@ -32,42 +32,51 @@ export default async function RecruiterDashboard({ profile }: { profile: Profile
         </Button>
       </div>
 
-      {/* Stats */}
+      {/* Stats — samma färgade ikon-chip-mönster som jobbsökarens dashboard,
+          så de två användarrollerna känns som samma produkt. */}
       <div className="grid gap-3 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="panel-hover">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Aktiva annonser</CardTitle>
-            <BriefcaseIcon className="h-4 w-4 text-muted-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <BriefcaseIcon className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{activeJobs}</div>
+            <div className="text-2xl font-bold tabular-nums">{activeJobs}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="panel-hover">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Totala annonser</CardTitle>
-            <FileTextIcon className="h-4 w-4 text-muted-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-accent border border-accent-foreground/15 flex items-center justify-center">
+              <FileTextIcon className="h-4 w-4 accent-mark" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{jobs?.length ?? 0}</div>
+            <div className="text-2xl font-bold tabular-nums">{jobs?.length ?? 0}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="panel-hover">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Totala ansökningar</CardTitle>
-            <UsersIcon className="h-4 w-4 text-muted-foreground" />
+            <div className="h-8 w-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <UsersIcon className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{appCount ?? 0}</div>
+            <div className="text-2xl font-bold tabular-nums">{appCount ?? 0}</div>
           </CardContent>
         </Card>
-        <Card className={(pendingCount ?? 0) > 0 ? 'border-primary/40 bg-primary/5' : ''}>
+        <Card className={(pendingCount ?? 0) > 0 ? 'panel-hover border-primary/40 bg-primary/5' : 'panel-hover'}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">Att granska</CardTitle>
-            <Clock className={`h-4 w-4 ${(pendingCount ?? 0) > 0 ? 'text-primary' : 'text-muted-foreground'}`} />
+            <div className={`h-8 w-8 rounded-lg border flex items-center justify-center ${(pendingCount ?? 0) > 0 ? 'bg-accent border-accent-foreground/15' : 'bg-muted border-border'}`}>
+              <Clock className={`h-4 w-4 ${(pendingCount ?? 0) > 0 ? 'accent-mark' : 'text-muted-foreground'}`} />
+            </div>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${(pendingCount ?? 0) > 0 ? 'gradient-text' : ''}`}>{pendingCount ?? 0}</div>
+            <div className={`text-2xl font-bold tabular-nums ${(pendingCount ?? 0) > 0 ? 'gradient-text' : ''}`}>{pendingCount ?? 0}</div>
             <p className="text-xs text-muted-foreground">nya ansökningar</p>
           </CardContent>
         </Card>

@@ -104,22 +104,27 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
         <p className="text-muted-foreground">Här är din jobbsökaröversikt.</p>
       </div>
 
-      {/* Stats row */}
+      {/* Stats row — färgad ikon-chip i märkesfärgerna istället för en grå ikon
+          i ett vitt kort, som annars är precis "generiskt admin-tema"-känslan. */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {[
-          { icon: FileText, label: 'Ansökningar', value: applications.length, href: '/seeker/applications' },
-          { icon: Star, label: 'Shortlistade', value: applications.filter(a => a.status === 'shortlisted').length, href: '/seeker/applications' },
-          { icon: Bookmark, label: 'Sparade jobb', value: savedJobsCount, href: '/seeker/saved' },
-          { icon: TrendingUp, label: 'Profilstyrka', value: `${profileStrength}%`, href: '/seeker/profile' },
+          { icon: FileText, label: 'Ansökningar', value: applications.length, href: '/seeker/applications', tone: 'primary' as const },
+          { icon: Star, label: 'Shortlistade', value: applications.filter(a => a.status === 'shortlisted').length, href: '/seeker/applications', tone: 'copper' as const },
+          { icon: Bookmark, label: 'Sparade jobb', value: savedJobsCount, href: '/seeker/saved', tone: 'primary' as const },
+          { icon: TrendingUp, label: 'Profilstyrka', value: `${profileStrength}%`, href: '/seeker/profile', tone: 'copper' as const },
         ].map((stat) => (
           <Link key={stat.label} href={stat.href}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+            <Card className="panel-hover hover:shadow-md transition-shadow cursor-pointer h-full">
               <CardContent className="pt-6">
-                <div className="flex items-center justify-between mb-2">
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
+                <div className="flex items-center justify-between mb-3">
+                  <div className={`h-9 w-9 rounded-lg border flex items-center justify-center ${
+                    stat.tone === 'primary' ? 'bg-primary/10 border-primary/20' : 'bg-accent border-accent-foreground/15'
+                  }`}>
+                    <stat.icon className={`h-4 w-4 ${stat.tone === 'primary' ? 'text-primary' : 'accent-mark'}`} />
+                  </div>
                   <ArrowRight className="h-3 w-3 text-muted-foreground" />
                 </div>
-                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-2xl font-bold tabular-nums">{stat.value}</p>
                 <p className="text-xs text-muted-foreground">{stat.label}</p>
               </CardContent>
             </Card>
@@ -361,7 +366,7 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
       )}
 
       {/* Career coach CTA */}
-      <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-violet-500/5">
+      <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-accent/40">
         <CardContent className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="h-12 w-12 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/25 flex-shrink-0">
