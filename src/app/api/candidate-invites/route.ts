@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).single()
+  const { data: profile } = await supabase.from('profiles').select('user_type, full_name').eq('id', user.id).single()
   if (profile?.user_type !== 'recruiter') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   if (!rateLimit(`candidate-invite:${user.id}`, 30)) {
@@ -47,7 +47,8 @@ export async function POST(req: Request) {
       { title: job.title, description: job.description },
       { name: seekerProfile?.full_name ?? 'Kandidat', skills: candidateSkills, experience_years: cv.experience_years },
       matchingSkills,
-      company?.company_name ?? 'Vårt företag'
+      company?.company_name ?? 'Vårt företag',
+      profile?.full_name ?? 'Rekryteraren'
     )
 
     // Konversation: samma upsert-mönster som /messages använder.

@@ -357,7 +357,8 @@ export async function generateOutreachMessage(
   job: { title: string; description: string },
   candidate: { name: string; skills: string[]; experience_years: number | null },
   matchingSkills: string[],
-  companyName: string
+  companyName: string,
+  recruiterName: string
 ) {
   const message = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
@@ -366,6 +367,7 @@ export async function generateOutreachMessage(
 
 Regler:
 - Max 4-5 meningar, vänlig och professionell ton på svenska, inte påträngande
+- Signera med avsändarens RIKTIGA namn (anges nedan) -- skriv aldrig ut hakparenteser, platshållare eller "[namn]"
 - Nämn 1-2 KONKRETA kompetenser kandidaten faktiskt har som matchar rollen (från matchande kompetenser) -- hitta aldrig på egna
 - Nämn ALDRIG saknade kompetenser i meddelandet -- det är bara internt underlag
 - Avsluta med en tydlig, lågtröskel fråga (t.ex. om de är öppna för att höra mer)
@@ -374,7 +376,7 @@ Regler:
 Returnera ENDAST JSON: { "message": "meddelandetext" }`,
     messages: [{
       role: 'user',
-      content: `Företag: ${companyName}\nJobb: ${job.title}\nBeskrivning: ${job.description}\n\nKandidat: ${candidate.name}\nKompetenser: ${candidate.skills.join(', ')}\nErfarenhet: ${candidate.experience_years ?? 'okänt'} år\n\nMatchande kompetenser mot jobbet: ${matchingSkills.join(', ') || '(inga specifika, generell relevans)'}`,
+      content: `Avsändare (du): ${recruiterName}\nFöretag: ${companyName}\nJobb: ${job.title}\nBeskrivning: ${job.description}\n\nKandidat: ${candidate.name}\nKompetenser: ${candidate.skills.join(', ')}\nErfarenhet: ${candidate.experience_years ?? 'okänt'} år\n\nMatchande kompetenser mot jobbet: ${matchingSkills.join(', ') || '(inga specifika, generell relevans)'}`,
     }],
   })
 
