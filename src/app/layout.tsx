@@ -1,10 +1,19 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Geist, Geist_Mono, Fraunces } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin', 'latin-ext'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin', 'latin-ext'] })
+// Distinkt rubriktypsnitt — en redaktionell serif istället för samma
+// standard-sans som all text, så alla rubriker (via font-heading, redan
+// kopplat i CardTitle m.fl.) genast läses som ett riktigt varumärke.
+const fraunces = Fraunces({
+  variable: '--font-display',
+  subsets: ['latin', 'latin-ext'],
+  weight: ['500', '600', '700', '900'],
+  style: ['normal', 'italic'],
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://rekryo.com'),
@@ -34,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="sv"
-      className={`${geistSans.variable} ${geistMono.variable} h-full`}
+      className={`${geistSans.variable} ${geistMono.variable} ${fraunces.variable} h-full`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col antialiased">
