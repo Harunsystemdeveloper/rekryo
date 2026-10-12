@@ -81,8 +81,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           {/* Stats */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '24px' }}>
             {[
-              { value: '180 000', label: 'Tjänster utan kandidat' },
-              { value: '74%', label: 'Av företagen har svårt att rekrytera' },
+              { value: '61 000', label: 'Personer saknas i olika yrken' },
+              { value: '76%', label: 'Av företagen har svårt att rekrytera' },
             ].map((s) => (
               <div key={s.value} style={{
                 background: 'rgba(255,255,255,0.1)',

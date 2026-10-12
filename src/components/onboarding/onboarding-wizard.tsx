@@ -41,7 +41,7 @@ export function OnboardingWizard({ profile }: Props) {
           <div className="absolute left-5 right-5 top-5 h-0.5 bg-border z-0" />
           {/* Progress track */}
           <div
-            className="absolute left-5 top-5 h-0.5 bg-gradient-to-r from-primary to-violet-500 z-[1] transition-all duration-500"
+            className="absolute left-5 top-5 h-0.5 gradient-primary z-[1] transition-all duration-500"
             style={{ width: `calc(${progressPct}% - 0px)`, maxWidth: 'calc(100% - 40px)' }}
           />
 
