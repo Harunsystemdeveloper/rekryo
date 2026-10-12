@@ -18,33 +18,33 @@ export const metadata: Metadata = {
 
 const keyStats = [
   {
-    value: '74%',
-    label: 'av svenska företag uppger kompetensbristen som ett allvarligt tillväxthinder',
-    source: 'Svenskt Näringsliv, Rekryteringsenkäten 2025',
+    value: '100 000+',
+    label: 'arbetslösa akademiker i Sverige — högsta nivån på 20 år',
+    source: 'Akademikernas a-kassa & Saco, 2025',
     color: 'from-orange-500 to-red-500',
     bg: 'from-orange-500/10 to-red-500/10',
     border: 'border-orange-500/20',
   },
   {
-    value: '8,2%',
-    label: 'akademikerarbetslöshet – paradoxalt bland de högsta i Norden',
-    source: 'SCB Arbetskraftsundersökning, Q4 2025',
+    value: '4,7%',
+    label: 'akademikerarbetslöshet – högst på tio år, över pandeminivå',
+    source: 'Akademikernas a-kassa, Arbetslöshetsrapporten 2025',
     color: 'from-red-500 to-rose-600',
     bg: 'from-red-500/10 to-rose-500/10',
     border: 'border-red-500/20',
   },
   {
-    value: '180 000',
-    label: 'lediga tjänster som inte kan tillsättas p.g.a. kompetensbrist',
-    source: 'Arbetsförmedlingen, Arbetsmarknadsrapport 2025',
+    value: '61 000',
+    label: 'personer saknas inom olika yrken enligt arbetsgivarna',
+    source: 'SCB, Lediga jobb och rekryteringsbehov 2025',
     color: 'from-amber-500 to-orange-500',
     bg: 'from-amber-500/10 to-orange-500/10',
     border: 'border-amber-500/20',
   },
   {
-    value: '45 mdr',
-    label: 'kronor förloras varje år i produktion p.g.a. obemannade specialisttjänster',
-    source: 'Konjunkturinstitutet & Ingenjörsföretagen 2025',
+    value: '93%',
+    label: 'av företagen påverkas negativt av rekryteringssvårigheter',
+    source: 'Svenskt Näringsliv, Rekryteringsenkäten 2025/2026',
     color: 'from-rose-500 to-pink-600',
     bg: 'from-rose-500/10 to-pink-500/10',
     border: 'border-rose-500/20',
@@ -52,12 +52,12 @@ const keyStats = [
 ]
 
 const deepStats = [
-  { value: '6,2 mån', label: 'genomsnittlig tid att tillsätta en specialisttjänst', source: 'Rekryteringsenkäten 2025/2026' },
-  { value: '42%', label: 'av rekryteringar misslyckas inom 18 månader p.g.a. kompetensmismatch', source: 'Ingenjörsföretagen 2025' },
-  { value: '68%', label: 'av jobbsökare får aldrig feedback på sina ansökningar', source: 'LinkedIn Talent Trends 2025' },
-  { value: 'Nr 4', label: 'Sverige är det fjärde mest matchningsmissmatchade landet i EU', source: 'OECD Employment Outlook 2025' },
-  { value: '3 av 5', label: 'rekryterare uppger att CV-granskning tar mer än hälften av rekryteringstiden', source: 'Rekryteringsbarometern Sverige 2025' },
-  { value: '31%', label: 'av akademiker jobbar utanför sitt utbildningsområde ett år efter examen', source: 'UKÄ Uppföljning 2025' },
+  { value: '27%', label: 'av alla inskrivna arbetslösa hos Arbetsförmedlingen är akademiker', source: 'Akademikernas a-kassa 2025' },
+  { value: '57%', label: 'av arbetslösa akademiker bedöms ha svag konkurrensförmåga', source: 'Akademikernas a-kassa 2025' },
+  { value: '18 700', label: 'arbetslösa akademiker i snitt per månad — 17% fler än rekordåret 2020', source: 'Akademikernas a-kassa 2025' },
+  { value: '25%', label: 'av rekryteringsförsök misslyckas helt', source: 'Svenskt Näringsliv 2025/2026' },
+  { value: '69%', label: 'av företag anger bristande yrkeserfarenhet som rekryteringshinder', source: 'Svenskt Näringsliv 2025/2026' },
+  { value: '90,0%', label: 'sysselsättningsgrad bland akademiker — högre än totalbefolkningens 81,8%', source: 'Akademikernas a-kassa 2025' },
 ]
 
 const causes = [
@@ -78,7 +78,7 @@ const causes = [
   {
     icon: Search,
     title: 'Nyckelordsbaserad rekrytering',
-    description: 'ATS-system filtrerar bort 75% av ansökningar baserat på titlar och nyckelord – inte faktisk förmåga. Rätt kandidater faller bort, felaktiga kallas in.',
+    description: 'ATS-system filtrerar ofta bort kvalificerade kandidater baserat på exakta titlar och nyckelord – inte faktisk förmåga. Rätt kandidater faller bort, felaktiga kallas in.',
     color: 'text-red-500',
     bg: 'bg-red-500/10',
   },
@@ -93,6 +93,7 @@ const causes = [
     icon: Network,
     title: 'Nätverksbias',
     description: 'Upp till 70% av tjänster tillsätts via nätverk och kontakter. Det stänger ute talangfulla kandidater utan rätt socialt kapital – oavsett kompetens.',
+    source: 'LinkedIn, undersökning om nätverkets betydelse vid anställning',
     color: 'text-pink-500',
     bg: 'bg-pink-500/10',
   },
@@ -212,7 +213,7 @@ export default function AboutPage() {
               <Badge variant="outline" className="mb-4 border-red-500/30 text-red-500 bg-red-500/5">Problemet i siffror</Badge>
               <h2 className="text-3xl sm:text-4xl font-bold">En paradox som kostar Sverige miljarder</h2>
               <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-                Data från Svenskt Näringsliv, SCB, Arbetsförmedlingen och OECD målar en tydlig bild.
+                Data från Svenskt Näringsliv, SCB, Saco och Akademikernas a-kassa målar en tydlig bild.
               </p>
             </div>
 
@@ -242,7 +243,7 @@ export default function AboutPage() {
               ))}
             </div>
             <p className="text-center text-xs text-muted-foreground/60 mt-4">
-              Källor: Rekryteringsenkäten, Ingenjörsföretagen, LinkedIn, OECD, UKÄ — 2025/2026
+              Källor: Svenskt Näringsliv (Rekryteringsenkäten 2025/2026), SCB (Lediga jobb och rekryteringsbehov 2025), Saco och Akademikernas a-kassa (Arbetslöshetsrapporten 2025) — se källa per siffra ovan
             </p>
           </div>
         </section>
@@ -266,11 +267,11 @@ export default function AboutPage() {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    '180 000+ akademiker söker arbete aktivt',
-                    'Genomsnittlig jobbsökarperiod: 9,4 månader',
-                    '68% får aldrig feedback på sina ansökningar',
-                    '31% jobbar utanför sitt utbildningsområde',
-                    'ATS-system avfärdar rätt kandidater på sekunder',
+                    '100 000+ akademiker är arbetslösa — högsta nivån på 20 år',
+                    '27% av alla inskrivna arbetslösa hos Arbetsförmedlingen är akademiker',
+                    '57% av dem bedöms ha svag konkurrensförmåga på arbetsmarknaden',
+                    'Traditionella CV:n fångar sällan hela kompetensbilden',
+                    'ATS-system kan sortera bort rätt kandidater på nyckelord',
                   ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                       <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5" />
@@ -289,11 +290,11 @@ export default function AboutPage() {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    '74% har akut svårt att hitta rätt kompetens',
-                    '180 000 tjänster kan inte tillsättas',
-                    'Genomsnittlig rekryteringstid: 6,2 månader',
-                    '42% av rekryteringar misslyckas inom 18 mån',
-                    '45 miljarder SEK förloras i produktion per år',
+                    '37% har tackat nej till affärer p.g.a. kompetensbrist',
+                    '61 000 personer saknas inom olika yrken',
+                    '25% av rekryteringsförsök misslyckas helt',
+                    '69% anger bristande yrkeserfarenhet som hinder',
+                    '93% påverkas negativt av rekryteringssvårigheter',
                   ].map(item => (
                     <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
                       <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
@@ -337,6 +338,9 @@ export default function AboutPage() {
                   </div>
                   <h3 className="font-semibold text-base mb-2">{cause.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{cause.description}</p>
+                  {'source' in cause && (
+                    <p className="text-xs text-muted-foreground/70 font-medium border-t border-border/50 pt-3 mt-4">{cause.source}</p>
+                  )}
                 </div>
               ))}
             </div>
