@@ -119,7 +119,7 @@ export default function OgImage() {
         {/* Stat pills */}
         <div style={{ display: 'flex', gap: '16px', marginTop: '40px' }}>
           {[
-            { value: '73%', label: 'av företag hittar inte rätt' },
+            { value: '76%', label: 'av företag hittar inte rätt' },
             { value: '0 kr', label: 'att komma igång' },
             { value: 'AI', label: 'matchning 0–100' },
           ].map((s) => (

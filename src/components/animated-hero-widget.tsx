@@ -4,10 +4,11 @@ import { useState, useEffect } from 'react'
 import { Brain, Loader2, CheckCircle } from 'lucide-react'
 import { CountUp } from '@/components/ui/count-up'
 
+// Samma två märkesfärger som resten av sajten — inte en regnbåge per kort.
 const jobs = [
-  { role: 'Sjuksköterska', co: 'Karolinska Sjukhuset', score: 94, color: 'text-emerald-500', bar: 'bg-emerald-500', badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' },
-  { role: 'Ekonomiassistent', co: 'Finansbolag AB', score: 87, color: 'text-blue-500', bar: 'bg-blue-500', badge: 'bg-blue-500/10 text-blue-600 dark:text-blue-400' },
-  { role: 'Lärare årskurs 4–6', co: 'Stockholms stad', score: 82, color: 'text-violet-500', bar: 'bg-violet-500', badge: 'bg-violet-500/10 text-violet-600 dark:text-violet-400' },
+  { role: 'Sjuksköterska', co: 'Karolinska Sjukhuset', score: 94, color: 'text-primary', bar: 'bg-primary' },
+  { role: 'Ekonomiassistent', co: 'Finansbolag AB', score: 87, color: 'accent-mark', bar: 'bg-accent-foreground/70' },
+  { role: 'Lärare årskurs 4–6', co: 'Stockholms stad', score: 82, color: 'text-primary', bar: 'bg-primary' },
 ]
 
 export function AnimatedHeroWidget() {
@@ -21,7 +22,7 @@ export function AnimatedHeroWidget() {
   return (
     <div className="relative float-animation">
       {/* Outer glow ring */}
-      <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-primary/30 via-violet-500/30 to-primary/30 blur-sm" />
+      <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-primary/30 via-accent-foreground/25 to-primary/30 blur-sm" />
 
       <div className="relative rounded-2xl border border-border/60 bg-card/95 backdrop-blur-sm shadow-2xl shadow-primary/10 overflow-hidden">
 
