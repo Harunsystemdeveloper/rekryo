@@ -57,6 +57,7 @@ export default async function CandidatesPage({ params }: { params: Promise<{ id:
       .from('cv_profiles')
       .select('seeker_id, skills, experience_years, seeker:profiles(id, full_name, avatar_url, headline, location)')
       .overlaps('skills', job.skills_required)
+      .eq('talent_pool_visible', true)
       .limit(20)
 
     suggestedProfiles = (cvMatches ?? [])

@@ -11,7 +11,7 @@ export default function PrivacyPage() {
       <main className="flex-1 mx-auto max-w-3xl px-4 py-16">
         <h1 className="text-3xl font-bold mb-6">Integritetspolicy</h1>
         <div className="prose prose-sm dark:prose-invert max-w-none space-y-4">
-          <p className="text-muted-foreground">Senast uppdaterad: 2026-09-19</p>
+          <p className="text-muted-foreground">Senast uppdaterad: 2026-10-13</p>
 
           <h2 className="text-xl font-semibold mt-8">1. Vilka vi är</h2>
           <p>
@@ -33,18 +33,46 @@ export default function PrivacyPage() {
             <li>
               Demografiska uppgifter (kön, födelseår) — <strong>helt frivilligt</strong> och
               separat samtycke krävs. Används aldrig för att matcha eller bedöma dig,
-              bara för den anonymiserade rättvise-analysen i punkt 5 nedan. Du kan
+              bara för den anonymiserade rättvise-analysen i punkt 6 nedan. Du kan
               radera dessa uppgifter när som helst utan att det påverkar ditt konto.
             </li>
           </ul>
 
-          <h2 className="text-xl font-semibold mt-8">3. Datalagring</h2>
+          <h2 className="text-xl font-semibold mt-8">3. Talangpoolen</h2>
+          <p>
+            Talangpoolen låter rekryterare hitta jobbsökare som inte själva sökt deras jobb.
+            Du syns där <strong>bara om du aktivt har godkänt det</strong> (samtycke enligt
+            GDPR art. 6.1 a). Valet är avstängt som standard och kan när som helst ändras
+            under Inställningar → Integritet &amp; GDPR. Återkallar du samtycket försvinner du
+            ur talangpoolen direkt.
+          </p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              Inloggade rekryterare ser då namn, rubrik, ort, bio, webbplats, kompetenser,
+              erfarenhet, utbildning, språk och en AI-genererad sammanfattning av ditt CV.
+            </li>
+            <li>
+              Hur väl dina kompetenser överlappar en rekryterares jobb räknas fram
+              automatiskt och visas som en procentsats — den är rådgivande och aldrig ett beslut.
+            </li>
+            <li>
+              Rekryterare kan skicka ett första meddelande till dig, och det meddelandet kan
+              vara skrivet med hjälp av AI.
+            </li>
+            <li>Själva CV-filen och dina kontaktuppgifter visas aldrig i talangpoolen.</li>
+            <li>
+              Säger du nej syns din profil bara för rekryterare vars jobb du själv söker,
+              eller som du redan har en konversation med.
+            </li>
+          </ul>
+
+          <h2 className="text-xl font-semibold mt-8">4. Datalagring</h2>
           <p>
             All data lagras inom EU (Irland) via Supabase och behandlas i enlighet med GDPR.
             Supabase är certifierat enligt SOC 2 Type II och uppfyller EU:s krav på databehandling.
           </p>
 
-          <h2 className="text-xl font-semibold mt-8">4. Hur vi använder AI</h2>
+          <h2 className="text-xl font-semibold mt-8">5. Hur vi använder AI</h2>
           <p>
             Vi använder Claude AI (Anthropic) för att analysera CV:n, beräkna matchningspoäng,
             identifiera kompetensgap, generera intervjufrågor och sammanfatta kandidater.
@@ -56,7 +84,7 @@ export default function PrivacyPage() {
             </a>.
           </p>
 
-          <h2 className="text-xl font-semibold mt-8">5. EU:s AI-förordning (AI Act)</h2>
+          <h2 className="text-xl font-semibold mt-8">6. EU:s AI-förordning (AI Act)</h2>
           <p>
             AI-system som används för att rekrytera eller utvärdera personer i en
             anställningsprocess klassas som <strong>högrisk-AI</strong> enligt AI-förordningens
@@ -110,22 +138,29 @@ export default function PrivacyPage() {
             <li>Rätt att få veta att ett AI-system använts för att bedöma dig</li>
             <li>Rätt till en begriplig förklaring av hur ett matchningspoäng räknats fram</li>
             <li>Rätt att begära mänsklig granskning av ett AI-genererat beslut</li>
-            <li>Rätt att få ut din egen AI-beslutslogg (ingår i dataexporten under punkt 6)</li>
+            <li>Rätt att få ut din egen AI-beslutslogg (ingår i dataexporten under punkt 7)</li>
           </ul>
 
-          <h2 className="text-xl font-semibold mt-8">6. GDPR</h2>
+          <h2 className="text-xl font-semibold mt-8">7. GDPR</h2>
           <p>
             Vi följer EU:s dataskyddsförordning (GDPR). Du har rätt att:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Få tillgång till dina uppgifter, inklusive din AI-beslutslogg</li>
-            <li>Radera ditt konto och all data</li>
+            <li>
+              Radera ditt konto och all data (art. 17) — gäller både jobbsökare och
+              rekryterare. Raderingen sker direkt under Inställningar → Integritet &amp; GDPR
+              och omfattar inloggningskontot, profilen, CV-filen, ansökningar, jobbannonser,
+              meddelanden och AI-beslutsloggen. Raderar en rekryterare sitt konto tas även
+              rekryterarens jobbannonser och de ansökningar som kommit in till dem bort.
+            </li>
             <li>Exportera dina uppgifter i ett maskinläsbart format</li>
             <li>Invända mot viss databehandling</li>
             <li>Återkalla samtycke till demografiska uppgifter utan att det påverkar kontot</li>
+            <li>Återkalla samtycket till att synas i talangpoolen när som helst</li>
           </ul>
 
-          <h2 className="text-xl font-semibold mt-8">7. Kontakt</h2>
+          <h2 className="text-xl font-semibold mt-8">8. Kontakt</h2>
           <p>
             Vid frågor om din integritet eller hur AI används för att bedöma dig,
             kontakta oss på privacy@rekryo.com.

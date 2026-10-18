@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Navbar } from '@/components/navbar'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Settings, User, Shield, KeyRound } from 'lucide-react'
+import { Settings, User, Shield, KeyRound, Lock } from 'lucide-react'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -69,12 +69,22 @@ export default async function SettingsPage() {
                   <Settings className="h-4 w-4" />
                   Konto
                 </CardTitle>
-                <CardDescription>Kontohantering och dataexport</CardDescription>
+                <CardDescription>
+                  {profile?.user_type === 'recruiter'
+                    ? 'Dataexport och radering av konto'
+                    : 'Synlighet i talangpoolen, dataexport och radering av konto'}
+                </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-3">
                 <p className="text-sm text-muted-foreground">
                   Kontotyp: {profile?.user_type === 'recruiter' ? 'Rekryterare' : 'Jobbsökare'}
                 </p>
+                <Button variant="outline" asChild>
+                  <Link href="/settings/privacy">
+                    <Lock className="h-4 w-4 mr-2" />
+                    Integritet & GDPR
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
           </div>

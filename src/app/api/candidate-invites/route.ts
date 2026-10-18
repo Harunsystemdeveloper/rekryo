@@ -31,11 +31,14 @@ export async function POST(req: Request) {
   // (samma avgränsade, granskade mönster som match-candidates/talent-pool använder).
   const admin = createAdminClient()
   const [{ data: cv }, { data: seekerProfile }, { data: company }] = await Promise.all([
-    admin.from('cv_profiles').select('skills, experience_years, ai_summary').eq('seeker_id', seeker_id).single(),
+    admin.from('cv_profiles').select('skills, experience_years, ai_summary, talent_pool_visible').eq('seeker_id', seeker_id).single(),
     admin.from('profiles').select('full_name').eq('id', seeker_id).single(),
     supabase.from('company_profiles').select('company_name').eq('recruiter_id', user.id).single(),
   ])
   if (!cv) return NextResponse.json({ error: 'Kandidaten har inget analyserat CV' }, { status: 400 })
+  // Utskick till någon som inte sökt jobbet kräver att hen valt att synas i talangpoolen
+  // — annars kunde ett känt seeker_id användas för att kringgå samtycket.
+  if (!cv.talent_pool_visible) return NextResponse.json({ error: 'Kandidaten är inte synlig i talangpoolen' }, { status: 403 })
 
   const requiredSkills: string[] = job.skills_required ?? []
   const candidateSkills: string[] = cv.skills ?? []

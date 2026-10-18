@@ -18,13 +18,15 @@ export default async function TalentPoolPage() {
 
   if (profile?.user_type !== 'recruiter') redirect('/dashboard')
 
-  // Hämta alla jobbsökare med CV-profil
-  // Use admin client to bypass RLS — recruiter needs to see all candidate profiles
+  // Hämta jobbsökare som själva valt att synas i talangpoolen (GDPR-samtycke, se 0016).
+  // Admin-klienten kringgår RLS, så samtyckesfiltret nedan är det enda som skyddar
+  // jobbsökare som inte vill synas — ta aldrig bort det.
   const admin = createAdminClient()
 
   const { data: cvProfiles } = await admin
     .from('cv_profiles')
     .select('seeker_id, skills, experience_years, education, languages, ai_summary, last_analyzed_at')
+    .eq('talent_pool_visible', true)
     .order('last_analyzed_at', { ascending: false, nullsFirst: false })
 
   // Fetch seeker profiles (only job_seekers) via admin to bypass RLS

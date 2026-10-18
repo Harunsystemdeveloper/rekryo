@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { Loader2, Download, Trash2, Shield, FileJson, AlertTriangle, Eye, Lock } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { DemographicsConsentCard } from '@/components/settings/demographics-consent-card'
+import { TalentPoolConsentCard } from '@/components/settings/talent-pool-consent'
 
 export function PrivacySettingsClient() {
   const router = useRouter()
@@ -110,6 +111,8 @@ export function PrivacySettingsClient() {
       </Card>
 
       <Separator />
+
+      <TalentPoolConsentCard />
 
       <DemographicsConsentCard />
 

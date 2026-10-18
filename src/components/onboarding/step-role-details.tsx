@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import type { Profile } from '@/types/database'
+import { TalentPoolConsentCheckbox } from '@/components/settings/talent-pool-consent'
 
 const seekerSchema = z.object({ experience_years: z.string().optional() })
 const recruiterSchema = z.object({
@@ -25,6 +26,7 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
   const [loading, setLoading] = useState(false)
   const [skills, setSkills] = useState<string[]>([])
   const [skillInput, setSkillInput] = useState('')
+  const [talentPoolVisible, setTalentPoolVisible] = useState(false)
   const supabase = createClient()
 
   const isRecruiter = profile.user_type === 'recruiter'
@@ -55,6 +57,8 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
       const { error } = await supabase.from('cv_profiles').upsert({
         seeker_id: profile.id, skills,
         experience_years: data.experience_years ? parseInt(data.experience_years) : null,
+        talent_pool_visible: talentPoolVisible,
+        talent_pool_consent_at: talentPoolVisible ? new Date().toISOString() : null,
       }, { onConflict: 'seeker_id' })
       if (error) { toast.error('Kunde inte spara kompetenser'); setLoading(false); return }
     }
@@ -143,6 +147,7 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
                   </SelectContent>
                 </Select>
               </div>
+              <TalentPoolConsentCheckbox checked={talentPoolVisible} onChange={setTalentPoolVisible} />
             </>
           )}
 

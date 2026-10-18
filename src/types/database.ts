@@ -72,6 +72,8 @@ export interface CvProfile {
   languages: string[] | null
   ai_summary: string | null
   last_analyzed_at: string | null
+  talent_pool_visible: boolean
+  talent_pool_consent_at: string | null
   created_at: string
 }
 
