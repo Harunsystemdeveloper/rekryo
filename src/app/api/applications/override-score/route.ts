@@ -1,5 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
-import { createClient as createServiceClient } from '@supabase/supabase-js'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -47,8 +46,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Åtkomst nekad' }, { status: 403 })
   }
 
-  // Update application with human override score
-  const { error: updateError } = await supabase
+  // Service role: sedan 0017 får inloggade användare inte ändra match_score direkt,
+  // så den här routen (med motivering + logg) är den enda vägen att skriva över ett AI-poäng.
+  const admin = createAdminClient()
+
+  // AI-förordningen art. 12/14: överstyrningen loggas FÖRST, tillsammans med det ursprungliga
+  // AI-poänget. Misslyckas loggningen ändras inget poäng — en överstyrning utan spår får inte ske.
+  const { error: logError } = await admin.from('ai_decision_logs').insert({
+    subject_user_id: application.seeker_id,
+    triggered_by_user_id: user.id,
+    decision_type: 'match_score',
+    job_id: job?.id,
+    application_id: parsed.data.application_id,
+    score: parsed.data.override_score,
+    decision_summary: `Manuell överstyring av rekryterare: ${parsed.data.reason}`,
+    decision_data: { original_ai_score: application.match_score },
+    model_id: 'human',
+    was_reviewed_by_human: true,
+    reviewed_by: user.id,
+    reviewed_at: new Date().toISOString(),
+    human_override_score: parsed.data.override_score,
+    human_override_reason: parsed.data.reason,
+  })
+
+  if (logError) {
+    console.error('[override-score] audit log failed:', logError.message)
+    return NextResponse.json({ error: 'Kunde inte logga överstyrningen — poänget har inte ändrats' }, { status: 500 })
+  }
+
+  const { error: updateError } = await admin
     .from('applications')
     .update({
       match_score: parsed.data.override_score,
@@ -59,28 +85,6 @@ export async function POST(request: Request) {
   if (updateError) {
     return NextResponse.json({ error: 'Kunde inte uppdatera poäng' }, { status: 500 })
   }
-
-  // Log the human override in audit trail
-  const serviceClient = createServiceClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  )
-
-  await serviceClient.from('ai_decision_logs').insert({
-    subject_user_id: application.seeker_id,
-    triggered_by_user_id: user.id,
-    decision_type: 'match_score',
-    job_id: job?.id,
-    application_id: parsed.data.application_id,
-    score: parsed.data.override_score,
-    decision_summary: `Manuell överstyring av rekryterare: ${parsed.data.reason}`,
-    model_id: 'human',
-    was_reviewed_by_human: true,
-    reviewed_by: user.id,
-    reviewed_at: new Date().toISOString(),
-    human_override_score: parsed.data.override_score,
-    human_override_reason: parsed.data.reason,
-  })
 
   return NextResponse.json({
     success: true,
