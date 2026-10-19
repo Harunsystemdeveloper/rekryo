@@ -1,5 +1,5 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { sendStatusUpdateEmail } from '@/lib/email'
 
 const STATUS_NOTIFICATION_LABELS: Record<string, string> = {
@@ -43,9 +43,12 @@ export async function POST(req: Request) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 
-  // Notifiera kandidaten i bakgrunden — både in-app-notis och mejl
-  ;(async () => {
+  // Notifiera kandidaten efter svaret — både in-app-notis och mejl. after() håller
+  // serverless-funktionen vid liv tills jobbet är klart (en lös async-IIFE kan frysas).
+  after(async () => {
     try {
+      // Service role: notiser får sedan 0017 bara skrivas av servern.
+      const admin = createAdminClient()
       const { data: application } = await supabase
         .from('applications')
         .select('seeker_id, job:jobs(id, title)')
@@ -59,7 +62,7 @@ export async function POST(req: Request) {
       // In-app-notis — synlig oavsett om e-post går fram eller inte
       const notifTitle = STATUS_NOTIFICATION_LABELS[status]
       if (notifTitle) {
-        await supabase.from('notifications').insert({
+        await admin.from('notifications').insert({
           user_id: application.seeker_id,
           type: 'status_change',
           title: notifTitle,
@@ -74,8 +77,6 @@ export async function POST(req: Request) {
         .eq('id', application.seeker_id)
         .single()
 
-      // .auth.admin kräver service-role — den vanliga sessionsklienten har inte rättigheten.
-      const admin = createAdminClient()
       const { data: authData } = await admin.auth.admin.getUserById(application.seeker_id)
       if (!authData?.user?.email) return
 
@@ -89,7 +90,7 @@ export async function POST(req: Request) {
     } catch (err) {
       console.error('[update-status] notification error:', err)
     }
-  })()
+  })
 
   return NextResponse.json({ ok: true })
 }

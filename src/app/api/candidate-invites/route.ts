@@ -85,7 +85,8 @@ export async function POST(req: Request) {
       .single()
     if (inviteErr) return NextResponse.json({ error: inviteErr.message }, { status: 500 })
 
-    await supabase.from('notifications').insert({
+    // Service role: notiser får sedan 0017 bara skrivas av servern.
+    await admin.from('notifications').insert({
       user_id: seeker_id,
       type: 'message',
       title: 'Ett företag är intresserad av dig!',
