@@ -1,7 +1,7 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { generateOutreachMessage } from '@/lib/ai/claude'
 import { logAiDecision } from '@/lib/ai/audit-log'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
       href: '/messages',
     })
 
-    void logAiDecision({
+    after(() => logAiDecision({
       triggeredByUserId: user.id,
       subjectUserId: seeker_id,
       decisionType: 'candidate_summary',
@@ -103,7 +103,7 @@ export async function POST(req: Request) {
       decisionSummary: `Genererade utskick till kandidat i talangpoolen (${matchingSkills.length} matchande kompetenser).`,
       decisionData: { type: 'candidate_invite', matching_skills: matchingSkills },
       usage,
-    })
+    }))
 
     return NextResponse.json({ invite, message: outreachText })
   } catch (error) {

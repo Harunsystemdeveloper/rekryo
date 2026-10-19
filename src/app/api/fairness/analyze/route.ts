@@ -1,7 +1,7 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { logAiDecision } from '@/lib/ai/audit-log'
 import { analyzeDimension, ageBucket, MIN_GROUP_SIZE, type GroupInput } from '@/lib/fairness/analysis'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -99,7 +99,7 @@ export async function POST(req: Request) {
   }
 
   // AI Act / GDPR: logga fairness-beräkningen. Ingen enskild "subject" här -- gäller en grupp.
-  void logAiDecision({
+  after(() => logAiDecision({
     triggeredByUserId: user.id,
     decisionType: 'fairness_analysis',
     jobId: parsed.data.job_id,
@@ -107,7 +107,7 @@ export async function POST(req: Request) {
       ? 'Möjlig systematisk skillnad upptäckt mellan grupper — mänsklig granskning krävs.'
       : 'Ingen statistiskt signifikant skillnad mellan grupper upptäckt.',
     decisionData: result,
-  })
+  }))
 
   return NextResponse.json(result)
 }

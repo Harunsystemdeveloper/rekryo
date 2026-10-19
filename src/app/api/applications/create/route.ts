@@ -1,5 +1,5 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { sendNewApplicationEmail } from '@/lib/email'
 
@@ -59,8 +59,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }
 
-  // Send email to recruiter in background (non-blocking)
-  ;(async () => {
+  // Mejla rekryteraren efter svaret (after() håller funktionen vid liv tills det är klart)
+  after(async () => {
     try {
       const { data: job } = await supabase
         .from('jobs')
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     } catch (err) {
       console.error('[apply] email error:', err)
     }
-  })()
+  })
 
   return NextResponse.json(application)
 }

@@ -3,7 +3,7 @@ import { analyzeCv } from '@/lib/ai/claude'
 import { logAiDecision } from '@/lib/ai/audit-log'
 import { normalizeSkills } from '@/lib/ai/skill-ontology'
 import { contentHash } from '@/lib/ai/cache-keys'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -65,14 +65,14 @@ export async function POST(request: Request) {
     }
 
     // AI Act: log the decision (fire-and-forget)
-    void logAiDecision({
+    after(() => logAiDecision({
       subjectUserId: user.id,
       triggeredByUserId: user.id,
       decisionType: 'cv_analysis',
       decisionSummary: analysis.summary,
       outputSkillsMatched: normalizedSkills,
       usage,
-    })
+    }))
 
     return NextResponse.json({ analysis: { ...analysis, skills: normalizedSkills }, cached: false })
   } catch (error) {

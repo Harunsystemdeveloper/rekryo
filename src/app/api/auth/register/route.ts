@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 import { sendWelcomeEmail } from '@/lib/email'
@@ -41,8 +41,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 400 })
   }
 
-  // Skicka välkomstmail i bakgrunden utan att blockera svaret
-  ;(async () => {
+  // Skicka välkomstmail efter svaret (after() håller funktionen vid liv tills det är klart)
+  after(async () => {
     try {
       await sendWelcomeEmail({
         email,
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     } catch (err) {
       console.error('[register] welcome email error:', err)
     }
-  })()
+  })
 
   return NextResponse.json({ user_id: data.user.id })
 }
