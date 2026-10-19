@@ -37,6 +37,8 @@ Regler:
   return { analysis, usage: message.usage }
 }
 
+// Kandidatens namn skickas medvetet INTE till modellen: namn kan bära kön/etnicitet och
+// påverka poängen (dataminimering, GDPR art. 5, och biashantering, AI-förordningen art. 10).
 export async function matchCandidates(job: {
   title: string
   description: string
@@ -44,13 +46,11 @@ export async function matchCandidates(job: {
   experience_level: string | null
 }, candidates: Array<{
   id: string
-  full_name: string | null
   cv_profile: { skills: string[] | null; experience_years: number | null; ai_summary: string | null } | null
 }>) {
   const candidateList = candidates.map((c, i) => ({
     index: i,
     id: c.id,
-    name: c.full_name ?? 'Anonym',
     skills: c.cv_profile?.skills ?? [],
     experience_years: c.cv_profile?.experience_years ?? 0,
     summary: c.cv_profile?.ai_summary ?? '',
@@ -123,13 +123,11 @@ export async function matchCandidatesLite(job: {
   experience_level: string | null
 }, candidates: Array<{
   id: string
-  full_name: string | null
   cv_profile: { skills: string[] | null; experience_years: number | null; ai_summary: string | null } | null
 }>) {
   const candidateList = candidates.map((c, i) => ({
     index: i,
     id: c.id,
-    name: c.full_name ?? 'Anonym',
     skills: c.cv_profile?.skills ?? [],
     experience_years: c.cv_profile?.experience_years ?? 0,
     summary: c.cv_profile?.ai_summary ?? '',

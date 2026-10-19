@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   // Fetch only applicants who have actually applied for this specific job
   const { data: applications } = await supabase
     .from('applications')
-    .select('id, seeker_id, match_score, match_breakdown, ai_summary, skill_gaps, match_input_hash, seeker:profiles(id, full_name)')
+    .select('id, seeker_id, match_score, match_breakdown, ai_summary, skill_gaps, match_input_hash')
     .eq('job_id', parsed.data.job_id)
 
   if (!applications || applications.length === 0) {
@@ -69,12 +69,10 @@ export async function POST(request: Request) {
 
   // Build candidate list from actual applicants only
   const candidates = applications.map((app) => {
-    const seeker = Array.isArray(app.seeker) ? app.seeker[0] : app.seeker
     const cvProfile = cvMap.get(app.seeker_id) ?? null
     return {
       applicationId: app.id,
-      id: seeker?.id ?? app.seeker_id,
-      full_name: seeker?.full_name ?? null,
+      id: app.seeker_id,
       cv_profile: cvProfile,
       currentHash: buildMatchInputHash(jobForHash, cvProfile),
       prevApp: app,
@@ -100,7 +98,7 @@ export async function POST(request: Request) {
     const sonnetSplit = splitByCache(sonnetTier)
     const haikuSplit = splitByCache(haikuTier)
 
-    const toClaudeInput = (c: typeof aiEligible[number]) => ({ id: c.id, full_name: c.full_name, cv_profile: c.cv_profile })
+    const toClaudeInput = (c: typeof aiEligible[number]) => ({ id: c.id, cv_profile: c.cv_profile })
 
     const [sonnetResult, haikuResult] = await Promise.all([
       sonnetSplit.fresh.length > 0
