@@ -236,36 +236,6 @@ Svara ENDAST med JSON.`,
   return JSON.parse(text.replace(/```json\n?|\n?```/g, '').trim())
 }
 
-export async function calculateMatchScore(cvText: string, jobDescription: string, jobRequirements: string) {
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1024,
-    messages: [
-      {
-        role: 'user',
-        content: `Calculate a job match score for this candidate. Return a JSON object with:
-- score: number (0-100)
-- reasoning: string (2-3 sentences explaining the score)
-- strengths: string[] (top 3 matching strengths)
-
-CV:
-${cvText}
-
-Job Description:
-${jobDescription}
-
-Requirements:
-${jobRequirements}
-
-Return only valid JSON, no markdown.`,
-      },
-    ],
-  })
-
-  const text = message.content[0].type === 'text' ? message.content[0].text : ''
-  return JSON.parse(text.replace(/```json\n?|\n?```/g, '').trim())
-}
-
 export interface CanonicalizedSkill {
   raw: string
   canonical_name: string
@@ -381,29 +351,4 @@ Returnera ENDAST JSON: { "message": "meddelandetext" }`,
   const text = message.content[0].type === 'text' ? message.content[0].text : ''
   const parsed = JSON.parse(text.replace(/```json\n?|\n?```/g, '').trim())
   return { message: parsed.message as string, usage: message.usage }
-}
-
-export async function summarizeCandidate(cvText: string, matchScore: number, skillGaps: string[]) {
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 512,
-    messages: [
-      {
-        role: 'user',
-        content: `Write a concise recruiter-facing summary of this candidate. Return a JSON object with:
-- summary: string (3-4 sentences for recruiters, highlighting fit and notable gaps)
-
-CV:
-${cvText}
-
-Match Score: ${matchScore}/100
-Skill Gaps: ${skillGaps.join(', ')}
-
-Return only valid JSON, no markdown.`,
-      },
-    ],
-  })
-
-  const text = message.content[0].type === 'text' ? message.content[0].text : ''
-  return JSON.parse(text.replace(/```json\n?|\n?```/g, '').trim())
 }
