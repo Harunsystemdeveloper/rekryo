@@ -2,8 +2,20 @@ import Anthropic from '@anthropic-ai/sdk'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { rateLimit } from '@/lib/rate-limit'
+import { z } from 'zod'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+// Klienten skickar historiken själv, så den måste begränsas: bara vanliga textmeddelanden
+// (inga påhittade tool-anrop/-resultat), rimlig längd per meddelande och en övre gräns för
+// hela historiken — annars kan en enda användare skicka enorma prompts 30 gånger i timmen.
+const MAX_HISTORY = 20
+const inputSchema = z.object({
+  messages: z.array(z.object({
+    role: z.enum(['user', 'assistant']),
+    content: z.string().min(1).max(8000),
+  })).min(1).max(100),
+})
 
 const tools: Anthropic.Tool[] = [
   {
@@ -85,7 +97,7 @@ async function executeTool(
         return JSON.stringify({ profile, cv_profile: cv })
       }
       case 'get_active_jobs': {
-        const limit = (input.limit as number) || 15
+        const limit = Math.min(Math.max(Number(input.limit) || 15, 1), 30) // modellstyrt värde — begränsa
         const skills = (input.skills as string[] | undefined)?.filter(Boolean)
         let query = admin
           .from('jobs')
@@ -147,8 +159,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'För många förfrågningar. Försök igen om en timme.' }, { status: 429 })
   }
 
-  const { messages: inputMessages } = await request.json()
-  if (!Array.isArray(inputMessages) || inputMessages.length === 0) {
+  const parsedInput = inputSchema.safeParse(await request.json().catch(() => null))
+  if (!parsedInput.success) {
+    return NextResponse.json({ error: 'Ogiltiga meddelanden' }, { status: 400 })
+  }
+  // Behåll bara de senaste meddelandena, och se till att historiken börjar med ett
+  // user-meddelande och slutar med ett (krav från API:t respektive för att få ett svar).
+  let inputMessages = parsedInput.data.messages.slice(-MAX_HISTORY)
+  while (inputMessages.length > 0 && inputMessages[0].role !== 'user') inputMessages = inputMessages.slice(1)
+  if (inputMessages.length === 0 || inputMessages[inputMessages.length - 1].role !== 'user') {
     return NextResponse.json({ error: 'Ogiltiga meddelanden' }, { status: 400 })
   }
 

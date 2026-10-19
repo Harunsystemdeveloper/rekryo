@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server'
 import { rateLimit } from '@/lib/rate-limit'
 import Anthropic from '@anthropic-ai/sdk'
+import { z } from 'zod'
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+
+// Publik route utan inloggning — hårda gränser så att den inte kan användas för att skicka
+// stora mängder godtycklig text till Claude på vår bekostnad.
+const skill = z.string().trim().min(1).max(60)
+const schema = z.object({
+  job_title: z.string().trim().min(2).max(100),
+  job_skills: z.array(skill).min(1).max(15),
+  candidate_skills: z.array(skill).min(1).max(15),
+})
 
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip') ?? 'unknown'
@@ -10,11 +20,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'För många försök. Prova igen om en timme.' }, { status: 429 })
   }
 
-  const { job_title, job_skills, candidate_skills } = await req.json()
-
-  if (!job_title || !job_skills?.length || !candidate_skills?.length) {
-    return NextResponse.json({ error: 'Fyll i alla fält.' }, { status: 400 })
+  const parsed = schema.safeParse(await req.json().catch(() => null))
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Fyll i alla fält (max 15 kompetenser à 60 tecken).' }, { status: 400 })
   }
+  const { job_title, job_skills, candidate_skills } = parsed.data
 
   try {
     const message = await anthropic.messages.create({
@@ -27,8 +37,8 @@ export async function POST(req: Request) {
 VIKTIGT: Om jobbtitel, jobbkrav eller kompetenser är nonsens, slumpmässiga tecken eller inte är riktiga yrkeskompetenser — returnera score 0 och förklara i verdict att inmatningen inte är giltig.
 
 Jobb: ${job_title}
-Jobbkrav (kompetenser): ${(job_skills as string[]).join(', ')}
-Kandidatens kompetenser: ${(candidate_skills as string[]).join(', ')}
+Jobbkrav (kompetenser): ${job_skills.join(', ')}
+Kandidatens kompetenser: ${candidate_skills.join(', ')}
 
 Svara ENDAST med giltig JSON:
 {
