@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { generateInterviewQuestions } from '@/lib/ai/claude'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -36,8 +36,8 @@ export async function POST(request: Request) {
       }
     )
 
-    // Save questions to application
-    await supabase.from('applications')
+    // Spara frågorna på egen ansökan (service role sedan 0017, begränsat till user.id nedan)
+    await createAdminClient().from('applications')
       .update({ interview_questions: result.questions.map((q: { question: string }) => q.question) })
       .eq('job_id', parsed.data.job_id)
       .eq('seeker_id', user.id)

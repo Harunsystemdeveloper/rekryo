@@ -1,7 +1,7 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { analyzeSkillGaps } from '@/lib/ai/claude'
 import { logAiDecision } from '@/lib/ai/audit-log'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -37,15 +37,18 @@ export async function POST(request: Request) {
       cvProfile.experience_years ?? 0
     )
 
-    // Save skill gaps to application if exists
-    const { data: application } = await supabase.from('applications')
-      .update({ skill_gaps: result.missing_skills, match_score: result.match_score })
+    // Spara kompetensgapen på ansökan om den finns. match_score skrivs medvetet INTE här:
+    // jobbsökaren kör själv analysen, och poänget rekryteraren ser ska bara komma från
+    // rekryterarens matchning eller en loggad manuell överstyrning. Service role krävs
+    // sedan 0017; .eq('seeker_id', user.id) begränsar skrivningen till egen ansökan.
+    const { data: application } = await createAdminClient().from('applications')
+      .update({ skill_gaps: result.missing_skills })
       .eq('job_id', parsed.data.job_id)
       .eq('seeker_id', user.id)
       .select('id')
       .maybeSingle()
 
-    void logAiDecision({
+    after(() => logAiDecision({
       subjectUserId: user.id,
       triggeredByUserId: user.id,
       decisionType: 'skill_gap_analysis',
@@ -56,7 +59,7 @@ export async function POST(request: Request) {
       inputSkills: cvProfile.skills,
       outputSkillsMatched: result.matching_skills,
       outputSkillsMissing: result.missing_skills,
-    })
+    }))
 
     return NextResponse.json(result)
   } catch (error) {

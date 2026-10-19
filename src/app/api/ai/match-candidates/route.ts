@@ -3,7 +3,7 @@ import { matchCandidates, matchCandidatesLite } from '@/lib/ai/claude'
 import { logAiDecision } from '@/lib/ai/audit-log'
 import { preScoreCandidates, selectTopCandidates } from '@/lib/ai/skill-similarity'
 import { contentHash } from '@/lib/ai/cache-keys'
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -156,9 +156,11 @@ export async function POST(request: Request) {
     }
 
     // Uppdatera bara ansökningar som faktiskt fick en NY bedömning (spar DB-skrivningar för cache-träffar).
-    for (const match of allMatches) {
-      if (match._tier === 'cached') continue
-
+    // AI-fälten skrivs med service role: sedan 0017 får inloggade användare bara ändra status
+    // direkt. Ägarskapet till jobbet är kontrollerat ovan, och .eq('job_id') håller skrivningen
+    // inom just det jobbet även om modellen skulle returnera ett okänt candidate_id.
+    const toWrite = allMatches.filter(m => m._tier !== 'cached')
+    const updated = await Promise.all(toWrite.map(async match => {
       const breakdown = match.category_scores ? {
         category_scores: match.category_scores,
         category_reasoning: match.category_reasoning ?? {},
@@ -166,7 +168,7 @@ export async function POST(request: Request) {
         top_gaps: match.top_gaps ?? [],
       } : null
 
-      const { data: updatedApp } = await supabase
+      const { data: updatedApp } = await admin
         .from('applications')
         .update({
           match_score: match.score,
@@ -181,23 +183,34 @@ export async function POST(request: Request) {
         .select('id')
         .maybeSingle()
 
-      if (match._tier === 'sonnet' || match._tier === 'haiku') {
-        void logAiDecision({
-          subjectUserId: match.candidate_id,
-          triggeredByUserId: user.id,
-          decisionType: 'match_score',
-          jobId: parsed.data.job_id,
-          applicationId: updatedApp?.id,
-          score: match.score,
-          decisionSummary: match.summary,
-          decisionData: { ...breakdown, tier: match._tier },
-          outputSkillsMatched: match.matching_skills,
-          outputSkillsMissing: match.missing_skills,
-          modelId: match._tier === 'haiku' ? 'claude-haiku-4-5-20251001' : 'claude-sonnet-4-6',
-          usage: match._tier === 'sonnet' ? sonnetResult.usage ?? undefined : haikuResult.usage ?? undefined,
-        })
-      }
-    }
+      return { match, breakdown, applicationId: updatedApp?.id }
+    }))
+
+    // Ett Claude-anrop bedömer hela nivån på en gång — fördela dess token-usage jämnt över
+    // kandidaterna så att summan i kostnadsanalysen blir anropets verkliga kostnad, inte N gånger den.
+    const sonnetCount = toWrite.filter(m => m._tier === 'sonnet').length
+    const haikuCount = toWrite.filter(m => m._tier === 'haiku').length
+    const shareOf = (usage: { input_tokens: number; output_tokens: number } | null, n: number) =>
+      usage && n > 0 ? { input_tokens: Math.round(usage.input_tokens / n), output_tokens: Math.round(usage.output_tokens / n) } : undefined
+
+    // AI-förordningen art. 12: även förfiltrerade kandidater har fått ett automatiserat
+    // poäng som rekryteraren ser, så de loggas likadant (utan modell och utan kostnad).
+    after(() => Promise.all(updated.map(({ match, breakdown, applicationId }) => logAiDecision({
+      subjectUserId: match.candidate_id,
+      triggeredByUserId: user.id,
+      decisionType: 'match_score',
+      jobId: parsed.data.job_id,
+      applicationId,
+      score: match.score,
+      decisionSummary: match.summary,
+      decisionData: { ...breakdown, tier: match._tier },
+      outputSkillsMatched: match.matching_skills,
+      outputSkillsMissing: match.missing_skills,
+      modelId: match._tier === 'haiku' ? 'claude-haiku-4-5-20251001' : match._tier === 'sonnet' ? 'claude-sonnet-4-6' : 'skill-overlap-prefilter',
+      usage: match._tier === 'sonnet' ? shareOf(sonnetResult.usage, sonnetCount)
+        : match._tier === 'haiku' ? shareOf(haikuResult.usage, haikuCount)
+        : undefined,
+    }))))
 
     const cacheHits = sonnetSplit.cached.length + haikuSplit.cached.length
     return NextResponse.json({
