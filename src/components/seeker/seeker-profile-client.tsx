@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dialog'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { checkCvUpload, checkImageUpload, CV_ACCEPT, IMAGE_ACCEPT } from '@/lib/uploads'
 import type { Profile, CvProfile } from '@/types/database'
 
 const profileSchema = z.object({
@@ -72,8 +73,10 @@ export function SeekerProfileClient({ profile, cvProfile: initialCv }: { profile
   async function uploadAvatar(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    const check = checkImageUpload(file)
+    if (!check.ok) { toast.error(check.error); return }
     setAvatarUploading(true)
-    const path = `${profile.id}/${profile.id}.${file.name.split('.').pop()}`
+    const path = `${profile.id}/${profile.id}.${check.ext}`
     const { error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
     if (error) { toast.error('Uppladdning misslyckades'); setAvatarUploading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path)
@@ -85,10 +88,11 @@ export function SeekerProfileClient({ profile, cvProfile: initialCv }: { profile
   async function uploadAndAnalyzeCv(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    if (file.size > 10 * 1024 * 1024) { toast.error('CV får max vara 10 MB'); return }
+    const check = checkCvUpload(file)
+    if (!check.ok) { toast.error(check.error); return }
 
     setCvUploading(true)
-    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'pdf'
+    const ext = check.ext
     const path = `${profile.id}/${profile.id}.${ext}`
     const { error: uploadError } = await supabase.storage.from('cvs').upload(path, file, { upsert: true })
     if (uploadError) { toast.error('Uppladdning misslyckades', { description: uploadError.message }); setCvUploading(false); return }
@@ -188,7 +192,7 @@ export function SeekerProfileClient({ profile, cvProfile: initialCv }: { profile
             <AvatarFallback className="gradient-primary text-white text-xl">{initials}</AvatarFallback>
           </Avatar>
           <div>
-            <input ref={avatarInputRef} type="file" accept="image/*" className="hidden" onChange={uploadAvatar} />
+            <input ref={avatarInputRef} type="file" accept={IMAGE_ACCEPT} className="hidden" onChange={uploadAvatar} />
             <Button variant="outline" size="sm" onClick={() => avatarInputRef.current?.click()} disabled={avatarUploading}>
               {avatarUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
               Byt bild
@@ -290,7 +294,7 @@ export function SeekerProfileClient({ profile, cvProfile: initialCv }: { profile
               <span className="shrink-0 mt-0.5">💡</span>
               <span><strong>Ju mer detaljerat CV, desto bättre matchning.</strong> AI:n läser texten ur PDF:en och extraherar dina kompetenser automatiskt — dessa jämförs sedan mot jobbens krav för att beräkna ditt matchningspoäng.</span>
             </div>
-          <input ref={cvInputRef} type="file" accept=".pdf,.txt" className="hidden" onChange={uploadAndAnalyzeCv} />
+          <input ref={cvInputRef} type="file" accept={CV_ACCEPT} className="hidden" onChange={uploadAndAnalyzeCv} />
           <div className="flex gap-2">
             <Button
               variant="outline"

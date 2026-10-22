@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Loader2, Upload, Building2, Image as ImageIcon, Palette, Quote, Plus, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { checkImageUpload, IMAGE_ACCEPT } from '@/lib/uploads'
 import type { Profile, CompanyProfile, Testimonial } from '@/types/database'
 
 const schema = z.object({
@@ -54,8 +55,10 @@ export function CompanyProfileClient({ profile, company }: { profile: Profile; c
   async function uploadLogo(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    const check = checkImageUpload(file)
+    if (!check.ok) { toast.error(check.error); return }
     setLogoUploading(true)
-    const path = `logos/${profile.id}.${file.name.split('.').pop()}`
+    const path = `logos/${profile.id}.${check.ext}`
     const { error } = await supabase.storage.from('logos').upload(path, file, { upsert: true })
     if (error) { toast.error('Uppladdning misslyckades'); setLogoUploading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path)
@@ -67,8 +70,10 @@ export function CompanyProfileClient({ profile, company }: { profile: Profile; c
   async function uploadCover(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    const check = checkImageUpload(file)
+    if (!check.ok) { toast.error(check.error); return }
     setCoverUploading(true)
-    const path = `covers/${profile.id}.${file.name.split('.').pop()}`
+    const path = `covers/${profile.id}.${check.ext}`
     const { error } = await supabase.storage.from('logos').upload(path, file, { upsert: true })
     if (error) { toast.error('Uppladdning misslyckades'); setCoverUploading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path)
@@ -120,7 +125,7 @@ export function CompanyProfileClient({ profile, company }: { profile: Profile; c
             </AvatarFallback>
           </Avatar>
           <div>
-            <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={uploadLogo} />
+            <input ref={logoRef} type="file" accept={IMAGE_ACCEPT} className="hidden" onChange={uploadLogo} />
             <Button variant="outline" size="sm" onClick={() => logoRef.current?.click()} disabled={logoUploading}>
               {logoUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
               Ladda upp logotyp
@@ -138,7 +143,7 @@ export function CompanyProfileClient({ profile, company }: { profile: Profile; c
             // eslint-disable-next-line @next/next/no-img-element
             <img src={coverUrl} alt="Omslagsbild" className="w-full h-32 object-cover rounded-lg border" />
           )}
-          <input ref={coverRef} type="file" accept="image/*" className="hidden" onChange={uploadCover} />
+          <input ref={coverRef} type="file" accept={IMAGE_ACCEPT} className="hidden" onChange={uploadCover} />
           <Button variant="outline" size="sm" onClick={() => coverRef.current?.click()} disabled={coverUploading}>
             {coverUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImageIcon className="mr-2 h-4 w-4" />}
             {coverUrl ? 'Byt omslagsbild' : 'Ladda upp omslagsbild'}

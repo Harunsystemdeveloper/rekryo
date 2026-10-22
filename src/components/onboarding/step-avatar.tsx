@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
+import { checkImageUpload, IMAGE_ACCEPT } from '@/lib/uploads'
 import type { Profile } from '@/types/database'
 
 export function StepAvatar({ profile, onNext, onBack }: { profile: Profile; onNext: () => void; onBack: () => void }) {
@@ -19,16 +20,18 @@ export function StepAvatar({ profile, onNext, onBack }: { profile: Profile; onNe
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]
     if (!f) return
-    if (f.size > 5 * 1024 * 1024) { toast.error('Filen är för stor (max 5 MB)'); return }
+    const check = checkImageUpload(f)
+    if (!check.ok) { toast.error(check.error); return }
     setFile(f)
     setPreview(URL.createObjectURL(f))
   }
 
   async function handleUpload() {
     if (!file) { onNext(); return }
+    const check = checkImageUpload(file)
+    if (!check.ok) { toast.error(check.error); return }
     setLoading(true)
-    const ext = file.name.split('.').pop()
-    const path = `avatars/${profile.id}.${ext}`
+    const path = `avatars/${profile.id}.${check.ext}`
     const { error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
     if (uploadError) { toast.error('Uppladdning misslyckades', { description: uploadError.message }); setLoading(false); return }
     const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path)
@@ -68,7 +71,7 @@ export function StepAvatar({ profile, onNext, onBack }: { profile: Profile; onNe
             </div>
           </button>
 
-          <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileChange} />
+          <input ref={inputRef} type="file" accept={IMAGE_ACCEPT} className="hidden" onChange={handleFileChange} />
 
           <Button type="button" variant="outline" className="h-10 px-5" onClick={() => inputRef.current?.click()}>
             <Upload className="mr-2 h-4 w-4" />
