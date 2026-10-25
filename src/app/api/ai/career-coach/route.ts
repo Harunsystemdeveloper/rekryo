@@ -110,12 +110,15 @@ async function executeTool(
         return JSON.stringify(jobs ?? [])
       }
       case 'get_job_details': {
+        // job_id kommer från modellen och kan styras via prompten. Admin-klienten kringgår
+        // RLS, så begränsa uttryckligen till publicerade jobb och publika fält.
         const { data: job } = await admin
           .from('jobs')
-          .select('*')
+          .select('id, title, description, requirements, skills_required, location, work_type, experience_level, salary_min, salary_max, currency, deadline')
           .eq('id', input.job_id as string)
-          .single()
-        return JSON.stringify(job)
+          .eq('status', 'active')
+          .maybeSingle()
+        return JSON.stringify(job ?? { error: 'Jobbet hittades inte' })
       }
       case 'get_my_applications': {
         const { data: apps } = await admin
@@ -128,7 +131,7 @@ async function executeTool(
       case 'get_skill_gap_analysis': {
         const [{ data: cv }, { data: job }] = await Promise.all([
           admin.from('cv_profiles').select('skills').eq('seeker_id', userId).single(),
-          admin.from('jobs').select('title, skills_required').eq('id', input.job_id as string).single(),
+          admin.from('jobs').select('title, skills_required').eq('id', input.job_id as string).eq('status', 'active').maybeSingle(),
         ])
         if (!job) return JSON.stringify({ error: 'Jobbet hittades inte' })
         const mySkills = new Set((cv?.skills ?? []).map(normalizeSkill))
