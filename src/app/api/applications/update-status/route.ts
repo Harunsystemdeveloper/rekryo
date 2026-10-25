@@ -2,6 +2,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse, after } from 'next/server'
 import { dbError } from '@/lib/api-errors'
 import { sendStatusUpdateEmail } from '@/lib/email'
+import { rateLimit } from '@/lib/rate-limit'
 
 const STATUS_NOTIFICATION_LABELS: Record<string, string> = {
   reviewed: 'Din ansökan har granskats',
@@ -14,6 +15,12 @@ export async function POST(req: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  // Varje statusbyte skickar notis och mejl till kandidaten. Gränsen hindrar att
+  // statusväxling används för att översvämma en kandidats inkorg.
+  if (!rateLimit(`update-status:${user.id}`, 200)) {
+    return NextResponse.json({ error: 'För många statusändringar. Försök igen om en stund.' }, { status: 429 })
+  }
 
   const { application_id, status } = await req.json()
   if (!application_id || !status) {
@@ -28,7 +35,7 @@ export async function POST(req: Request) {
   // Verify the user is the recruiter who owns the job for this application
   const { data: app } = await supabase
     .from('applications')
-    .select('job:jobs(recruiter_id)')
+    .select('status, job:jobs(recruiter_id)')
     .eq('id', application_id)
     .single()
 
@@ -36,6 +43,9 @@ export async function POST(req: Request) {
   if (!job || (job as { recruiter_id: string }).recruiter_id !== user.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
+
+  // Oförändrad status: inget att spara och ingen anledning att notifiera kandidaten igen
+  if (app?.status === status) return NextResponse.json({ ok: true })
 
   const { error } = await supabase
     .from('applications')
