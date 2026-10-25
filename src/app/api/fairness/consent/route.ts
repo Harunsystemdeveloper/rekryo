@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 
 const CONSENT_VERSION = 'v1'
@@ -23,7 +24,7 @@ export async function GET() {
     .eq('seeker_id', user.id)
     .maybeSingle()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('fairness/consent', error, 500)
   return NextResponse.json({ demographics: data })
 }
 
@@ -55,7 +56,7 @@ export async function POST(req: Request) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('fairness/consent', error, 500)
   return NextResponse.json({ demographics: data })
 }
 
@@ -65,6 +66,6 @@ export async function DELETE() {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const { error } = await supabase.from('candidate_demographics').delete().eq('seeker_id', user.id)
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('fairness/consent', error, 500)
   return NextResponse.json({ success: true })
 }

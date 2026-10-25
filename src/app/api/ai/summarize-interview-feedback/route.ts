@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { summarizeInterviewFeedback } from '@/lib/ai/claude'
 import { NextResponse } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -26,7 +27,7 @@ export async function POST(request: Request) {
     .eq('recruiter_id', user.id)
     .order('created_at', { ascending: true })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('ai/summarize-interview-feedback', error, 500)
   if (!scorecards || scorecards.length === 0) {
     return NextResponse.json({ error: 'Inga scorecards att sammanfatta ännu' }, { status: 400 })
   }

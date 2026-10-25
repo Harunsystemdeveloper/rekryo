@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 
 const ratingSchema = z.object({
@@ -36,7 +37,7 @@ export async function GET(req: Request) {
     .eq('recruiter_id', user.id)
     .order('created_at', { ascending: false })
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('interview-scorecards', error, 500)
   return NextResponse.json({ scorecards: data })
 }
 
@@ -69,7 +70,7 @@ export async function POST(req: Request) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('interview-scorecards', error, 500)
   return NextResponse.json({ scorecard: data })
 }
 
@@ -91,7 +92,7 @@ export async function PATCH(req: Request) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('interview-scorecards', error, 500)
   return NextResponse.json({ scorecard: data })
 }
 
@@ -110,6 +111,6 @@ export async function DELETE(req: Request) {
     .eq('id', id)
     .eq('recruiter_id', user.id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('interview-scorecards', error, 500)
   return NextResponse.json({ success: true })
 }

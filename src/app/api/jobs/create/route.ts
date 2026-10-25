@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { normalizeSkills } from '@/lib/ai/skill-ontology'
 import { NextResponse } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -51,6 +52,6 @@ export async function POST(req: Request) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return dbError('jobs/create', error, 400)
   return NextResponse.json({ job })
 }

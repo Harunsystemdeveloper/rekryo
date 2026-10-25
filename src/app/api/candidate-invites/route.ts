@@ -2,6 +2,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { generateOutreachMessage } from '@/lib/ai/claude'
 import { logAiDecision } from '@/lib/ai/audit-log'
 import { NextResponse, after } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -84,7 +85,7 @@ export async function POST(req: Request) {
       }, { onConflict: 'recruiter_id,job_id,seeker_id' })
       .select()
       .single()
-    if (inviteErr) return NextResponse.json({ error: inviteErr.message }, { status: 500 })
+    if (inviteErr) return dbError('candidate-invites', inviteErr, 500)
 
     // Service role: notiser får sedan 0017 bara skrivas av servern.
     await admin.from('notifications').insert({

@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse, after } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { sendStatusUpdateEmail } from '@/lib/email'
 
 const STATUS_NOTIFICATION_LABELS: Record<string, string> = {
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', application_id)
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
+  if (error) return dbError('applications/update-status', error, 400)
 
   // Notifiera kandidaten efter svaret — både in-app-notis och mejl. after() håller
   // serverless-funktionen vid liv tills jobbet är klart (en lös async-IIFE kan frysas).

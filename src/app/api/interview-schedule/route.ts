@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 
 const createSchema = z.object({
@@ -37,7 +38,7 @@ export async function GET(req: Request) {
     .eq('application_id', applicationId)
     .maybeSingle()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('interview-schedule', error, 500)
   return NextResponse.json({ schedule: data })
 }
 
@@ -115,7 +116,7 @@ export async function PATCH(req: Request) {
       .select()
       .single()
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return dbError('interview-schedule', error, 500)
     return NextResponse.json({ schedule: data })
   }
 
@@ -131,7 +132,7 @@ export async function PATCH(req: Request) {
       .select()
       .single()
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (error) return dbError('interview-schedule', error, 500)
     return NextResponse.json({ schedule: data })
   }
 

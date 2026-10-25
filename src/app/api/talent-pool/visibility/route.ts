@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 
 const updateSchema = z.object({ visible: z.boolean() })
@@ -20,7 +21,7 @@ export async function GET() {
     .eq('seeker_id', user.id)
     .maybeSingle()
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('talent-pool/visibility', error, 500)
   return NextResponse.json({
     visible: data?.talent_pool_visible ?? false,
     consent_at: data?.talent_pool_consent_at ?? null,
@@ -47,6 +48,6 @@ export async function PUT(req: Request) {
       { onConflict: 'seeker_id' }
     )
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return dbError('talent-pool/visibility', error, 500)
   return NextResponse.json({ visible, consent_at: consentAt })
 }

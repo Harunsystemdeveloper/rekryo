@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse, after } from 'next/server'
+import { dbError } from '@/lib/api-errors'
 import { z } from 'zod'
 import { sendNewApplicationEmail } from '@/lib/email'
 
@@ -56,7 +57,10 @@ export async function POST(req: Request) {
     .single()
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 })
+    if (error.code === '23505') return dbError('applications/create', error, 409, 'Du har redan sökt det här jobbet.')
+    // RLS (0020) nekar ansökningar till jobb som inte är aktiva
+    if (error.code === '42501') return dbError('applications/create', error, 403, 'Jobbet tar inte emot ansökningar längre.')
+    return dbError('applications/create', error)
   }
 
   // Mejla rekryteraren efter svaret (after() håller funktionen vid liv tills det är klart)
