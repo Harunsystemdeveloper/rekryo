@@ -5,9 +5,14 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Logga in' }
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ verification?: string }>
+}) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (user) redirect('/dashboard')
-  return <LoginForm />
+  const { verification } = await searchParams
+  return <LoginForm verificationFailed={verification === 'failed'} />
 }

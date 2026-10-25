@@ -19,7 +19,7 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 
-export function LoginForm() {
+export function LoginForm({ verificationFailed = false }: { verificationFailed?: boolean }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -31,15 +31,12 @@ export function LoginForm() {
   async function onSubmit(data: FormData) {
     setLoading(true)
     const supabase = createClient()
-    let { error } = await supabase.auth.signInWithPassword({ email: data.email, password: data.password })
+    const { error } = await supabase.auth.signInWithPassword({ email: data.email, password: data.password })
 
-    if (error?.message?.toLowerCase().includes('email not confirmed')) {
-      await fetch('/api/auth/confirm-email', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: data.email, password: data.password }),
-      })
-      const retry = await supabase.auth.signInWithPassword({ email: data.email, password: data.password })
-      error = retry.error
+    if (error?.code === 'email_not_confirmed') {
+      toast.error('E-postadressen är inte bekräftad', { description: 'Klicka på länken i mejlet vi skickade när du registrerade dig.' })
+      setLoading(false)
+      return
     }
 
     if (error) {
@@ -69,6 +66,12 @@ export function LoginForm() {
       <div className="relative rounded-2xl border border-border bg-card shadow-xl shadow-black/5 p-8 space-y-5 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         <div className="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primary/8 blur-3xl pointer-events-none" />
+
+        {verificationFailed && (
+          <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            Bekräftelselänken är ogiltig eller har gått ut. Registrera dig igen för att få en ny länk.
+          </p>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 relative">
           {/* Email */}

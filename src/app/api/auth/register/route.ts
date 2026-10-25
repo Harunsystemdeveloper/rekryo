@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
-import { NextResponse, after } from 'next/server'
+import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
-import { sendWelcomeEmail } from '@/lib/email'
+import { sendVerificationEmail } from '@/lib/email'
 
 const schema = z.object({
   email: z.string().email('Ogiltig e-postadress'),
@@ -10,6 +10,12 @@ const schema = z.object({
   user_type: z.enum(['job_seeker', 'recruiter']),
   full_name: z.string().max(200).optional(),
 })
+
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://rekryo.com'
+
+// Samma svar oavsett om adressen redan har ett konto, så att routen inte kan användas
+// för att ta reda på vilka e-postadresser som är registrerade.
+const SENT = { message: 'Om adressen inte redan är registrerad har vi skickat en bekräftelselänk.' }
 
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip') ?? 'unknown'
@@ -30,29 +36,41 @@ export async function POST(req: Request) {
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
 
-  const { data, error } = await supabaseAdmin.auth.admin.createUser({
+  // Kontot skapas overifierat. Tidigare bekräftades e-posten direkt, så vem som helst
+  // kunde registrera sig med någon annans adress, t.ex. ett företags, och utge sig för att
+  // vara den. Användaren kan logga in först efter att ha klickat på länken i mejlet.
+  const { data, error } = await supabaseAdmin.auth.admin.generateLink({
+    type: 'signup',
     email,
     password,
-    email_confirm: true,
-    user_metadata: { user_type },
+    options: { data: { user_type, full_name } },
   })
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 })
+    if (error.code === 'email_exists' || error.code === 'user_already_exists') {
+      // Finns kontot men är obekräftat (t.ex. om länken gått ut) skickas en ny länk.
+      // Bekräftade konton får inget mejl. Svaret är detsamma i båda fallen.
+      const { data: existing } = await supabaseAdmin.auth.admin.generateLink({ type: 'magiclink', email })
+      if (existing?.user && !existing.user.email_confirmed_at) {
+        await sendVerificationEmail({
+          email,
+          link: `${BASE_URL}/api/auth/confirm?token_hash=${existing.properties.hashed_token}&type=magiclink`,
+        })
+      }
+      return NextResponse.json(SENT)
+    }
+    console.error('[register] generateLink failed:', error.message)
+    return NextResponse.json({ error: 'Kunde inte skapa kontot. Försök igen.' }, { status: 500 })
   }
 
-  // Skicka välkomstmail efter svaret (after() håller funktionen vid liv tills det är klart)
-  after(async () => {
-    try {
-      await sendWelcomeEmail({
-        email,
-        name: full_name ?? email.split('@')[0],
-        userType: user_type,
-      })
-    } catch (err) {
-      console.error('[register] welcome email error:', err)
-    }
-  })
+  const link = `${BASE_URL}/api/auth/confirm?token_hash=${data.properties.hashed_token}&type=signup`
+  const sent = await sendVerificationEmail({ email, link })
 
-  return NextResponse.json({ user_id: data.user.id })
+  if (!sent) {
+    // Utan mejlet går kontot aldrig att aktivera — ta bort det så att användaren kan försöka igen
+    await supabaseAdmin.auth.admin.deleteUser(data.user.id)
+    return NextResponse.json({ error: 'Kunde inte skicka bekräftelsemejlet. Försök igen om en stund.' }, { status: 502 })
+  }
+
+  return NextResponse.json(SENT)
 }

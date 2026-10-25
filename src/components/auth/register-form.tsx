@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -10,7 +9,6 @@ import { Loader2, Briefcase, Search, Mail, Lock, Eye, EyeOff } from 'lucide-reac
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import type { UserType } from '@/types/database'
 
@@ -25,8 +23,8 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function RegisterForm() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [sentTo, setSentTo] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const [userType, setUserType] = useState<UserType>('job_seeker')
@@ -47,15 +45,33 @@ export function RegisterForm() {
       setLoading(false)
       return
     }
-    const supabase = createClient()
-    const { error: loginError } = await supabase.auth.signInWithPassword({ email: data.email, password: data.password })
-    if (loginError) {
-      toast.error('Inloggning misslyckades', { description: loginError.message })
-      setLoading(false)
-      return
-    }
-    router.push('/onboarding')
-    router.refresh()
+    // Kontot måste bekräftas via länken i mejlet innan det går att logga in
+    setSentTo(data.email)
+    setLoading(false)
+  }
+
+  if (sentTo) {
+    return (
+      <div className="w-full max-w-sm">
+        <div className="rounded-2xl border border-border bg-card shadow-lg shadow-black/5 p-8 space-y-4 text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl gradient-primary shadow-lg shadow-primary/30">
+            <Mail className="h-6 w-6 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold">Kolla din inkorg</h1>
+          <p className="text-sm text-muted-foreground">
+            Vi har skickat en bekräftelselänk till <span className="font-medium text-foreground">{sentTo}</span>.
+            Klicka på länken för att aktivera ditt konto.
+          </p>
+          <p className="text-xs text-muted-foreground">Hittar du inte mejlet? Titta i skräpposten.</p>
+        </div>
+        <p className="text-center text-sm text-muted-foreground mt-6">
+          Redan bekräftat?{' '}
+          <Link href="/login" className="text-primary font-semibold hover:underline">
+            Logga in
+          </Link>
+        </p>
+      </div>
+    )
   }
 
   return (

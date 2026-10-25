@@ -114,6 +114,28 @@ export async function sendStatusUpdateEmail({
   })
 }
 
+export async function sendVerificationEmail({ email, link }: { email: string; link: string }) {
+  return send({
+    from: FROM,
+    to: email,
+    subject: 'Bekräfta din e-postadress för Rekryo',
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#111">
+        <h2 style="margin-bottom:8px">Bekräfta din e-postadress</h2>
+        <p>Klicka på knappen för att aktivera ditt Rekryo-konto.</p>
+        <p>
+          <a href="${link}"
+             style="display:inline-block;background:#6d28d9;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600">
+            Bekräfta e-postadress
+          </a>
+        </p>
+        <p style="color:#666;font-size:13px">Har du inte skapat något konto kan du bortse från det här mejlet.</p>
+        <p style="color:#666;font-size:13px">Rekryo · AI-driven jobbmatchning för den svenska arbetsmarknaden</p>
+      </div>
+    `,
+  })
+}
+
 export async function sendWelcomeEmail({
   email,
   name,
