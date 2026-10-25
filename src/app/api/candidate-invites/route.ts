@@ -73,7 +73,9 @@ export async function POST(req: Request) {
 
     await supabase.from('conversations').update({ last_message_at: new Date().toISOString() }).eq('id', conversation.id)
 
-    const { data: invite, error: inviteErr } = await supabase
+    // Service role: inloggade får sedan 0023 bara uppdatera spårningsfälten, och en ny
+    // inbjudan till samma kandidat och jobb uppdaterar den befintliga raden
+    const { data: invite, error: inviteErr } = await admin
       .from('candidate_invites')
       .upsert({
         recruiter_id: user.id,
