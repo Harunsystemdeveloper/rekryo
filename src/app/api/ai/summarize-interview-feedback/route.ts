@@ -32,16 +32,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Inga scorecards att sammanfatta ännu' }, { status: 400 })
   }
 
-  const { data: application } = await supabase
-    .from('applications')
-    .select('seeker:profiles!applications_seeker_id_fkey(full_name)')
-    .eq('id', parsed.data.application_id)
-    .single()
-  const seeker = Array.isArray(application?.seeker) ? application.seeker[0] : application?.seeker
-  const candidateName = (seeker as { full_name: string | null } | undefined)?.full_name ?? 'Kandidaten'
-
   try {
-    const result = await summarizeInterviewFeedback(candidateName, scorecards)
+    // Namnet skickas medvetet inte till modellen, av samma skäl som i matchningen: det kan
+    // bära kön och etnicitet och påverka bedömningen (GDPR art. 5, AI-förordningen art. 10)
+    const result = await summarizeInterviewFeedback('Kandidaten', scorecards)
     return NextResponse.json(result)
   } catch (err) {
     console.error('Interview feedback summary error:', err)
