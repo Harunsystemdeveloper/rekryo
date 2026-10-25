@@ -108,6 +108,21 @@ export async function PATCH(req: Request) {
     const parsed = confirmSchema.safeParse(body)
     if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
 
+    // Kandidaten får bara välja bland rekryterarens föreslagna tider
+    const { data: schedule } = await supabase
+      .from('interview_schedules')
+      .select('proposed_times')
+      .eq('id', parsed.data.id)
+      .eq('seeker_id', user.id)
+      .maybeSingle()
+    if (!schedule) return NextResponse.json({ error: 'Intervjuförslaget hittades inte' }, { status: 404 })
+
+    const chosen = new Date(parsed.data.confirmed_time).getTime()
+    const proposed: string[] = schedule.proposed_times ?? []
+    if (!proposed.some(t => new Date(t).getTime() === chosen)) {
+      return NextResponse.json({ error: 'Välj en av de föreslagna tiderna' }, { status: 400 })
+    }
+
     const { data, error } = await supabase
       .from('interview_schedules')
       .update({ confirmed_time: parsed.data.confirmed_time, status: 'confirmed' })
