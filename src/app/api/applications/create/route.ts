@@ -51,7 +51,7 @@ export async function POST(req: Request) {
 
   const { data: application, error } = await supabase
     .from('applications')
-    .insert({ job_id, seeker_id: user.id, cover_letter: fullCoverLetter, status: 'pending' })
+    .insert({ job_id, seeker_id: user.id, cover_letter: fullCoverLetter }) // status sätts av databasens default ('pending')
     .select()
     .single()
 
