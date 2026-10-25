@@ -11,7 +11,8 @@ const ratingSchema = z.object({
 
 const createSchema = z.object({
   application_id: z.string().uuid(),
-  seeker_id: z.string().uuid(),
+  // Ignoreras: kandidaten hämtas från ansökan (se POST). Kvar för befintliga klienter.
+  seeker_id: z.string().uuid().optional(),
   stage: z.string().min(1).max(100).default('Intervju'),
   ratings: z.array(ratingSchema).default([]),
   overall_rating: z.number().int().min(1).max(5).optional(),
@@ -19,7 +20,8 @@ const createSchema = z.object({
   notes: z.string().max(2000).optional(),
 })
 
-const updateSchema = createSchema.partial().extend({ id: z.string().uuid() })
+// Vilken ansökan och kandidat ett scorecard gäller kan inte ändras i efterhand
+const updateSchema = createSchema.omit({ application_id: true, seeker_id: true }).partial().extend({ id: z.string().uuid() })
 
 export async function GET(req: Request) {
   const supabase = await createClient()
@@ -56,17 +58,19 @@ export async function POST(req: Request) {
   // Verify the recruiter owns the job this application belongs to
   const { data: app } = await supabase
     .from('applications')
-    .select('job:jobs(recruiter_id)')
+    .select('seeker_id, job:jobs(recruiter_id)')
     .eq('id', parsed.data.application_id)
     .single()
   const job = Array.isArray(app?.job) ? app.job[0] : app?.job
-  if (!job || (job as { recruiter_id: string }).recruiter_id !== user.id) {
+  if (!app || !job || (job as { recruiter_id: string }).recruiter_id !== user.id) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
+  // seeker_id tas från ansökan, inte från klienten, så att ett scorecard inte kan kopplas
+  // till en annan kandidat än den som faktiskt sökte
   const { data, error } = await supabase
     .from('interview_scorecards')
-    .insert({ ...parsed.data, recruiter_id: user.id })
+    .insert({ ...parsed.data, seeker_id: app.seeker_id, recruiter_id: user.id })
     .select()
     .single()
 
