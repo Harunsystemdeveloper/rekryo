@@ -154,15 +154,12 @@ export function SeekerProfileClient({ profile, cvProfile: initialCv }: { profile
   async function deleteCv() {
     if (!cvProfile?.cv_url) return
     setCvDeleting(true)
-    const ext = cvProfile.cv_url.split('.').pop()?.split('?')[0] ?? 'pdf'
-    await supabase.storage.from('cvs').remove([`${profile.id}/${profile.id}.${ext}`])
-    await supabase.from('cv_profiles').update({
-      cv_url: null,
-      cv_text: null,
-      skills: [],
-      ai_summary: null,
-      last_analyzed_at: null,
-    }).eq('seeker_id', profile.id)
+    const res = await fetch('/api/cv', { method: 'DELETE' })
+    if (!res.ok) {
+      toast.error('Kunde inte ta bort CV', { description: (await res.json().catch(() => null))?.error })
+      setCvDeleting(false)
+      return
+    }
     setCvProfile(prev => prev ? { ...prev, cv_url: null, ai_summary: null } : null)
     setSkills([])
     toast.success('CV borttaget')
