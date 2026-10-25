@@ -54,8 +54,9 @@ export async function POST(req: Request) {
       profile?.full_name ?? 'Rekryteraren'
     )
 
-    // Konversation: samma upsert-mönster som /messages använder.
-    const { data: conversation, error: convErr } = await supabase
+    // Konversationer skapas bara av servern (0022). Samtycket till talangpoolen är
+    // kontrollerat ovan, och recruiter_id är alltid den inloggade rekryteraren.
+    const { data: conversation, error: convErr } = await admin
       .from('conversations')
       .upsert({ recruiter_id: user.id, seeker_id, job_id }, { onConflict: 'recruiter_id,seeker_id' })
       .select('id')

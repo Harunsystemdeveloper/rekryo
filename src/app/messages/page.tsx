@@ -1,4 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { ensureConversation } from '@/lib/conversations'
+import { z } from 'zod'
 import { redirect } from 'next/navigation'
 import { MessagesClient } from '@/components/messages/messages-client'
 import { Navbar } from '@/components/navbar'
@@ -20,13 +22,10 @@ export default async function MessagesPage({
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single()
   if (!profile) redirect('/onboarding')
 
-  // If targetUserId provided, ensure conversation exists
-  if (targetUserId) {
-    const isRecruiter = profile.user_type === 'recruiter'
-    await supabase.from('conversations').upsert({
-      recruiter_id: isRecruiter ? user.id : targetUserId,
-      seeker_id: isRecruiter ? targetUserId : user.id,
-    }, { onConflict: 'recruiter_id,seeker_id', ignoreDuplicates: true })
+  // Öppna eller skapa en konversation med targetUserId, men bara om det finns en legitim
+  // koppling (ansökan eller samtycke till talangpoolen) — se ensureConversation.
+  if (targetUserId && z.string().uuid().safeParse(targetUserId).success) {
+    await ensureConversation(createAdminClient(), { id: user.id, userType: profile.user_type }, targetUserId)
   }
 
   // Fetch conversations
