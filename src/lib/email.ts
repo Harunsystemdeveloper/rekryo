@@ -14,12 +14,21 @@ function esc(value: string): string {
   return value.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]!))
 }
 
-async function send(options: Parameters<Resend['emails']['send']>[0]) {
-  if (!resend) return
+// Returnerar om mejlet faktiskt skickades. De flesta utskick är best effort och ignorerar
+// svaret, men verifieringsmejlet måste fram för att kontot ska gå att använda.
+async function send(options: Parameters<Resend['emails']['send']>[0]): Promise<boolean> {
+  if (!resend) return false
   try {
-    await resend.emails.send(options)
+    // Resend kastar inte vid API-fel (t.ex. overifierad avsändardomän) utan returnerar error
+    const { error } = await resend.emails.send(options)
+    if (error) {
+      console.error('[email] send failed:', error.message)
+      return false
+    }
+    return true
   } catch (err) {
     console.error('[email] send failed:', err)
+    return false
   }
 }
 
