@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -19,29 +18,14 @@ export default function ProfileView({ profile, cvProfile }: { profile: Profile; 
     setIsAnalyzing(true)
 
     try {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
+      // Routen sparar analysen själv på servern
       const res = await fetch('/api/ai/analyze-cv', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cv_text: cvText }),
       })
       const result = await res.json()
-      const analysis = result.analysis ?? result
-      setAnalysisResult(analysis)
-
-      const { error: saveError } = await supabase.from('cv_profiles').upsert({
-        seeker_id: user.id,
-        cv_text: cvText,
-        skills: analysis.skills,
-        experience_years: analysis.experience_years,
-        education: analysis.education,
-        ai_summary: analysis.summary ?? analysis.ai_summary,
-        last_analyzed_at: new Date().toISOString(),
-      }, { onConflict: 'seeker_id' })
-      if (saveError) console.error('CV analysis save error:', saveError)
+      setAnalysisResult(result.analysis ?? result)
     } finally {
       setIsAnalyzing(false)
     }
