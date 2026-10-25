@@ -6,7 +6,7 @@ import { sendWelcomeEmail } from '@/lib/email'
 
 const schema = z.object({
   email: z.string().email('Ogiltig e-postadress'),
-  password: z.string().min(6, 'Lösenord måste vara minst 6 tecken'),
+  password: z.string().min(8, 'Lösenord måste vara minst 8 tecken').max(72),
   user_type: z.enum(['job_seeker', 'recruiter']),
   full_name: z.string().max(200).optional(),
 })
