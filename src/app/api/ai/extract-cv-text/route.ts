@@ -30,8 +30,13 @@ export async function POST(request: Request) {
     }
 
     if (ext === 'pdf') {
-      const buffer = await file.arrayBuffer()
-      const { text } = await extractText(new Uint8Array(buffer), { mergePages: true })
+      const bytes = new Uint8Array(await file.arrayBuffer())
+      // Kontrollera att filen faktiskt är en PDF innan den tolkas, så att godtyckliga filer
+      // med ändelsen .pdf inte når parsern. Standarden tillåter att "%PDF-" ligger var som
+      // helst inom de första 1024 byten.
+      const isPdf = new TextDecoder('latin1').decode(bytes.subarray(0, 1024)).includes('%PDF-')
+      if (!isPdf) return NextResponse.json({ error: 'Filen är inte en giltig PDF' }, { status: 400 })
+      const { text } = await extractText(bytes, { mergePages: true })
       return NextResponse.json({ text })
     }
 
