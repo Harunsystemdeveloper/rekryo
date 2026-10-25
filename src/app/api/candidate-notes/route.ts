@@ -6,13 +6,13 @@ import { z } from 'zod'
 const createSchema = z.object({
   seeker_id: z.string().uuid(),
   note: z.string().min(1).max(2000),
-  tags: z.array(z.string()).default([]),
+  tags: z.array(z.string().trim().min(1).max(50)).max(20).default([]),
 })
 
 const updateSchema = z.object({
   id: z.string().uuid(),
   note: z.string().min(1).max(2000).optional(),
-  tags: z.array(z.string()).optional(),
+  tags: z.array(z.string().trim().min(1).max(50)).max(20).optional(),
 })
 
 export async function GET(req: Request) {
