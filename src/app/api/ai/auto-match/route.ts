@@ -1,6 +1,7 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { matchCandidates } from '@/lib/ai/claude'
 import { NextResponse } from 'next/server'
+import { rateLimit } from '@/lib/rate-limit'
 
 /**
  * Called automatically after a seeker uploads and analyzes their CV.
@@ -12,6 +13,12 @@ export async function POST() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  // Varje anrop kör upp till 10 parallella Claude-anrop — den dyraste routen per förfrågan.
+  // Den triggas automatiskt efter en CV-analys, så några anrop i timmen räcker gott.
+  if (!rateLimit(`auto-match:${user.id}`, 5)) {
+    return NextResponse.json({ error: 'För många förfrågningar. Försök igen om en timme.' }, { status: 429 })
+  }
 
   // Get seeker's cv profile
   const { data: cv } = await supabase

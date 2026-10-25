@@ -1,11 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { extractText } from 'unpdf'
+import { rateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  // PDF-tolkning av filer upp till 10 MB är CPU-tung, så antalet anrop begränsas.
+  if (!rateLimit(`extract-cv-text:${user.id}`, 10)) {
+    return NextResponse.json({ error: 'För många förfrågningar. Försök igen om en timme.' }, { status: 429 })
+  }
 
   try {
     const formData = await request.formData()
