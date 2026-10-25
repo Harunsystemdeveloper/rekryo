@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { matchCandidates } from '@/lib/ai/claude'
 import { NextResponse } from 'next/server'
 
@@ -69,8 +69,8 @@ export async function POST() {
       .sort((a, b) => b.score - a.score)
       .slice(0, 5)
 
-    // Store top matches in cv_profiles as JSON for fast dashboard reads
-    await supabase
+    // Store top matches in cv_profiles as JSON for fast dashboard reads (service role sedan 0021)
+    await createAdminClient()
       .from('cv_profiles')
       .update({ top_matches: scored } as Record<string, unknown>)
       .eq('seeker_id', user.id)

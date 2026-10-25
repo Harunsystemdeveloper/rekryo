@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { analyzeCv } from '@/lib/ai/claude'
 import { logAiDecision } from '@/lib/ai/audit-log'
 import { normalizeSkills } from '@/lib/ai/skill-ontology'
@@ -47,7 +47,8 @@ export async function POST(request: Request) {
     const { analysis, usage } = await analyzeCv(parsed.data.cv_text)
     const normalizedSkills = await normalizeSkills(analysis.skills ?? [])
 
-    const { error: saveError } = await supabase.from('cv_profiles').upsert({
+    // AI-fälten skrivs bara av servern (jobbsökaren saknar skrivrätt till dem sedan 0021)
+    const { error: saveError } = await createAdminClient().from('cv_profiles').upsert({
       seeker_id: user.id,
       cv_text: parsed.data.cv_text,
       cv_text_hash: cvHash,
