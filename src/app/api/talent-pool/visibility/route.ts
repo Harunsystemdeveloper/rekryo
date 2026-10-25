@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -6,7 +6,8 @@ const updateSchema = z.object({ visible: z.boolean() })
 
 // Jobbsökarens samtycke till att synas i talangpoolen (GDPR art. 6.1 a / 7).
 // Samtycket ska vara lika lätt att återkalla som att ge, så samma route hanterar båda.
-// RLS på cv_profiles tillåter bara auth.uid() = seeker_id, så ingen kan ändra någon annans val.
+// Samtycket skrivs med service role (0021) så att tidsstämpeln alltid sätts av servern och
+// inte kan anges av klienten. Skrivningen är begränsad till den inloggades egen rad.
 
 export async function GET() {
   const supabase = await createClient()
@@ -39,7 +40,7 @@ export async function PUT(req: Request) {
   const { visible } = parsed.data
 
   const consentAt = visible ? new Date().toISOString() : null
-  const { error } = await supabase
+  const { error } = await createAdminClient()
     .from('cv_profiles')
     .upsert(
       { seeker_id: user.id, talent_pool_visible: visible, talent_pool_consent_at: consentAt },

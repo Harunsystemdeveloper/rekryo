@@ -57,10 +57,16 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
       const { error } = await supabase.from('cv_profiles').upsert({
         seeker_id: profile.id, skills,
         experience_years: data.experience_years ? parseInt(data.experience_years) : null,
-        talent_pool_visible: talentPoolVisible,
-        talent_pool_consent_at: talentPoolVisible ? new Date().toISOString() : null,
       }, { onConflict: 'seeker_id' })
       if (error) { toast.error('Kunde inte spara kompetenser'); setLoading(false); return }
+
+      // Samtycket till talangpoolen registreras av servern, som sätter tidsstämpeln
+      const consentRes = await fetch('/api/talent-pool/visibility', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visible: talentPoolVisible }),
+      })
+      if (!consentRes.ok) { toast.error('Kunde inte spara ditt val för talangpoolen'); setLoading(false); return }
     }
     onNext()
   }
