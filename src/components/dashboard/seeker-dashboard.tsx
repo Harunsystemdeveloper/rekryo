@@ -13,6 +13,7 @@ import {
   User, MapPin, Star, AlertCircle, Sparkles
 } from 'lucide-react'
 
+import { RecommendedJobCard, type DashboardJob } from '@/components/dashboard/recommended-job-card'
 import type { Profile, CvProfile, Application } from '@/types/database'
 
 interface JobRelation {
@@ -21,18 +22,14 @@ interface JobRelation {
   company_profiles?: { company_name: string }[] | { company_name: string } | null
 }
 
-interface RecommendedJob {
-  id: string; title: string; location: string | null; work_type: string | null
-  skills_required: string[] | null; salary_min: number | null; salary_max: number | null; currency: string
-  company_profile: { company_name: string; industry: string | null } | null
-}
 
 interface Props {
   profile: Profile
   cvProfile: CvProfile | null
   applications: (Application & { job?: JobRelation | null })[]
   savedJobsCount: number
-  recommendedJobs?: RecommendedJob[]
+  recommendedJobs?: DashboardJob[]
+  latestJobs?: DashboardJob[]
 }
 
 function getProfileStrength(profile: Profile, cvProfile: CvProfile | null): number {
@@ -62,7 +59,7 @@ const statusLabels: Record<string, string> = {
   accepted: 'Accepterad', rejected: 'Avvisad',
 }
 
-export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCount, recommendedJobs = [] }: Props) {
+export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCount, recommendedJobs = [], latestJobs = [] }: Props) {
   const profileStrength = getProfileStrength(profile, cvProfile)
 
   // Build chart data from applications per week
@@ -281,88 +278,33 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
         </Card>
       </div>
 
-      {/* Recommended jobs */}
-      {recommendedJobs.length > 0 && (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
+      {/* Jobb för dig: matchade jobb först, sedan de senaste, så att listan aldrig är tom */}
+      {(recommendedJobs.length > 0 || latestJobs.length > 0) && (
+        <section aria-labelledby="jobs-for-you">
+          <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <CardTitle className="text-base flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-primary" />
-                Rekommenderade för dig
-              </CardTitle>
-              <CardDescription>Baserat på dina kompetenser</CardDescription>
+              <h2 id="jobs-for-you" className="flex items-center gap-2 text-lg font-semibold">
+                <Sparkles className="h-4 w-4 text-primary" aria-hidden />
+                {recommendedJobs.length > 0 ? 'Rekommenderade för dig' : 'Nya jobb att utforska'}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {recommendedJobs.length > 0
+                  ? 'Sorterade efter hur många av jobbets kompetenser du redan har'
+                  : cvProfile?.skills?.length
+                    ? 'Inga jobb matchar dina kompetenser exakt ännu, här är de senaste'
+                    : 'Ladda upp ditt CV så räknar vi ut hur väl du matchar varje jobb'}
+              </p>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link href="/seeker/jobs">Se alla</Link>
+              <Link href="/seeker/jobs">Alla jobb <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
             </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {recommendedJobs.map(job => {
-                const overlap = (job.skills_required ?? []).filter(s =>
-                  cvProfile?.skills?.includes(s)
-                ).length
-                const total = (job.skills_required ?? []).length
-                const pct = total > 0 ? Math.round((overlap / total) * 100) : 0
-                return (
-                  <Link key={job.id} href={`/seeker/jobs/${job.id}`}>
-                    <div className="rounded-lg border border-border hover:border-primary/40 hover:shadow-sm transition-all p-3 space-y-2 h-full">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <p className="font-medium text-sm truncate">{job.title}</p>
-                          <p className="text-xs text-muted-foreground truncate">
-                            {job.company_profile?.company_name ?? 'Okänt företag'}
-                          </p>
-                        </div>
-                        <div className="text-right flex-shrink-0">
-                          <p className="text-sm font-bold text-primary">{pct}%</p>
-                          <p className="text-xs text-muted-foreground">match</p>
-                        </div>
-                      </div>
-                      <Progress value={pct} className="h-1" />
-                      <div className="flex flex-wrap gap-1">
-                        {job.location && (
-                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <MapPin className="h-2.5 w-2.5" />{job.location}
-                          </span>
-                        )}
-                        {job.work_type && (
-                          <Badge variant="outline" className="text-xs">{job.work_type}</Badge>
-                        )}
-                      </div>
-                      {job.skills_required && (
-                        <div className="flex flex-wrap gap-1">
-                          {job.skills_required.slice(0, 3).map(s => (
-                            <Badge
-                              key={s}
-                              variant={cvProfile?.skills?.includes(s) ? 'default' : 'secondary'}
-                              className="text-xs"
-                            >
-                              {s}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* No CV = prompt to upload */}
-      {!cvProfile?.skills?.length && (
-        <Card className="border-dashed">
-          <CardContent className="pt-6 text-center space-y-3">
-            <Sparkles className="h-8 w-8 mx-auto text-muted-foreground/40" />
-            <p className="font-medium text-sm">Ladda upp ditt CV för att se rekommenderade jobb</p>
-            <Button size="sm" asChild>
-              <Link href="/seeker/profile">Ladda upp CV</Link>
-            </Button>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {[...recommendedJobs, ...latestJobs].slice(0, 6).map(job => (
+              <RecommendedJobCard key={job.id} job={job} seekerSkills={cvProfile?.skills ?? null} />
+            ))}
+          </div>
+        </section>
       )}
 
       {/* Career coach CTA */}

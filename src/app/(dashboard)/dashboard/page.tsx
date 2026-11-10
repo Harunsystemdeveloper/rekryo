@@ -81,6 +81,26 @@ export default async function DashboardPage() {
       .slice(0, 5)
   }
 
+  // Dashboarden ska aldrig vara tom: utan CV, eller med få träffar, fylls listan på med
+  // de senast publicerade jobben som användaren inte redan sökt.
+  const excludeIds = [...appliedJobIds, ...recommendedJobs.map(j => j.id)]
+  let latestQuery = supabase
+    .from('jobs')
+    .select('id, title, location, work_type, skills_required, salary_min, salary_max, currency, recruiter_id')
+    .eq('status', 'active')
+    .order('created_at', { ascending: false })
+    .limit(Math.max(0, 6 - recommendedJobs.length))
+  if (excludeIds.length > 0) {
+    latestQuery = latestQuery.not('id', 'in', `(${excludeIds.join(',')})`)
+  }
+  const { data: latest } = recommendedJobs.length < 6 ? await latestQuery : { data: [] }
+  const latestRecruiterIds = [...new Set((latest ?? []).map(j => j.recruiter_id).filter(Boolean))]
+  const { data: latestCompanies } = latestRecruiterIds.length > 0
+    ? await supabase.from('company_profiles').select('recruiter_id, company_name, industry').in('recruiter_id', latestRecruiterIds)
+    : { data: [] }
+  const latestCompanyMap = new Map((latestCompanies ?? []).map(c => [c.recruiter_id, c]))
+  const latestJobs = (latest ?? []).map(job => ({ ...job, company_profile: latestCompanyMap.get(job.recruiter_id) ?? null }))
+
   return (
     <>
       <SeekerDashboard
@@ -89,6 +109,7 @@ export default async function DashboardPage() {
         applications={applications ?? []}
         savedJobsCount={savedJobsCount ?? 0}
         recommendedJobs={recommendedJobs}
+        latestJobs={latestJobs}
       />
       <OnboardingTour userType="job_seeker" />
     </>
