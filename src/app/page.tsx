@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Navbar } from '@/components/navbar'
@@ -336,134 +335,113 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── For seekers / recruiters ── */}
-      <section className="py-24 px-6 border-t border-border/60">
-        <div className="mx-auto max-w-5xl grid lg:grid-cols-2 gap-5">
-          {/* Jobbsökare */}
-          <div className="panel overflow-hidden flex flex-col">
-            <div className="relative h-52 overflow-hidden flex-shrink-0 border-b border-border/60">
-              <Image
-                src="https://images.unsplash.com/photo-1573497620053-ea5300f94f21?q=80&w=1200&auto=format&fit=crop"
-                alt="Jobbsökare i ett positivt samtal"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/10 dark:from-background dark:via-background/70 dark:to-background/15" />
-              <div className="absolute inset-0 dot-grid opacity-15" />
+      {/* ── Två perspektiv: samma designspråk, var sin produktvy ── */}
+      <section className="border-t border-border px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader
+            eyebrow="För båda sidor"
+            title="En plattform, två perspektiv"
+            description="Jobbsökare ser hur de matchar och vad som saknas. Rekryterare får en rangordnad lista med motivering till varje poäng."
+          />
 
-              {/* Mini product mockup: CV-analys */}
-              <div className="absolute inset-x-5 top-5 bottom-12 rounded-xl border border-border bg-card shadow-lg overflow-hidden flex flex-col">
-                <div className="h-6 flex items-center gap-1.5 px-2.5 border-b border-border/50 bg-muted/40 flex-shrink-0">
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-400/70" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-yellow-400/70" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-400/70" />
-                  <span className="ml-2 text-[9px] text-muted-foreground truncate">rekryo.com/cv-analys</span>
-                </div>
-                <div className="flex-1 p-3 flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0 shadow-sm">
-                    <FileText className="h-4.5 w-4.5 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-[11px] font-semibold">CV.pdf</p>
-                      <CheckCircle className="h-3 w-3 text-emerald-500" />
-                    </div>
-                    <p className="text-[9px] text-muted-foreground mb-1.5">Analyserad av AI · 12s</p>
-                    <div className="flex flex-wrap gap-1">
-                      <Badge variant="secondary" className="text-[9px] px-1.5 py-0 h-4 font-normal">Excel</Badge>
-                      <Badge variant="secondary" className="text-[9px] px-1.5 py-0 h-4 font-normal">Projektledning</Badge>
-                      <Badge variant="secondary" className="text-[9px] px-1.5 py-0 h-4 font-normal">+4</Badge>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center flex-shrink-0 pl-1">
-                    <span className="text-lg font-bold text-primary leading-none">94%</span>
-                    <span className="text-[8px] text-muted-foreground mt-1">Matchning</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="absolute bottom-4 left-6 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg gradient-primary flex items-center justify-center shadow-md">
-                  <Zap className="h-4.5 w-4.5 text-white" />
-                </div>
-                <h3 className="text-xl font-bold">För jobbsökare</h3>
-              </div>
-            </div>
-            <div className="p-8 flex flex-col flex-1">
-              <p className="text-muted-foreground mb-6">Ladda upp ditt CV och få omedelbar AI-analys. Se hur väl du matchar varje jobb och exakt vad du behöver förbättra.</p>
-              <ul className="space-y-2.5 mb-8 flex-1">
-                {['AI analyserar ditt CV automatiskt', 'Se matchningspoäng per jobb', 'Identifiera kompetensgap', 'Förbered dig med AI-intervjufrågor'].map(item => (
-                  <li key={item} className="flex items-center gap-2.5 text-sm">
-                    <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Button asChild className="w-full">
-                <Link href="/register">Hitta ditt drömjobb <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
-            </div>
-          </div>
-
-          {/* Rekryterare */}
-          <div className="panel overflow-hidden flex flex-col">
-            <div className="relative h-52 overflow-hidden flex-shrink-0 border-b border-border/60">
-              <Image
-                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1200&auto=format&fit=crop"
-                alt="Rekryterare som går igenom kandidatunderlag"
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/55 to-background/10 dark:from-background dark:via-background/70 dark:to-background/15" />
-              <div className="absolute inset-0 dot-grid opacity-15" />
-
-              {/* Mini product mockup: rankad kandidatlista */}
-              <div className="absolute inset-x-5 top-5 bottom-12 rounded-xl border border-border bg-card shadow-lg overflow-hidden flex flex-col">
-                <div className="h-6 flex items-center gap-1.5 px-2.5 border-b border-border/50 bg-muted/40 flex-shrink-0">
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-400/70" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-yellow-400/70" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-400/70" />
-                  <span className="ml-2 text-[9px] text-muted-foreground truncate">rekryo.com/rekryterare/kandidater</span>
-                </div>
-                <div className="flex-1 p-2 flex flex-col justify-center gap-1">
-                  {[
-                    { initials: 'AL', name: 'Anna L.', score: 96 },
-                    { initials: 'ES', name: 'Erik S.', score: 88 },
-                    { initials: 'MK', name: 'Maria K.', score: 74 },
-                  ].map((c, i) => (
-                    <div key={c.initials} className={`flex items-center gap-2 rounded-lg px-2 py-1 ${i === 0 ? 'bg-primary/5 border border-primary/20' : 'bg-muted/40'}`}>
-                      <div className="h-5 w-5 rounded-full gradient-primary flex items-center justify-center text-[7px] font-bold text-white flex-shrink-0">
-                        {c.initials}
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Jobbsökare */}
+            <div className="panel flex flex-col overflow-hidden">
+              <div className="border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
+                <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+                  <p className="mb-4 text-xs font-medium text-muted-foreground">Dina bästa matchningar</p>
+                  <div className="space-y-3.5">
+                    {[
+                      { title: 'Undersköterska, akutmottagning', company: 'Nordvik Vård AB', score: 87 },
+                      { title: 'Vårdadministratör', company: 'Region Mälardalen', score: 74 },
+                      { title: 'Kundtjänst, vårdguiden', company: 'Hälsolinjen', score: 61 },
+                    ].map((job, i) => (
+                      <div key={job.title}>
+                        <div className="mb-1.5 flex items-baseline justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-medium">{job.title}</p>
+                            <p className="truncate text-xs text-muted-foreground">{job.company}</p>
+                          </div>
+                          <span className={`text-sm font-semibold tabular-nums ${i === 0 ? 'text-mint-foreground' : 'text-foreground/80'}`}>{job.score}</span>
+                        </div>
+                        <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                          <div className={`h-full rounded-full ${i === 0 ? 'bg-gradient-to-r from-primary to-mint' : 'bg-primary/60'}`} style={{ width: `${job.score}%` }} />
+                        </div>
                       </div>
-                      <span className="text-[10px] font-medium flex-1 truncate">{c.name}</span>
-                      <span className={`text-[10px] font-bold ${i === 0 ? 'text-primary' : 'text-muted-foreground'}`}>{c.score}%</span>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                  <div className="mt-5 flex items-center gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
+                    <TrendingUp className="h-3.5 w-3.5 text-amber-500" />
+                    Saknas oftast: <span className="rounded-md bg-amber-500/10 px-1.5 py-0.5 font-medium text-amber-700 dark:text-amber-400">TakeCare</span>
+                  </div>
                 </div>
               </div>
-
-              <div className="absolute bottom-4 left-6 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg gradient-primary flex items-center justify-center shadow-md">
-                  <BarChart3 className="h-4.5 w-4.5 text-white" />
+              <div className="flex flex-1 flex-col p-7 sm:p-8">
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <Search className="h-5 w-5" aria-hidden />
+                  </div>
+                  <h3 className="text-xl font-semibold">För jobbsökare</h3>
                 </div>
-                <h3 className="text-xl font-bold">För rekryterare</h3>
+                <p className="mb-6 text-muted-foreground">Ladda upp ditt CV och se direkt hur väl du matchar varje jobb, och exakt vad du kan förbättra.</p>
+                <ul className="mb-8 flex-1 space-y-3">
+                  {['AI analyserar ditt CV automatiskt', 'Matchningspoäng med motivering per jobb', 'Tydliga kompetensgap att jobba med', 'Intervjufrågor anpassade efter jobbet'].map(item => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm">
+                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-mint-foreground" aria-hidden />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Button asChild className="w-full">
+                  <Link href="/register?roll=jobbsokare">Hitta ditt nästa jobb <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                </Button>
               </div>
             </div>
-            <div className="p-8 flex flex-col flex-1">
-              <p className="text-muted-foreground mb-6">Sluta gissa. Få en AI-rankad lista av kandidater med matchningspoäng, kompetensgap och personliga sammanfattningar.</p>
-              <ul className="space-y-2.5 mb-8 flex-1">
-                {['Publicera jobbannonser på minuter', 'AI rankar alla sökande 0–100', 'Se kandidatsammanfattningar direkt', 'Kommunicera via inbyggd chatt'].map(item => (
-                  <li key={item} className="flex items-center gap-2.5 text-sm">
-                    <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Button asChild variant="outline" className="w-full">
-                <Link href="/register">Rekrytera smartare <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
+
+            {/* Rekryterare */}
+            <div className="panel flex flex-col overflow-hidden">
+              <div className="border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
+                <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+                  <p className="mb-4 text-xs font-medium text-muted-foreground">Sökande · Undersköterska, akutmottagning</p>
+                  <div className="space-y-2">
+                    {[
+                      { initials: 'AL', name: 'Anna L.', score: 87, status: 'Shortlistad', tone: 'bg-mint/15 text-mint-foreground' },
+                      { initials: 'ES', name: 'Erik S.', score: 81, status: 'Granskad', tone: 'bg-primary/10 text-primary' },
+                      { initials: 'MK', name: 'Maria K.', score: 74, status: 'Ny', tone: 'bg-muted text-muted-foreground' },
+                    ].map((c, i) => (
+                      <div key={c.initials} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${i === 0 ? 'bg-primary/[0.06] ring-1 ring-primary/20' : ''}`}>
+                        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full gradient-primary text-[11px] font-semibold text-white">{c.initials}</span>
+                        <span className="flex-1 truncate text-sm font-medium">{c.name}</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${c.tone}`}>{c.status}</span>
+                        <span className="w-7 text-right text-sm font-semibold tabular-nums">{c.score}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p className="mt-4 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
+                    <span className="font-medium text-foreground">AI-sammanfattning:</span> Stark inom akutsjukvård och triage. Saknar erfarenhet av TakeCare.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-1 flex-col p-7 sm:p-8">
+                <div className="mb-3 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mint/10 text-mint-foreground">
+                    <BarChart3 className="h-5 w-5" aria-hidden />
+                  </div>
+                  <h3 className="text-xl font-semibold">För rekryterare</h3>
+                </div>
+                <p className="mb-6 text-muted-foreground">Sluta gissa. Få alla sökande rangordnade med poäng, kompetensgap och en sammanfattning, och fatta beslutet själv.</p>
+                <ul className="mb-8 flex-1 space-y-3">
+                  {['Publicera jobbannonser på minuter', 'AI rangordnar alla sökande 0–100', 'Sammanfattning och gap per kandidat', 'Inbyggd chatt och intervjubokning'].map(item => (
+                    <li key={item} className="flex items-center gap-2.5 text-sm">
+                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-mint-foreground" aria-hidden />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <Button asChild variant="outline" className="w-full">
+                  <Link href="/register?roll=rekryterare">Rekrytera smartare <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
