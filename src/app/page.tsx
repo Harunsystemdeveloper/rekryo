@@ -469,7 +469,7 @@ export default function HomePage() {
               {
                 id: 'faq-3',
                 q: 'Är mina uppgifter säkra?',
-                a: 'All data lagras inom EU (Irland) via Supabase och behandlas strikt enligt GDPR. Ditt CV analyseras av Claude AI (Anthropic) enbart för matchning — Anthropic lagrar inte din data och använder den inte för att träna AI-modeller.',
+                a: 'Din profil och dina uppgifter lagras inom EU (Irland) via Supabase och behandlas enligt GDPR. Ditt CV analyseras av Claude AI (Anthropic) enbart för matchningen, och Anthropic använder inte data som skickas via deras API för att träna sina AI-modeller.',
               },
               {
                 id: 'faq-4',
@@ -479,7 +479,7 @@ export default function HomePage() {
               {
                 id: 'faq-5',
                 q: 'Hur laddar jag upp mitt CV?',
-                a: 'Du laddar upp PDF eller DOCX direkt i din profil efter registrering. AI-analysen körs automatiskt och tar ungefär 30 sekunder.',
+                a: 'Du laddar upp ditt CV som PDF eller textfil (TXT) i din profil efter registrering. AI-analysen körs automatiskt och tar ungefär 30 sekunder.',
               },
               {
                 id: 'faq-6',
