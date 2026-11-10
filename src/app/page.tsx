@@ -490,12 +490,12 @@ export default function HomePage() {
               <AccordionItem
                 key={faq.id}
                 value={faq.id}
-                className="rounded-xl border border-border bg-card px-5 data-[state=open]:border-primary/40 transition-colors"
+                className="rounded-xl border border-border bg-card px-6 transition-colors data-[state=open]:border-primary/40"
               >
-                <AccordionTrigger className="text-sm font-semibold text-left hover:no-underline py-4">
+                <AccordionTrigger className="py-5 text-left text-base font-medium hover:no-underline">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4">
+                <AccordionContent className="pb-5 text-sm leading-relaxed text-muted-foreground">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>
