@@ -7,14 +7,14 @@ import { Footer } from '@/components/footer'
 import { ParadoxStats } from '@/components/paradox-stats'
 import { DemoMatcher } from '@/components/demo-matcher'
 import { ScrollReveal } from '@/components/scroll-reveal'
-import { AnimatedHeroWidget } from '@/components/animated-hero-widget'
+import { MatchCardMockup } from '@/components/landing/match-card-mockup'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Target, Users, TrendingUp, Shield,
   ArrowRight, CheckCircle, Zap, Sparkles,
   FileText, BarChart3, MessageSquare, AlertTriangle,
-  Building2, TrendingDown
+  Building2, TrendingDown, Search, ShieldCheck, UserCheck
 } from 'lucide-react'
 
 // Två märkesfärger, inte en regnbåge — växlar mellan primär (navy) och
@@ -76,132 +76,76 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen bg-background">
       <Navbar />
 
-      {/* ── Hero — mörkt varumärkesband, inte ett krämfärgat kort med en blå knapp ── */}
-      <section className="relative min-h-[90vh] flex items-center px-6 pt-24 pb-16 overflow-hidden hero-dark">
-        <div className="absolute inset-0 -z-20 dot-grid-light opacity-60" />
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
-        <div className="absolute -top-32 left-1/4 h-96 w-96 rounded-full bg-white/10 blur-3xl -z-10 pointer-events-none" />
+      {/* ── Hero: budskap och två ingångar till vänster, produkten själv till höger ── */}
+      <section className="relative overflow-hidden hero-dark px-6 pt-28 pb-24 lg:pt-36 lg:pb-32">
+        <div className="absolute inset-0 -z-10 dot-grid-light opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-        <div className="mx-auto max-w-6xl w-full">
-          <div className="grid lg:grid-cols-[1fr_1.15fr] gap-12 lg:gap-16 items-center">
+        <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-12">
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <Badge variant="secondary" className="mb-7 gap-1.5 border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm">
+              <Sparkles className="h-3 w-3 text-[#A99DFB]" />
+              AI-matchning för den svenska arbetsmarknaden
+            </Badge>
 
-            {/* Left: Text */}
-            <div className="flex flex-col items-start animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <Badge variant="secondary" className="mb-6 gap-1.5 px-4 py-1.5 text-xs font-medium border border-white/20 bg-white/10 text-white backdrop-blur-sm">
-                <Sparkles className="h-3 w-3 accent-mark" />
-                AI-driven rekrytering · Alla branscher · Svenska arbetsmarknaden
-              </Badge>
+            <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[3.4rem] xl:text-[3.75rem]">
+              Kompetensen finns.{' '}
+              <span className="gradient-text-light">Matchningen</span>
+              {' '}är trasig.
+            </h1>
 
-              <h1 className="font-heading text-5xl sm:text-6xl lg:text-[4.25rem] font-semibold tracking-tight leading-[1.05] mb-6 text-white">
-                Kompetensen finns.{' '}
-                <span className="gradient-text-light italic">Matchningen</span>
-                {' '}är trasig.
-              </h1>
+            <p className="mb-9 max-w-xl text-lg leading-relaxed text-white/65">
+              Rekryo matchar CV och jobb med förklarbar AI. Varje matchning får ett poäng 0–100,
+              en motivering och en lista över vad som saknas, för jobbsökare och rekryterare i alla branscher.
+            </p>
 
-              <p className="text-base sm:text-lg text-white/70 leading-relaxed mb-8 max-w-lg">
-                <strong className="text-white">76% av svenska arbetsgivare</strong> hittar inte rätt kompetens — nästan dubbelt så många som för tio år sedan.
-                Samtidigt tjänar <strong className="text-white">var fjärde nyexaminerad akademiker</strong> under studiemedelsnivån månader efter sin examen.{' '}
-                Det är inte ett kompetensproblem. Det är ett <strong className="text-white">matchningsproblem</strong> — och vi löser det med AI.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 mb-8">
-                <Button size="lg" variant="secondary" asChild className="text-base px-8 h-12 shadow-xl shadow-black/20">
-                  <Link href="/register">
-                    Kom igång gratis
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="outline" asChild className="text-base px-8 h-12 border-white/25 text-white bg-transparent hover:bg-white/10 hover:text-white">
-                  <Link href="#problemet">
-                    Se problemet i siffror
-                  </Link>
-                </Button>
-              </div>
-
-              <Link href="#demo" className="inline-flex items-center gap-1.5 text-sm font-semibold accent-mark hover:underline mb-8">
-                <Zap className="h-3.5 w-3.5" />
-                Testa gratis demo — inget konto krävs
-              </Link>
-
-              <div className="flex flex-wrap items-center gap-5 text-sm text-white/60">
-                {[
-                  { label: 'Gratis att börja', color: 'text-white' },
-                  { label: 'Inget kreditkort krävs', color: 'accent-mark' },
-                  { label: 'GDPR-säkert', color: 'text-emerald-400' },
-                ].map(({ label: item, color }) => (
-                  <span key={item} className="flex items-center gap-1.5">
-                    <CheckCircle className={`h-3.5 w-3.5 ${color}`} />
-                    {item}
-                  </span>
-                ))}
-              </div>
+            <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+              <Button size="lg" asChild className="h-12 bg-[#6C5CE7] px-7 text-base text-white shadow-lg shadow-[#6C5CE7]/30 hover:bg-[#5B4BD8]">
+                <Link href="/register?roll=jobbsokare">
+                  <Search className="mr-2 h-4 w-4" />
+                  Jag söker jobb
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="h-12 border-white/20 bg-white/[0.04] px-7 text-base text-white hover:bg-white/10 hover:text-white">
+                <Link href="/register?roll=rekryterare">
+                  <Users className="mr-2 h-4 w-4" />
+                  Jag rekryterar
+                </Link>
+              </Button>
             </div>
 
-            {/* Right: Image + product demo */}
-            <div className="relative hidden lg:flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
+            <Link href="#demo" className="mb-12 inline-flex items-center gap-1.5 rounded text-sm font-medium text-[#5EEAD4] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5EEAD4]">
+              <Zap className="h-3.5 w-3.5" />
+              Testa matchningen utan konto
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
 
-              {/* Matching illustration with floating stat cards */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 aspect-[16/9] border border-border/60">
-                <Image
-                  src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1600&auto=format&fit=crop"
-                  alt="Team som samarbetar runt bärbara datorer"
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 0px, 50vw"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-br from-background/92 via-background/72 to-primary/25 dark:from-background/94 dark:via-background/78 dark:to-primary/20" />
-                <div className="absolute inset-0 dot-grid opacity-25" />
-
-                {/* CV → match → job illustration */}
-                <div className="absolute inset-0 flex items-center justify-center gap-4 px-8">
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="h-16 w-16 rounded-2xl bg-card border border-border shadow-lg flex items-center justify-center">
-                      <FileText className="h-7 w-7 text-primary" />
-                    </div>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">CV</span>
-                  </div>
-
-                  <div className="flex-1 max-w-20 h-px bg-gradient-to-r from-primary/60 to-primary" />
-
-                  <div className="h-20 w-20 rounded-2xl gradient-primary shadow-xl glow-primary flex items-center justify-center float-animation">
-                    <Target className="h-9 w-9 text-white" />
-                  </div>
-
-                  <div className="flex-1 max-w-20 h-px bg-gradient-to-r from-primary to-primary/60" />
-
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="h-16 w-16 rounded-2xl bg-card border border-border shadow-lg flex items-center justify-center">
-                      <Building2 className="h-7 w-7 text-primary" />
-                    </div>
-                    <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Jobb</span>
-                  </div>
-                </div>
-
-                {/* Floating: paradoxen i ett kort, inte två — mindre brus, samma poäng */}
-                <div className="absolute top-4 left-4 right-4 rounded-xl border border-border/60 bg-card/95 backdrop-blur-md p-3.5 shadow-xl flex items-center gap-4">
-                  <div className="flex-1">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Kompetensbrist</span>
-                    <p className="text-2xl font-black text-destructive leading-none mt-1">76%</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">av svenska företag · ManpowerGroup</p>
-                  </div>
-                  <div className="w-px h-10 bg-border" />
-                  <div className="flex-1">
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Nyexaminerade</span>
-                    <p className="text-2xl font-black accent-mark leading-none mt-1">1 av 4</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">under studiemedel · Saco</p>
-                  </div>
-                </div>
+            {/* Paradoxen i två stora siffror, med källa */}
+            <dl className="grid max-w-lg grid-cols-2 gap-6 border-t border-white/10 pt-8">
+              <div>
+                <dt className="sr-only">Arbetsgivare med kompetensbrist</dt>
+                <dd className="text-4xl font-semibold tabular-nums tracking-tight text-white">76%</dd>
+                <dd className="mt-2 text-sm leading-snug text-white/60">av svenska arbetsgivare hittar inte rätt kompetens</dd>
+                <dd className="mt-1 text-xs text-white/35">ManpowerGroup</dd>
               </div>
+              <div>
+                <dt className="sr-only">Nyexaminerade under studiemedelsnivån</dt>
+                <dd className="text-4xl font-semibold tabular-nums tracking-tight text-white">1 av 4</dd>
+                <dd className="mt-2 text-sm leading-snug text-white/60">nyexaminerade akademiker tjänar under studiemedelsnivån</dd>
+                <dd className="mt-1 text-xs text-white/35">Saco</dd>
+              </div>
+            </dl>
+          </div>
 
-              {/* Animated product demo */}
-              <AnimatedHeroWidget />
-
+          <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200 lg:pl-4">
+            <MatchCardMockup />
+            <div className="mt-16 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/45 sm:mt-14 lg:justify-end">
+              <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-[#5EEAD4]" />GDPR, data lagras inom EU</span>
+              <span className="flex items-center gap-1.5"><UserCheck className="h-3.5 w-3.5 text-[#5EEAD4]" />AI föreslår, människa beslutar</span>
             </div>
           </div>
         </div>
       </section>
-
 
       {/* ── Ticker tape ── */}
       <div className="border-y border-border/50 bg-muted/30 py-3 overflow-hidden relative">
