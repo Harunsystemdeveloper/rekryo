@@ -9,6 +9,7 @@ import { DemoMatcher } from '@/components/demo-matcher'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { MatchCardMockup } from '@/components/landing/match-card-mockup'
 import { SectionHeader } from '@/components/landing/section-header'
+import { MatchNetworkIllustration } from '@/components/illustrations/match-network'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -220,29 +221,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Photo banner: humaniserar lösningen mellan problem och produkt ── */}
-      <section className="relative overflow-hidden border-t border-border/60 min-h-[26rem] flex items-center px-6 py-20">
-        <Image
-          src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1920&auto=format&fit=crop"
-          alt="Team på ett svenskt kontor som delar kompetens"
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/35 dark:from-background dark:via-background/90 dark:to-background/45" />
-        <div className="absolute inset-0 dot-grid opacity-10" />
-
-        <div className="relative mx-auto max-w-5xl w-full">
+      {/* ── Övergång från problem till lösning, med illustration i stället för stockfoto ── */}
+      <section className="border-t border-border hero-mesh px-6 py-28">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
           <ScrollReveal>
-            <div className="max-w-lg">
-              <Badge variant="outline" className="mb-4 text-primary border-primary/30 bg-background/60 backdrop-blur-sm">Rätt kompetens finns redan</Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight leading-tight mb-4">
-                Sverige har kompetensen. Vi ser till att den <span className="gradient-text">hittar rätt.</span>
-              </h2>
-              <p className="text-muted-foreground text-base leading-relaxed">
-                Bakom varje ouppfylld tjänst finns en person med precis rätt bakgrund — som aldrig sågs.
-                Rekryo kopplar samman dem med AI, inte gissningar.
-              </p>
+            <SectionHeader
+              align="left"
+              eyebrow="Rätt kompetens finns redan"
+              title={<>Sverige har kompetensen. Vi ser till att den <span className="gradient-text">hittar rätt.</span></>}
+              description="Bakom varje otillsatt tjänst finns en person med rätt bakgrund som aldrig syntes. Rekryo jämför kompetenser, erfarenhet och krav, och visar varför en matchning håller."
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={120}>
+            <div className="panel p-6 sm:p-8">
+              <MatchNetworkIllustration className="h-auto w-full" />
             </div>
           </ScrollReveal>
         </div>
