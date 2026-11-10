@@ -19,12 +19,10 @@ import {
   Building2, TrendingDown, Search, ShieldCheck, UserCheck, UserPlus
 } from 'lucide-react'
 
-// Två märkesfärger, inte en regnbåge — växlar mellan primär (navy) och
-// koppar-accent i ett medvetet rutmönster. Sex olika pastellfärger per kort
-// är precis den "generiska AI-mall"-känslan vi designar bort.
+// Två märkesfärger, inte en regnbåge: lila och mint växlar i ett medvetet mönster.
 const brandTone = {
-  primary: { accent: 'text-primary', accentBg: 'bg-primary/10 border-primary/20' },
-  copper: { accent: 'accent-mark', accentBg: 'bg-accent border-accent-foreground/15' },
+  primary: { accent: 'text-primary', accentBg: 'bg-primary/10' },
+  mint: { accent: 'text-mint-foreground', accentBg: 'bg-mint/10' },
 }
 
 const features = [
@@ -38,7 +36,7 @@ const features = [
     icon: Target,
     title: 'Precisionsmatchning',
     description: 'Varje matchning får ett poäng 0–100 med förklaring av varför du passar för jobbet.',
-    ...brandTone.copper,
+    ...brandTone.mint,
   },
   {
     icon: TrendingUp,
@@ -50,7 +48,7 @@ const features = [
     icon: Users,
     title: 'Smart rekrytering',
     description: 'Rekryterare hittar rätt kandidater på minuter, inte månader – med AI-ranking.',
-    ...brandTone.copper,
+    ...brandTone.mint,
   },
   {
     icon: MessageSquare,
@@ -62,7 +60,7 @@ const features = [
     icon: Shield,
     title: 'GDPR-säkert',
     description: 'Dina data lagras säkert inom EU (Irland) via Supabase och behandlas strikt enligt GDPR.',
-    ...brandTone.copper,
+    ...brandTone.mint,
   },
 ]
 
@@ -322,15 +320,15 @@ export default function HomePage() {
             title="Allt du behöver för förklarad matchning"
             description="Från CV-analys till intervjuförberedelse, med samma förklarbara AI genom hela flödet."
           />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f, i) => (
               <ScrollReveal key={f.title} delay={i * 80}>
-                <div className="group panel panel-hover p-6 h-full">
-                  <div className={`h-10 w-10 rounded-lg border flex items-center justify-center mb-5 ${f.accentBg}`}>
-                    <f.icon className={`h-5 w-5 ${f.accent}`} />
+                <div className="panel panel-hover h-full p-7">
+                  <div className={`mb-6 flex h-11 w-11 items-center justify-center rounded-xl ${f.accentBg}`}>
+                    <f.icon className={`h-5 w-5 ${f.accent}`} aria-hidden />
                   </div>
-                  <h3 className="font-semibold text-base mb-2">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{f.description}</p>
+                  <h3 className="mb-2 text-base font-semibold">{f.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">{f.description}</p>
                 </div>
               </ScrollReveal>
             ))}
