@@ -9,6 +9,7 @@ import { ScrollReveal } from '@/components/scroll-reveal'
 import { MatchCardMockup } from '@/components/landing/match-card-mockup'
 import { SectionHeader } from '@/components/landing/section-header'
 import { MatchNetworkIllustration } from '@/components/illustrations/match-network'
+import { TrustSection } from '@/components/landing/trust-section'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -446,6 +447,8 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      <TrustSection />
 
       {/* ── FAQ ── */}
       <section className="border-t border-border bg-muted/30 px-6 py-28">
