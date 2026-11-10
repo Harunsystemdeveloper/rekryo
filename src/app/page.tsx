@@ -147,43 +147,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Ticker tape ── */}
-      <div className="border-y border-border/50 bg-muted/30 py-3 overflow-hidden relative">
-        <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-        <div className="ticker-track text-xs font-medium text-muted-foreground select-none">
-          {[
-            { label: 'Företag med kompetensbrist', value: '76%', up: true },
-            { label: 'Nyexaminerade under studiemedelsnivån', value: '1 av 4', up: true },
-            { label: 'Mindre bolag med svårt att rekrytera', value: '50%', up: true },
-            { label: 'Rekryteringar som misslyckas', value: '25%', up: true },
-            { label: 'Företag drabbade negativt', value: '93%', up: true },
-            { label: 'Expansioner som uteblir', value: '33%', up: true },
-            { label: 'Nyexaminerade utan a-kassa', value: '7 av 8', up: true },
-            { label: 'Bristande yrkeserfarenhet som hinder', value: '69%', up: true },
-            { label: 'Kompetensbrist dubbelt mot för 10 år sedan', value: '2×', up: true },
-            // Duplicate for seamless loop
-            { label: 'Företag med kompetensbrist', value: '76%', up: true },
-            { label: 'Nyexaminerade under studiemedelsnivån', value: '1 av 4', up: true },
-            { label: 'Mindre bolag med svårt att rekrytera', value: '50%', up: true },
-            { label: 'Rekryteringar som misslyckas', value: '25%', up: true },
-            { label: 'Företag drabbade negativt', value: '93%', up: true },
-            { label: 'Expansioner som uteblir', value: '33%', up: true },
-            { label: 'Nyexaminerade utan a-kassa', value: '7 av 8', up: true },
-            { label: 'Bristande yrkeserfarenhet som hinder', value: '69%', up: true },
-            { label: 'Kompetensbrist dubbelt mot för 10 år sedan', value: '2×', up: true },
-          ].map((item, i) => (
-            <span key={i} className="flex items-center gap-2 whitespace-nowrap">
-              <span className={`font-bold ${item.up ? 'text-red-500' : 'text-emerald-500'}`}>
-                {item.up ? '▼' : '▲'} {item.value}
-              </span>
-              <span>{item.label}</span>
-              <span className="opacity-30">·</span>
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* ── Paradoxen ── */}
       <section id="problemet" className="py-24 px-6 relative overflow-hidden border-t border-border/60">
         <div className="absolute inset-0 bg-muted/25 -z-10" />

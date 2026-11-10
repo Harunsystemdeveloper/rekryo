@@ -322,19 +322,6 @@
     transform: translateY(0);
   }
 
-  /* Ticker tape scroll */
-  .ticker-track {
-    display: flex;
-    gap: 2.5rem;
-    animation: ticker 30s linear infinite;
-    width: max-content;
-  }
-  .ticker-track:hover { animation-play-state: paused; }
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
   /* Number slot machine flip */
   .tabular-nums { font-variant-numeric: tabular-nums; }
 
