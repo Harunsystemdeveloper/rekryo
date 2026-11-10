@@ -22,12 +22,12 @@ const schema = z.object({
 })
 type FormData = z.infer<typeof schema>
 
-export function RegisterForm() {
+export function RegisterForm({ defaultUserType = 'job_seeker' }: { defaultUserType?: UserType }) {
   const [loading, setLoading] = useState(false)
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-  const [userType, setUserType] = useState<UserType>('job_seeker')
+  const [userType, setUserType] = useState<UserType>(defaultUserType)
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
