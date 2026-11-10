@@ -8,12 +8,13 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts'
 import {
-  Briefcase, FileText, Bookmark, TrendingUp, ArrowRight,
+  FileText, Bookmark, TrendingUp, ArrowRight,
   MapPin, Star, Sparkles
 } from 'lucide-react'
 
 import { RecommendedJobCard, type DashboardJob } from '@/components/dashboard/recommended-job-card'
 import { ProfileStrengthCard, getProfileStrength } from '@/components/dashboard/profile-strength-card'
+import { EmptyActivityIllustration, EmptyApplicationsIllustration, EmptyGapsIllustration } from '@/components/illustrations/empty-states'
 import type { Profile, CvProfile, Application } from '@/types/database'
 
 interface JobRelation {
@@ -126,9 +127,11 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
           </CardHeader>
           <CardContent>
             {applications.length === 0 ? (
-              <div className="h-32 flex items-center justify-center text-muted-foreground text-sm">
-                Inga ansökningar ännu.{' '}
-                <Link href="/seeker/jobs" className="text-primary ml-1 hover:underline">Bläddra bland jobb</Link>
+              <div className="flex flex-col items-center gap-3 py-4 text-center">
+                <EmptyActivityIllustration className="h-20 w-auto" />
+                <p className="max-w-xs text-sm text-muted-foreground">
+                  Här ser du hur många jobb du söker per vecka. Sök ditt första jobb så börjar kurvan växa.
+                </p>
               </div>
             ) : (
               <ResponsiveContainer width="100%" height={150}>
@@ -165,11 +168,14 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
           </CardHeader>
           <CardContent>
             {applications.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground text-sm">
-                <Briefcase className="h-8 w-8 mx-auto mb-2 opacity-40" />
-                <p>Inga ansökningar ännu</p>
-                <Button size="sm" className="mt-3" asChild>
-                  <Link href="/seeker/jobs">Hitta jobb</Link>
+              <div className="flex flex-col items-center gap-3 py-6 text-center">
+                <EmptyApplicationsIllustration className="h-20 w-auto" />
+                <div>
+                  <p className="font-medium">Din första ansökan väntar</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Hitta ett jobb du gillar, så ser du status och matchning här.</p>
+                </div>
+                <Button size="sm" asChild>
+                  <Link href="/seeker/jobs">Hitta jobb <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
                 </Button>
               </div>
             ) : (
@@ -206,10 +212,12 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
           </CardHeader>
           <CardContent>
             {topGaps.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground text-sm">
-                <TrendingUp className="h-8 w-8 mx-auto mb-2 opacity-40" />
-                <p>Inga gap identifierade ännu</p>
-                <p className="text-xs mt-1">Sök på jobb för att se din matchning</p>
+              <div className="flex flex-col items-center gap-3 py-6 text-center">
+                <EmptyGapsIllustration className="h-20 w-auto" />
+                <div>
+                  <p className="font-medium">Se vad som skiljer dig från drömjobbet</p>
+                  <p className="mt-1 text-sm text-muted-foreground">När du söker jobb visar vi vilka kompetenser som oftast saknas, så vet du vad som lönar sig att lära dig.</p>
+                </div>
               </div>
             ) : (
               <div className="space-y-3">
