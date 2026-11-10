@@ -504,39 +504,35 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="py-24 px-6">
-        <div className="mx-auto max-w-3xl">
-          <div className="relative rounded-3xl overflow-hidden">
-            <div className="absolute inset-0 gradient-primary" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,oklch(1_0_0/15%),transparent)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_80%_100%,oklch(0.60_0.25_295/30%),transparent)]" />
-            <div className="absolute inset-0 dot-grid opacity-20" />
-            <div className="absolute top-0 left-1/4 right-1/4 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-            <div className="relative px-8 py-16 text-center">
-              <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-sm mb-5 mx-auto ring-1 ring-white/20">
-                <Sparkles className="h-6 w-6 text-white" />
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3 tracking-tight">
-                Redo att vara en del av lösningen?
-              </h2>
-              <p className="text-white/70 mb-8 text-base max-w-md mx-auto leading-relaxed">
-                Gå med jobbsökare och rekryterare som väljer kompetens framför kontakter.
-                Gratis att börja — inga kreditkort.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button size="lg" variant="secondary" asChild className="px-8 h-12 shadow-xl shadow-black/20">
-                  <Link href="/register">
-                    Kom igång gratis
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
-                <Button size="lg" variant="ghost" asChild className="px-8 h-12 text-white hover:text-white hover:bg-white/15 border border-white/20">
-                  <Link href="/login">Logga in</Link>
-                </Button>
-              </div>
+      {/* ── Slut-CTA: samma mörka band och samma två ingångar som heron ── */}
+      <section className="px-6 py-28">
+        <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-white/10 hero-dark px-8 py-16 text-center sm:px-16 sm:py-20">
+          <div className="absolute inset-0 dot-grid-light opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
+          <div className="relative">
+            <h2 className="mx-auto mb-4 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+              Redo att matcha på kompetens i stället för kontakter?
+            </h2>
+            <p className="mx-auto mb-9 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
+              Gratis att börja, inget kreditkort. Välj din väg in.
+            </p>
+            <div className="flex flex-col justify-center gap-3 sm:flex-row">
+              <Button size="lg" asChild className="h-12 bg-[#6C5CE7] px-7 text-base text-white shadow-lg shadow-[#6C5CE7]/30 hover:bg-[#5B4BD8]">
+                <Link href="/register?roll=jobbsokare">
+                  <Search className="mr-2 h-4 w-4" />
+                  Jag söker jobb
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild className="h-12 border-white/20 bg-white/[0.04] px-7 text-base text-white hover:bg-white/10 hover:text-white">
+                <Link href="/register?roll=rekryterare">
+                  <Users className="mr-2 h-4 w-4" />
+                  Jag rekryterar
+                </Link>
+              </Button>
             </div>
+            <p className="mt-7 text-sm text-white/50">
+              Har du redan ett konto?{' '}
+              <Link href="/login" className="font-medium text-white/80 underline-offset-4 hover:underline">Logga in</Link>
+            </p>
           </div>
         </div>
       </section>
