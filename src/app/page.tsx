@@ -290,16 +290,14 @@ export default function HomePage() {
       </section>
 
       {/* ── Live Demo ── */}
-      <section id="demo" className="py-24 px-6 bg-muted/20 border-t border-border/60">
+      <section id="demo" className="scroll-mt-20 border-t border-border bg-muted/30 px-6 py-28">
         <div className="mx-auto max-w-2xl">
           <ScrollReveal>
-            <div className="text-center mb-10">
-              <Badge variant="outline" className="mb-4 text-primary border-primary/30">Prova direkt</Badge>
-              <h2 className="text-2xl sm:text-3xl font-bold">Se AI-matchningen i realtid</h2>
-              <p className="text-muted-foreground mt-3">
-                Inga konton. Inga kortuppgifter. Få ett matchningspoäng på 10 sekunder.
-              </p>
-            </div>
+            <SectionHeader
+              eyebrow="Prova direkt"
+              title="Se AI-matchningen i realtid"
+              description="Inget konto och inga kortuppgifter. Skriv in ett jobb och några kompetenser och få ett matchningspoäng på några sekunder."
+            />
             <Tabs defaultValue="seeker" className="items-center">
               <TabsList className="mb-6">
                 <TabsTrigger value="seeker" className="gap-1.5"><Zap className="h-3.5 w-3.5" /> Prova som jobbsökare</TabsTrigger>
@@ -317,15 +315,13 @@ export default function HomePage() {
       </section>
 
       {/* ── Features ── */}
-      <section className="py-24 px-6 border-t border-border/60">
-        <div className="mx-auto max-w-5xl">
-          <div className="text-center mb-14">
-            <Badge variant="outline" className="mb-4 text-primary border-primary/30">Funktioner</Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Allt du behöver för smart matchning</h2>
-            <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-              Från CV-analys till intervjuförberedelse — Rekryo guidar dig hela vägen.
-            </p>
-          </div>
+      <section className="border-t border-border px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader
+            eyebrow="Funktioner"
+            title="Allt du behöver för förklarad matchning"
+            description="Från CV-analys till intervjuförberedelse, med samma förklarbara AI genom hela flödet."
+          />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((f, i) => (
               <ScrollReveal key={f.title} delay={i * 80}>
@@ -476,13 +472,9 @@ export default function HomePage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="py-24 px-6 bg-muted/20 border-t border-border/60">
+      <section className="border-t border-border bg-muted/30 px-6 py-28">
         <div className="mx-auto max-w-2xl">
-          <div className="text-center mb-12">
-            <Badge variant="outline" className="mb-4 text-primary border-primary/30">Vanliga frågor</Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Allt du behöver veta</h2>
-            <p className="text-muted-foreground mt-3">Klicka på en fråga för att se svaret.</p>
-          </div>
+          <SectionHeader eyebrow="Vanliga frågor" title="Allt du behöver veta" />
           <Accordion className="space-y-3">
             {[
               {
