@@ -8,12 +8,13 @@ import { ParadoxStats } from '@/components/paradox-stats'
 import { DemoMatcher } from '@/components/demo-matcher'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { MatchCardMockup } from '@/components/landing/match-card-mockup'
+import { SectionHeader } from '@/components/landing/section-header'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Target, Users, TrendingUp, Shield,
   ArrowRight, CheckCircle, Zap, Sparkles,
-  FileText, BarChart3, MessageSquare, AlertTriangle,
+  FileText, BarChart3, MessageSquare,
   Building2, TrendingDown, Search, ShieldCheck, UserCheck
 } from 'lucide-react'
 
@@ -147,79 +148,73 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Paradoxen ── */}
-      <section id="problemet" className="py-24 px-6 relative overflow-hidden border-t border-border/60">
-        <div className="absolute inset-0 bg-muted/25 -z-10" />
-        <div className="absolute inset-0 dot-grid opacity-25 -z-10" />
-        <div className="mx-auto max-w-5xl">
-          <div className="text-center mb-14">
-            <Badge variant="outline" className="mb-4 border-red-500/30 text-red-500 bg-red-500/5">Kompetensparadoxen</Badge>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">En paradox som kostar Sverige miljarder</h2>
-            <p className="text-muted-foreground mt-3 max-w-xl mx-auto">
-              Varför är tusentals akademiker arbetslösa medan företag desperat söker kompetens?
-            </p>
-          </div>
+      {/* ── Paradoxen: samma problem sett från två håll ── */}
+      <section id="problemet" className="scroll-mt-20 border-t border-border px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader
+            eyebrow="Kompetensparadoxen"
+            title="En paradox som kostar Sverige miljarder"
+            description="Akademiker står utan jobb samtidigt som arbetsgivare inte hittar kompetens. Det är inte ett kompetensproblem, det är ett matchningsproblem."
+          />
 
-          {/* Animated ticker stats */}
-          <ScrollReveal className="mb-12">
+          <ScrollReveal className="mb-6">
             <ParadoxStats />
           </ScrollReveal>
 
-          {/* Two-column tension */}
-          <div className="grid lg:grid-cols-2 gap-5 mb-10">
-            <div className="panel border-red-500/25 bg-red-500/[0.03] p-7">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="h-10 w-10 rounded-lg bg-red-500/12 border border-red-500/20 flex items-center justify-center flex-shrink-0">
-                  <TrendingDown className="h-5 w-5 text-red-500" />
+          <div className="mb-6 grid gap-6 lg:grid-cols-2">
+            <div className="panel p-7 sm:p-8">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <TrendingDown className="h-5 w-5" aria-hidden />
                 </div>
-                <h3 className="text-base font-bold text-red-600 dark:text-red-400">På jobbsökarsidan</h3>
+                <h3 className="text-lg font-semibold">Jobbsökarna</h3>
               </div>
-              <ul className="space-y-2.5">
+              <dl className="space-y-5">
                 {[
-                  'Var fjärde nyexaminerad akademiker tjänar under studiemedelsnivån 4 månader efter examen',
-                  'Bara 1 av 8 nyexaminerade uppfyller inkomstkravet för a-kassa',
-                  'Nyexaminerade hamnar i ett ekonomiskt mellanrum — utan studiemedel och utan a-kassa',
-                  '"Ett enormt stort slöseri när studenter som investerat flera år i sina utbildningar inte lyckas komma i arbete" — Colin Andersson, Saco studentråd',
-                  'Hög arbetslöshet bland akademiker trots att arbetsgivare skriker efter kompetens',
-                ].map(item => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                    <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5" />
-                    {item}
-                  </li>
+                  { value: '1 av 4', text: 'nyexaminerade akademiker tjänar under studiemedelsnivån fyra månader efter examen' },
+                  { value: '1 av 8', text: 'nyexaminerade uppfyller inkomstkravet för a-kassa, så många hamnar mellan studiemedel och a-kassa' },
+                ].map(row => (
+                  <div key={row.value} className="flex items-baseline gap-5">
+                    <dt className="w-20 flex-shrink-0 text-2xl font-semibold tabular-nums tracking-tight">{row.value}</dt>
+                    <dd className="text-sm leading-relaxed text-muted-foreground">{row.text}</dd>
+                  </div>
                 ))}
-              </ul>
+              </dl>
+              <blockquote className="mt-7 border-l-2 border-primary/40 pl-4">
+                <p className="text-sm italic leading-relaxed text-foreground/85">
+                  &rdquo;Ett enormt stort slöseri när studenter som investerat flera år i sina utbildningar inte lyckas komma i arbete.&rdquo;
+                </p>
+                <footer className="mt-2 text-xs text-muted-foreground">Colin Andersson, Saco studentråd</footer>
+              </blockquote>
             </div>
 
-            <div className="panel border-amber-500/25 bg-amber-500/[0.03] p-7">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="h-10 w-10 rounded-lg bg-amber-500/12 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
-                  <Building2 className="h-5 w-5 text-amber-600" />
+            <div className="panel p-7 sm:p-8">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <Building2 className="h-5 w-5" aria-hidden />
                 </div>
-                <h3 className="text-base font-bold text-amber-600 dark:text-amber-400">På arbetsgivarsidan</h3>
+                <h3 className="text-lg font-semibold">Arbetsgivarna</h3>
               </div>
-              <ul className="space-y-2.5">
+              <dl className="space-y-5">
                 {[
-                  '58% av arbetsgivare upplevde problem vid sitt senaste rekryteringsförsök',
-                  '60% anger bristande erfarenhet eller fel utbildning som rekryteringshinder',
-                  '56% av beslutsfattare ser att regeringens politik bidragit lite eller inget till bättre matchning',
-                  '67% av Unionens medlemmar har lågt förtroende för regeringens arbetsmarknadspolitik',
-                  'Grundproblemet: matchning — de arbetslösas kompetens möter inte arbetsgivarnas krav',
-                ].map(item => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-muted-foreground">
-                    <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0 mt-0.5" />
-                    {item}
-                  </li>
+                  { value: '58%', text: 'av arbetsgivarna fick problem vid sitt senaste rekryteringsförsök' },
+                  { value: '60%', text: 'anger bristande erfarenhet eller fel utbildning som rekryteringshinder' },
+                  { value: '56%', text: 'av beslutsfattarna ser att politiken bidragit lite eller inget till bättre matchning' },
+                  { value: '67%', text: 'av Unionens medlemmar har lågt förtroende för regeringens arbetsmarknadspolitik' },
+                ].map(row => (
+                  <div key={row.value} className="flex items-baseline gap-5">
+                    <dt className="w-20 flex-shrink-0 text-2xl font-semibold tabular-nums tracking-tight">{row.value}</dt>
+                    <dd className="text-sm leading-relaxed text-muted-foreground">{row.text}</dd>
+                  </div>
                 ))}
-              </ul>
+              </dl>
             </div>
           </div>
 
-          {/* Conclusion */}
-          <div className="panel border-primary/25 bg-primary/[0.04] px-8 py-6 text-center max-w-2xl mx-auto">
-            <p className="text-base font-medium leading-relaxed">
-              <span className="gradient-text font-bold">Slutsats:</span>{' '}
-              Det finns tillräckligt med kompetens i Sverige. Systemet för att matcha den är trasigt.
-              {' '}<strong className="text-foreground">Rekryo löser det med AI.</strong>
+          <div className="panel gradient-subtle mx-auto max-w-3xl px-8 py-7 text-center">
+            <p className="text-lg leading-relaxed">
+              Det finns tillräckligt med kompetens i Sverige. Systemet för att matcha den är trasigt.{' '}
+              <strong className="font-semibold text-foreground">Rekryo löser det med förklarbar AI.</strong>
             </p>
           </div>
         </div>
