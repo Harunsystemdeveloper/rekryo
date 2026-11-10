@@ -3,147 +3,94 @@ import { Briefcase, Brain, ClipboardCheck, ShieldCheck, Check } from 'lucide-rea
 
 const RECRUITER_FEATURES = [
   { icon: Brain, text: 'AI rankar och motiverar varje kandidat på sekunder' },
-  { icon: ClipboardCheck, text: 'Strukturerade intervjuutvärderingar — inte magkänsla' },
+  { icon: ClipboardCheck, text: 'Strukturerade intervjuutvärderingar, inte magkänsla' },
   { icon: ShieldCheck, text: 'Fairness-övervakning och full spårbarhet enligt EU AI Act' },
 ]
 
+// Delas av inloggning, registrering, onboarding och lösenordsåterställning.
+// Vänsterpanelen är alltid mörk (samma band som landningssidans hero). Högersidan följer
+// temat, så formulärets text aldrig hamnar ljus på ljust eller mörk på mörkt.
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="flex min-h-screen">
+      {/* ── Vänster: varumärkespanel ── */}
+      <aside className="hero-dark relative hidden w-[440px] flex-shrink-0 flex-col overflow-hidden border-r border-white/[0.06] p-10 lg:flex">
+        <div className="absolute inset-0 dot-grid-light opacity-40 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
 
-      {/* ── Left brand panel ── */}
-      <div
-        className="hidden lg:flex flex-col"
-        style={{
-          width: '420px',
-          minWidth: '420px',
-          background: 'linear-gradient(160deg, #1e1b4b 0%, #312e81 40%, #1e3a5f 100%)',
-          position: 'relative',
-          overflow: 'hidden',
-          padding: '40px',
-        }}
-      >
-        {/* Glow blobs */}
-        <div style={{
-          position: 'absolute', top: '-80px', left: '-80px',
-          width: '320px', height: '320px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(99,102,241,0.5) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', bottom: '60px', right: '-60px',
-          width: '260px', height: '260px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-
-        {/* Logo */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-          <div style={{
-            width: '38px', height: '38px', borderRadius: '10px',
-            background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <Briefcase size={18} color="white" />
-          </div>
-          <span style={{ color: 'white', fontWeight: 700, fontSize: '20px' }}>Rekryo</span>
+        <Link href="/" className="relative flex items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/20">
+            <Briefcase className="h-[18px] w-[18px] text-white" />
+          </span>
+          <span className="text-xl font-semibold text-white">Rekryo</span>
         </Link>
 
-        {/* Main content */}
-        <div style={{ marginTop: 'auto', marginBottom: 'auto', paddingTop: '48px' }}>
-          <p style={{ color: '#a5b4fc', fontSize: '12px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '16px' }}>
-            Framtidens rekrytering
-          </p>
-          <h2 style={{ color: 'white', fontSize: '34px', fontWeight: 800, lineHeight: 1.25, marginBottom: '20px' }}>
-            Rätt person<br />till rätt jobb —<br />
-            <span style={{ color: '#a5b4fc' }}>med AI-precision</span>
+        <div className="relative my-auto pt-12">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-[#A99DFB]">Framtidens rekrytering</p>
+          <h2 className="mb-5 text-[2.1rem] font-semibold leading-[1.15] tracking-tight text-white">
+            Rätt person till rätt jobb, <span className="gradient-text-light">med förklarbar AI</span>
           </h2>
-          <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '15px', lineHeight: 1.7, maxWidth: '300px' }}>
-            Rekryo analyserar kompetenser och erfarenhet för att skapa perfekta matchningar på svenska arbetsmarknaden.
+          <p className="max-w-[320px] text-[15px] leading-relaxed text-white/60">
+            Rekryo analyserar kompetenser och erfarenhet för att skapa träffsäkra matchningar på den svenska arbetsmarknaden.
           </p>
 
-          {/* Recruiter value props */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '24px' }}>
+          <ul className="mt-7 space-y-3">
             {RECRUITER_FEATURES.map(({ icon: Icon, text }) => (
-              <div key={text} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                <div style={{
-                  width: '26px', height: '26px', borderRadius: '8px', flexShrink: 0,
-                  background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1px',
-                }}>
-                  <Icon size={13} color="#c7d2fe" />
-                </div>
-                <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13.5px', lineHeight: 1.5, margin: 0, paddingTop: '3px' }}>{text}</p>
-              </div>
+              <li key={text} className="flex items-start gap-3">
+                <span className="mt-px flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-white/[0.08] ring-1 ring-white/15">
+                  <Icon className="h-3.5 w-3.5 text-[#C9C2FF]" />
+                </span>
+                <span className="pt-1 text-[13.5px] leading-snug text-white/80">{text}</span>
+              </li>
             ))}
-          </div>
+          </ul>
 
-          {/* Stats */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: '24px' }}>
+          <div className="mt-7 grid grid-cols-2 gap-3">
             {[
               { value: '61 000', label: 'Personer saknas i olika yrken' },
               { value: '76%', label: 'Av företagen har svårt att rekrytera' },
-            ].map((s) => (
-              <div key={s.value} style={{
-                background: 'rgba(255,255,255,0.1)',
-                border: '1px solid rgba(255,255,255,0.18)',
-                borderRadius: '12px',
-                padding: '14px',
-              }}>
-                <p style={{ color: 'white', fontWeight: 700, fontSize: '20px', margin: 0 }}>{s.value}</p>
-                <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '11.5px', marginTop: '4px', lineHeight: 1.4 }}>{s.label}</p>
+            ].map(s => (
+              <div key={s.value} className="rounded-xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+                <p className="text-xl font-semibold tabular-nums text-white">{s.value}</p>
+                <p className="mt-1 text-[11.5px] leading-snug text-white/55">{s.label}</p>
               </div>
             ))}
           </div>
 
-          {/* Trust strip */}
-          <div style={{ display: 'flex', gap: '8px', marginTop: '18px', flexWrap: 'wrap' }}>
+          <div className="mt-5 flex flex-wrap gap-2">
             {['GDPR-säkert', 'EU AI Act-spårbart', '100% gratis'].map(t => (
-              <div key={t} style={{
-                display: 'flex', alignItems: 'center', gap: '5px',
-                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)',
-                borderRadius: '999px', padding: '5px 10px',
-              }}>
-                <Check size={11} color="#86efac" />
-                <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: '11px', fontWeight: 500 }}>{t}</span>
-              </div>
+              <span key={t} className="flex items-center gap-1.5 rounded-full bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-white/70 ring-1 ring-white/10">
+                <Check className="h-3 w-3 text-[#5EEAD4]" />
+                {t}
+              </span>
             ))}
           </div>
         </div>
 
-        <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '12px', marginTop: 'auto' }}>
+        <p className="relative mt-auto text-xs text-white/30">
           © {new Date().getFullYear()} Rekryo · GDPR-säkert · Sverige
         </p>
-      </div>
+      </aside>
 
-      {/* ── Right form panel ── */}
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        background: 'linear-gradient(160deg, #eef2ff 0%, #f8f7ff 50%, #f0f9ff 100%)',
-      }}>
-        {/* Mobile header */}
-        <header className="lg:hidden" style={{ padding: '20px 24px', borderBottom: '1px solid rgba(99,102,241,0.15)' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-            <div className="gradient-primary" style={{
-              width: '34px', height: '34px', borderRadius: '10px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>
-              <Briefcase size={16} color="white" />
-            </div>
-            <span className="gradient-text" style={{ fontWeight: 700, fontSize: '18px' }}>Rekryo</span>
+      {/* ── Höger: formulär på temats bakgrund ── */}
+      <div className="hero-mesh relative flex flex-1 flex-col">
+        {/* Svag lila ton längs skarven så att panelerna hänger ihop */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-72 bg-gradient-to-r from-primary/[0.07] to-transparent lg:block" />
+
+        <header className="border-b border-border px-6 py-5 lg:hidden">
+          <Link href="/" className="flex items-center gap-2.5">
+            <span className="gradient-primary flex h-9 w-9 items-center justify-center rounded-xl">
+              <Briefcase className="h-4 w-4 text-white" />
+            </span>
+            <span className="text-lg font-semibold">Rekryo</span>
           </Link>
         </header>
 
-        <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 16px' }}>
+        <main className="relative flex flex-1 justify-center px-4 py-10 sm:px-6 lg:items-start lg:pt-[12vh] lg:pb-16">
           {children}
         </main>
 
-        <footer className="lg:hidden" style={{ padding: '16px', textAlign: 'center' }}>
-          <p style={{ fontSize: '12px', color: 'rgba(100,116,139,0.7)' }}>
-            © {new Date().getFullYear()} Rekryo · GDPR-säkert · Sverige
-          </p>
+        <footer className="px-4 py-4 text-center lg:hidden">
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} Rekryo · GDPR-säkert · Sverige</p>
         </footer>
       </div>
     </div>
