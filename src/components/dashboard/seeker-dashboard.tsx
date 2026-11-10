@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import {
@@ -10,10 +9,11 @@ import {
 } from 'recharts'
 import {
   Briefcase, FileText, Bookmark, TrendingUp, ArrowRight,
-  User, MapPin, Star, AlertCircle, Sparkles
+  MapPin, Star, Sparkles
 } from 'lucide-react'
 
 import { RecommendedJobCard, type DashboardJob } from '@/components/dashboard/recommended-job-card'
+import { ProfileStrengthCard, getProfileStrength } from '@/components/dashboard/profile-strength-card'
 import type { Profile, CvProfile, Application } from '@/types/database'
 
 interface JobRelation {
@@ -30,20 +30,6 @@ interface Props {
   savedJobsCount: number
   recommendedJobs?: DashboardJob[]
   latestJobs?: DashboardJob[]
-}
-
-function getProfileStrength(profile: Profile, cvProfile: CvProfile | null): number {
-  let score = 0
-  if (profile.full_name) score += 15
-  if (profile.avatar_url) score += 10
-  if (profile.headline) score += 10
-  if (profile.bio) score += 10
-  if (profile.location) score += 5
-  if (cvProfile?.cv_url) score += 20
-  if (cvProfile?.skills && cvProfile.skills.length >= 5) score += 15
-  if (cvProfile?.experience_years != null) score += 10
-  if (cvProfile?.education) score += 5
-  return score
 }
 
 const statusColors: Record<string, string> = {
@@ -130,43 +116,7 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
-        {/* Profile strength */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <User className="h-4 w-4" /> Profilstyrka
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold gradient-text">{profileStrength}%</span>
-              <Badge variant={profileStrength >= 80 ? 'default' : 'secondary'}>
-                {profileStrength >= 80 ? 'Stark' : profileStrength >= 50 ? 'OK' : 'Svag'}
-              </Badge>
-            </div>
-            <Progress value={profileStrength} className="h-2" />
-            <div className="space-y-1.5 text-xs text-muted-foreground">
-              {!cvProfile?.cv_url && (
-                <p className="flex items-center gap-1.5 text-orange-600 dark:text-orange-400">
-                  <AlertCircle className="h-3 w-3" /> Ladda upp ditt CV (+20p)
-                </p>
-              )}
-              {!profile.avatar_url && (
-                <p className="flex items-center gap-1.5">
-                  <AlertCircle className="h-3 w-3" /> Lägg till profilbild (+10p)
-                </p>
-              )}
-              {(!cvProfile?.skills || cvProfile.skills.length < 5) && (
-                <p className="flex items-center gap-1.5">
-                  <AlertCircle className="h-3 w-3" /> Lägg till minst 5 kompetenser (+15p)
-                </p>
-              )}
-            </div>
-            <Button size="sm" variant="outline" className="w-full" asChild>
-              <Link href="/seeker/profile">Förbättra profil</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <ProfileStrengthCard profile={profile} cvProfile={cvProfile} />
 
         {/* Application chart */}
         <Card className="lg:col-span-2">
