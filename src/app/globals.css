@@ -5,6 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --color-brand: var(--brand);
+  --color-mint: var(--mint);
+  --color-mint-foreground: var(--mint-foreground);
+  --color-navy: var(--navy);
+  --color-navy-elevated: var(--navy-elevated);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
@@ -48,75 +53,84 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Rekryo 2026: marinblå bas, lila för handling och AI, mint för positiva signaler
+   (matchning, uppfyllda krav). Kontrasten är kontrollerad mot WCAG AA. Lila text på
+   marinblått klarar inte 4.5:1, så primärfärgen är ljusare i mörkt läge. */
 :root {
-  /* Editorial ink-navy + warm copper — a deliberate, single-brand-hue system
-     instead of the generic "AI-startup blue→teal gradient" look. */
-  --background: oklch(0.975 0.008 68);
-  --foreground: oklch(0.17 0.020 258);
-  --card: oklch(0.995 0.003 68);
-  --card-foreground: oklch(0.17 0.020 258);
-  --popover: oklch(0.995 0.003 68);
-  --popover-foreground: oklch(0.17 0.020 258);
-  --primary: oklch(0.38 0.135 258);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.94 0.010 68);
-  --secondary-foreground: oklch(0.24 0.045 258);
-  --muted: oklch(0.94 0.010 68);
-  --muted-foreground: oklch(0.43 0.032 258);
-  --accent: oklch(0.90 0.058 58);
-  --accent-foreground: oklch(0.32 0.09 48);
-  --destructive: oklch(0.56 0.205 25);
-  --border: oklch(0.882 0.011 68);
-  --input: oklch(0.886 0.011 68);
-  --ring: oklch(0.38 0.135 258);
-  --chart-1: oklch(0.38 0.135 258);
-  --chart-2: oklch(0.72 0.135 58);
-  --chart-3: oklch(0.55 0.15 20);
-  --chart-4: oklch(0.62 0.10 190);
-  --chart-5: oklch(0.60 0.09 135);
-  --radius: 0.55rem;
-  --sidebar: oklch(0.958 0.010 68);
-  --sidebar-foreground: oklch(0.17 0.018 258);
-  --sidebar-primary: oklch(0.38 0.135 258);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.90 0.045 258);
-  --sidebar-accent-foreground: oklch(0.26 0.06 258);
-  --sidebar-border: oklch(0.888 0.013 68);
-  --sidebar-ring: oklch(0.38 0.135 258);
+  --brand: #6C5CE7;
+  --mint: #00B894;
+  --mint-foreground: #00806A;
+  --navy: #0B1120;
+  --navy-elevated: #141B2D;
+
+  --background: #F7F8FB;
+  --foreground: #0B1120;
+  --card: #FFFFFF;
+  --card-foreground: #0B1120;
+  --popover: #FFFFFF;
+  --popover-foreground: #0B1120;
+  --primary: #6C5CE7;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EEF0F6;
+  --secondary-foreground: #141B2D;
+  --muted: #EEF0F6;
+  --muted-foreground: #5A6378;
+  --accent: #EFEDFD;
+  --accent-foreground: #3B2FA8;
+  --destructive: #DC2626;
+  --border: #E3E6EE;
+  --input: #DCE0EA;
+  --ring: #6C5CE7;
+  --chart-1: #6C5CE7;
+  --chart-2: #00B894;
+  --chart-3: #F59E0B;
+  --chart-4: #3B82F6;
+  --chart-5: #EC4899;
+  --radius: 0.625rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0B1120;
+  --sidebar-primary: #6C5CE7;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EFEDFD;
+  --sidebar-accent-foreground: #3B2FA8;
+  --sidebar-border: #E3E6EE;
+  --sidebar-ring: #6C5CE7;
 }
 
 .dark {
-  --background: oklch(0.150 0.018 258);
-  --foreground: oklch(0.97 0.006 258);
-  --card: oklch(0.208 0.022 258);
-  --card-foreground: oklch(0.97 0.006 258);
-  --popover: oklch(0.208 0.022 258);
-  --popover-foreground: oklch(0.97 0.006 258);
-  --primary: oklch(0.68 0.130 258);
-  --primary-foreground: oklch(0.10 0.02 258);
-  --secondary: oklch(0.258 0.030 258);
-  --secondary-foreground: oklch(0.97 0.006 258);
-  --muted: oklch(0.242 0.026 258);
-  --muted-foreground: oklch(0.685 0.035 258);
-  --accent: oklch(0.305 0.062 58);
-  --accent-foreground: oklch(0.90 0.05 55);
-  --destructive: oklch(0.65 0.19 22);
-  --border: oklch(1 0 0 / 14%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.68 0.130 258);
-  --chart-1: oklch(0.68 0.130 258);
-  --chart-2: oklch(0.78 0.130 58);
-  --chart-3: oklch(0.68 0.15 22);
-  --chart-4: oklch(0.70 0.09 190);
-  --chart-5: oklch(0.70 0.08 135);
-  --sidebar: oklch(0.185 0.020 258);
-  --sidebar-foreground: oklch(0.97 0.006 258);
-  --sidebar-primary: oklch(0.68 0.130 258);
-  --sidebar-primary-foreground: oklch(0.10 0.02 258);
-  --sidebar-accent: oklch(0.258 0.030 258);
-  --sidebar-accent-foreground: oklch(0.97 0.006 258);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.68 0.130 258);
+  --mint-foreground: #2DD4AE;
+
+  --background: #0B1120;
+  --foreground: #E8EBF2;
+  --card: #141B2D;
+  --card-foreground: #E8EBF2;
+  --popover: #141B2D;
+  --popover-foreground: #E8EBF2;
+  --primary: #8B7CF6;
+  --primary-foreground: #0B1120;
+  --secondary: #1A2236;
+  --secondary-foreground: #E8EBF2;
+  --muted: #1A2236;
+  --muted-foreground: #94A3B8;
+  --accent: #1E2742;
+  --accent-foreground: #E8EBF2;
+  --destructive: #F87171;
+  --border: rgb(255 255 255 / 8%);
+  --input: rgb(255 255 255 / 12%);
+  --ring: #8B7CF6;
+  --chart-1: #8B7CF6;
+  --chart-2: #2DD4AE;
+  --chart-3: #FBBF24;
+  --chart-4: #60A5FA;
+  --chart-5: #F472B6;
+  --sidebar: #0F1626;
+  --sidebar-foreground: #E8EBF2;
+  --sidebar-primary: #8B7CF6;
+  --sidebar-primary-foreground: #0B1120;
+  --sidebar-accent: #1E2742;
+  --sidebar-accent-foreground: #E8EBF2;
+  --sidebar-border: rgb(255 255 255 / 8%);
+  --sidebar-ring: #8B7CF6;
 }
 
 @layer base {
@@ -136,126 +150,117 @@
     @apply font-heading tracking-tight;
   }
 
-  /* Card elevation in light mode — shadows beat color-diff every time */
+  /* Kort: subtil kant och mjuk skugga. Låg, utspridd skugga i ljust läge, djupare
+     i mörkt läge där svaga kanter annars ser platta ut. */
   :root .border,
   :root [class*="rounded"][class*="border"] {
-    box-shadow: 0 1px 3px oklch(0 0 0 / 6%), 0 1px 2px oklch(0 0 0 / 4%);
+    box-shadow: 0 1px 2px rgb(11 17 32 / 4%), 0 6px 16px -8px rgb(11 17 32 / 8%);
   }
-  /* Dark mode needs its own, stronger lift — faint borders alone read as flat */
   .dark [class*="rounded"][class*="border"] {
-    box-shadow: 0 1px 2px oklch(0 0 0 / 30%), 0 4px 16px -6px oklch(0 0 0 / 40%);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 10px 28px -14px rgb(0 0 0 / 55%);
   }
 }
 
 @layer utilities {
-  /* Gradients — single-hue depth (navy → indigo), not a rainbow blend.
-     A confident brand mark reads more premium than a blue→teal gradient. */
+  /* Gradienter: lila till djupare indigo för ytor, lila till mint för betonad text */
   .gradient-primary {
-    background: linear-gradient(135deg, oklch(0.36 0.135 258), oklch(0.47 0.155 247));
+    background: linear-gradient(135deg, #6C5CE7, #5443D4);
   }
   .gradient-text {
-    background: linear-gradient(135deg, oklch(0.36 0.135 258), oklch(0.47 0.155 247));
+    background: linear-gradient(120deg, #6C5CE7, #00A383);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .dark .gradient-text {
-    background: linear-gradient(135deg, oklch(0.74 0.13 258), oklch(0.80 0.135 246));
+    background: linear-gradient(120deg, #A99DFB, #2DD4AE);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   .gradient-subtle {
-    background: linear-gradient(135deg, oklch(0.38 0.135 258 / 8%), oklch(0.47 0.155 247 / 8%));
+    background: linear-gradient(135deg, rgb(108 92 231 / 8%), rgb(0 184 148 / 6%));
   }
 
-  /* Warm copper accent — used sparingly as the second brand color, never blended into gradients */
+  /* Accentmarkering i mint, för positiva signaler och små betoningar */
   .accent-mark {
-    color: oklch(0.60 0.135 55);
-  }
-  .dark .accent-mark {
-    color: oklch(0.78 0.13 58);
+    color: var(--mint-foreground);
   }
 
-  /* Glass */
+  /* Glas */
   .glass {
-    background: oklch(0.97 0.010 68 / 78%);
+    background: rgb(255 255 255 / 75%);
     backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid oklch(0.85 0.020 68 / 60%);
+    border: 1px solid rgb(227 230 238 / 80%);
   }
   .dark .glass {
-    background: oklch(0.14 0.020 258 / 80%);
-    border: 1px solid oklch(1 0 0 / 8%);
+    background: rgb(11 17 32 / 72%);
+    border: 1px solid rgb(255 255 255 / 8%);
   }
 
-  /* Hero brand band — a deliberately dark navy section, independent of light/dark
-     theme mode. This is the single most visible signal that the site was redesigned:
-     a real color statement up top, not another cream card with a blue button. */
+  /* Hero-band: alltid mörkt marinblått oavsett tema, med en lila och en mint glöd */
   .hero-dark {
-    background-color: oklch(0.19 0.035 258);
+    background-color: #0B1120;
     background-image:
-      radial-gradient(at 15% 10%, oklch(0.32 0.10 258 / 55%) 0px, transparent 55%),
-      radial-gradient(at 88% 15%, oklch(0.62 0.135 55 / 20%) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, oklch(0.30 0.09 258 / 45%) 0px, transparent 45%);
+      radial-gradient(60% 50% at 18% 12%, rgb(108 92 231 / 32%) 0px, transparent 70%),
+      radial-gradient(45% 40% at 88% 18%, rgb(0 184 148 / 14%) 0px, transparent 70%),
+      radial-gradient(60% 45% at 50% 105%, rgb(108 92 231 / 18%) 0px, transparent 70%);
   }
   .dot-grid-light {
-    background-image: radial-gradient(oklch(1 0 0 / 8%) 1px, transparent 1px);
+    background-image: radial-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px);
     background-size: 28px 28px;
   }
   .gradient-text-light {
-    background: linear-gradient(135deg, oklch(0.98 0 0), oklch(0.75 0.135 58));
+    background: linear-gradient(120deg, #C9C2FF, #5EEAD4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Hero background — navy depth with a single warm copper glow, not a multi-hue mesh */
+  /* Bakgrund med svag lila och mint ton för större sektioner */
   .hero-mesh {
     background-color: var(--background);
     background-image:
-      radial-gradient(at 12% 15%, oklch(0.38 0.135 258 / 9%) 0px, transparent 50%),
-      radial-gradient(at 90% 8%, oklch(0.65 0.135 58 / 6%) 0px, transparent 50%),
-      radial-gradient(at 50% 100%, oklch(0.45 0.11 258 / 5%) 0px, transparent 45%);
+      radial-gradient(at 12% 15%, rgb(108 92 231 / 7%) 0px, transparent 50%),
+      radial-gradient(at 90% 8%, rgb(0 184 148 / 5%) 0px, transparent 50%);
   }
   .dark .hero-mesh {
     background-image:
-      radial-gradient(at 15% 20%, oklch(0.68 0.130 258 / 12%) 0px, transparent 55%),
-      radial-gradient(at 85% 10%, oklch(0.72 0.13 58 / 8%) 0px, transparent 55%),
-      radial-gradient(at 50% 90%, oklch(0.55 0.10 258 / 7%) 0px, transparent 50%);
+      radial-gradient(at 15% 20%, rgb(108 92 231 / 14%) 0px, transparent 55%),
+      radial-gradient(at 85% 10%, rgb(0 184 148 / 7%) 0px, transparent 55%);
   }
 
-  /* Dot grid */
+  /* Prickrutnät */
   .dot-grid {
-    background-image: radial-gradient(oklch(0.38 0.135 258 / 8%) 1px, transparent 1px);
+    background-image: radial-gradient(rgb(108 92 231 / 9%) 1px, transparent 1px);
     background-size: 28px 28px;
   }
   .dark .dot-grid {
-    background-image: radial-gradient(oklch(0.68 0.130 258 / 10%) 1px, transparent 1px);
+    background-image: radial-gradient(rgb(139 124 246 / 11%) 1px, transparent 1px);
     background-size: 28px 28px;
   }
 
-  /* Glow */
+  /* Glöd */
   .glow-primary {
-    box-shadow: 0 0 28px -10px oklch(0.38 0.135 258 / 35%);
+    box-shadow: 0 0 32px -10px rgb(108 92 231 / 45%);
   }
   .dark .glow-primary {
-    box-shadow: 0 0 28px -10px oklch(0.68 0.130 258 / 40%);
+    box-shadow: 0 0 36px -10px rgb(139 124 246 / 50%);
   }
 
-  /* Card hover ring */
+  /* Hover på kort */
   .card-hover {
     transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
   }
   .card-hover:hover {
-    box-shadow: 0 8px 24px -10px oklch(0.38 0.135 258 / 18%), 0 0 0 1px oklch(0.38 0.135 258 / 16%);
+    box-shadow: 0 12px 28px -12px rgb(108 92 231 / 22%), 0 0 0 1px rgb(108 92 231 / 18%);
     transform: translateY(-2px);
   }
   .dark .card-hover:hover {
-    box-shadow: 0 8px 24px -8px oklch(0 0 0 / 45%), 0 0 0 1px oklch(0.68 0.130 258 / 22%);
+    box-shadow: 0 12px 28px -10px rgb(0 0 0 / 50%), 0 0 0 1px rgb(139 124 246 / 28%);
   }
 
-  /* Structured panel — the default "professional" card: neutral surface,
-     a real border, restrained elevation. Used instead of ad-hoc color washes. */
+  /* Panel: standardkortet med neutral yta, riktig kant och återhållsam elevation */
   .panel {
     background: var(--card);
     border: 1px solid var(--border);
@@ -265,11 +270,11 @@
     transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   }
   .panel-hover:hover {
-    border-color: oklch(0.38 0.135 258 / 35%);
+    border-color: rgb(108 92 231 / 35%);
     transform: translateY(-2px);
   }
   .dark .panel-hover:hover {
-    border-color: oklch(0.68 0.130 258 / 40%);
+    border-color: rgb(139 124 246 / 40%);
   }
 
   /* Danger variant of panel-hover — for stat cards that flag a worsening metric */
