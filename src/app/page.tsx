@@ -16,7 +16,7 @@ import {
   Target, Users, TrendingUp, Shield,
   ArrowRight, CheckCircle, Zap, Sparkles,
   FileText, BarChart3, MessageSquare,
-  Building2, TrendingDown, Search, ShieldCheck, UserCheck
+  Building2, TrendingDown, Search, ShieldCheck, UserCheck, UserPlus
 } from 'lucide-react'
 
 // Två märkesfärger, inte en regnbåge — växlar mellan primär (navy) och
@@ -68,9 +68,9 @@ const features = [
 
 
 const steps = [
-  { step: '01', title: 'Skapa konto', desc: 'Registrera dig gratis som jobbsökare eller rekryterare på under en minut.' },
-  { step: '02', title: 'Ladda upp CV / skapa annons', desc: 'AI analyserar ditt CV eller din jobbannons och extraherar nyckelkompetenser.' },
-  { step: '03', title: 'Få AI-matchning', desc: 'Se ditt matchningspoäng, kompetensgap och personaliserade intervjufrågor direkt.' },
+  { step: '01', icon: UserPlus, title: 'Skapa konto', desc: 'Registrera dig gratis som jobbsökare eller rekryterare på under en minut.' },
+  { step: '02', icon: FileText, title: 'Ladda upp CV eller annons', desc: 'AI läser ditt CV eller din jobbannons och plockar ut kompetenser, erfarenhet och krav.' },
+  { step: '03', icon: Target, title: 'Få en förklarad matchning', desc: 'Se poäng 0–100, varför matchningen håller, vad som saknas och förslag på intervjufrågor.' },
 ]
 
 export default function HomePage() {
@@ -240,32 +240,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── How it works ── */}
-      <section className="py-24 px-6 border-t border-border/60">
-        <div className="mx-auto max-w-3xl">
-          <ScrollReveal>
-          <div className="text-center mb-14">
-            <Badge variant="outline" className="mb-4 text-primary border-primary/30">Hur det fungerar</Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Tre steg till din nästa möjlighet</h2>
-          </div>
-          <div className="relative">
-            <div className="absolute left-8 top-8 bottom-8 w-px bg-gradient-to-b from-primary/60 via-primary/20 to-transparent hidden sm:block" />
-            <div className="space-y-6">
-              {steps.map((s, i) => (
-                <div key={s.step} className="flex gap-6 items-start group relative">
-                  <div className="flex-shrink-0 h-16 w-16 rounded-xl gradient-primary flex flex-col items-center justify-center shadow-lg shadow-primary/25 group-hover:scale-105 group-hover:shadow-primary/40 transition-all duration-200 z-10">
-                    <span className="text-white/60 text-[10px] font-bold leading-none">{String(i + 1).padStart(2, '0')}</span>
-                    <span className="text-white font-bold text-sm leading-none mt-0.5">{s.title.split(' ')[0]}</span>
+      {/* ── Så fungerar det: tre steg, vart och ett med ett litet utsnitt av produkten ── */}
+      <section className="border-t border-border px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <SectionHeader eyebrow="Så fungerar det" title="Från CV till förklarad matchning i tre steg" />
+
+          <ol className="grid gap-6 md:grid-cols-3">
+            {steps.map((s, i) => (
+              <ScrollReveal key={s.step} delay={i * 100}>
+                <li className="panel flex h-full flex-col p-7">
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <s.icon className="h-5 w-5" aria-hidden />
+                    </div>
+                    <span className="text-sm font-semibold tabular-nums text-muted-foreground/70">{s.step}</span>
                   </div>
-                  <div className="pt-3 flex-1">
-                    <h3 className="text-lg font-semibold mb-1.5">{s.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{s.desc}</p>
+                  <h3 className="mb-2 text-lg font-semibold">{s.title}</h3>
+                  <p className="mb-7 flex-1 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
+
+                  <div className="rounded-lg border border-border bg-muted/50 p-3" aria-hidden>
+                    {i === 0 && (
+                      <div className="grid grid-cols-2 gap-2 text-xs font-medium">
+                        <span className="rounded-md border border-primary/40 bg-primary/10 px-2 py-2 text-center text-primary">Jobbsökare</span>
+                        <span className="rounded-md border border-border bg-card px-2 py-2 text-center text-muted-foreground">Rekryterare</span>
+                      </div>
+                    )}
+                    {i === 1 && (
+                      <div className="flex flex-wrap gap-1.5 text-xs">
+                        {['Triage', 'Projektledning', 'Excel', 'Kundservice'].map(skill => (
+                          <span key={skill} className="rounded-md bg-card px-2 py-1 text-foreground/80 ring-1 ring-border">{skill}</span>
+                        ))}
+                      </div>
+                    )}
+                    {i === 2 && (
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl font-semibold tabular-nums">87</span>
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-border">
+                          <div className="h-full w-[87%] rounded-full bg-gradient-to-r from-primary to-mint" />
+                        </div>
+                        <span className="text-xs font-medium text-mint-foreground">Stark</span>
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          </ScrollReveal>
+                </li>
+              </ScrollReveal>
+            ))}
+          </ol>
         </div>
       </section>
 
