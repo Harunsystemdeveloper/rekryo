@@ -188,15 +188,15 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
                 <AreaChart data={weekData}>
                   <defs>
                     <linearGradient id="colorApp" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                      <stop offset="5%" stopColor="var(--chart-1)" stopOpacity={0.3} />
+                      <stop offset="95%" stopColor="var(--chart-1)" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                   <XAxis dataKey="week" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
                   <Tooltip />
-                  <Area type="monotone" dataKey="ansökningar" stroke="hsl(var(--primary))" fill="url(#colorApp)" strokeWidth={2} />
+                  <Area type="monotone" dataKey="ansökningar" stroke="var(--chart-1)" fill="url(#colorApp)" strokeWidth={2} />
                 </AreaChart>
               </ResponsiveContainer>
             )}
