@@ -153,12 +153,13 @@
   }
 
   /* Kort: subtil kant och mjuk skugga. Låg, utspridd skugga i ljust läge, djupare
-     i mörkt läge där svaga kanter annars ser platta ut. */
-  :root .border,
-  :root [class*="rounded"][class*="border"] {
+     i mörkt läge där svaga kanter annars ser platta ut. Element med genomskinlig kant
+     (knappar, badges, flikar, accordion) undantas, annars får de en skugga utan kant. */
+  :root .border:not([class*="border-transparent"]),
+  :root [class*="rounded"][class*="border"]:not([class*="border-transparent"]) {
     box-shadow: 0 1px 2px rgb(11 17 32 / 4%), 0 6px 16px -8px rgb(11 17 32 / 8%);
   }
-  .dark [class*="rounded"][class*="border"] {
+  .dark [class*="rounded"][class*="border"]:not([class*="border-transparent"]) {
     box-shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 10px 28px -14px rgb(0 0 0 / 55%);
   }
 }
