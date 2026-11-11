@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Navbar } from '@/components/navbar'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Settings, User, Shield, KeyRound, Lock } from 'lucide-react'
@@ -19,9 +18,6 @@ export default async function SettingsPage() {
   const profileLink = profile?.user_type === 'recruiter' ? '/recruiter/company' : '/seeker/profile'
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1 mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-bold">Inställningar</h1>
@@ -89,7 +85,5 @@ export default async function SettingsPage() {
             </Card>
           </div>
         </div>
-      </main>
-    </div>
   )
 }
