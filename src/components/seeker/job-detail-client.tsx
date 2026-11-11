@@ -7,13 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScoreRing, matchLevel, matchLevelLabel, matchLevelText } from '@/components/match/score-ring'
 import {
   MapPin, Globe, Bookmark, BookmarkCheck, Loader2,
-  Brain, Target, MessageSquare, CheckCircle, XCircle, ArrowLeft, Calendar, AlertCircle, Share2, FileWarning,
+  Target, MessageSquare, CheckCircle, XCircle, ArrowLeft, Calendar, AlertCircle, Share2, FileWarning,
   Building2, Briefcase, Wallet, Sparkles
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -148,11 +147,12 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
   const overlap = required.filter(s => seekerSkills.has(s.toLowerCase())).length
   const companyInitials = (job.company_profile?.company_name ?? job.title).split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
 
+  // Frågekategorier i designsystemets färger i stället för fyra olika Tailwind-paletter
   const categoryColors: Record<string, string> = {
-    teknisk: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    beteendemässig: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    situationell: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
-    motivation: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
+    yrkesspecifik: 'bg-primary/10 text-primary',
+    beteendemässig: 'bg-mint/15 text-mint-foreground',
+    situationell: 'bg-amber-500/10 text-amber-700 dark:text-amber-400',
+    motivation: 'bg-muted text-muted-foreground',
   }
 
   return (
@@ -283,111 +283,110 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
             </TabsList>
 
             <TabsContent value="description" className="mt-4">
-              <Card>
-                <CardContent className="pt-6 max-w-none">
-                  <ReactMarkdown components={markdownComponents}>{job.description}</ReactMarkdown>
-                  {job.requirements && (
-                    <>
-                      <h3 className="text-sm font-semibold mt-6 mb-2 pt-4 border-t">Krav</h3>
-                      <ReactMarkdown components={markdownComponents}>{job.requirements}</ReactMarkdown>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
+              <div className="panel p-6">
+                <ReactMarkdown components={markdownComponents}>{job.description}</ReactMarkdown>
+                {job.requirements && (
+                  <>
+                    <h3 className="text-sm font-semibold mt-6 mb-2 pt-4 border-t">Krav</h3>
+                    <ReactMarkdown components={markdownComponents}>{job.requirements}</ReactMarkdown>
+                  </>
+                )}
+              </div>
             </TabsContent>
 
             <TabsContent value="skillgap" className="mt-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <Brain className="h-4 w-4 text-primary" />
-                    AI Kompetensgap-analys
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {!cvProfile?.skills?.length ? (
-                    <div className="space-y-2">
-                      <p className="text-sm text-muted-foreground">
-                        Lägg till kompetenser i din profil för att se kompetensgap.{' '}
-                        <Link href="/seeker/profile" className="text-primary hover:underline">Uppdatera profil</Link>
-                      </p>
-                      <p className="text-xs text-muted-foreground">💡 Ju mer detaljerat din profil är, desto mer träffsäker blir analysen.</p>
-                    </div>
-                  ) : !skillGaps ? (
-                    <div className="space-y-3">
-                    <p className="text-xs text-muted-foreground">AI:n jämför dina kompetenser mot jobbets krav och visar exakt vad du har och vad du saknar.</p>
-                    <Button onClick={analyzeGaps} disabled={loadingGaps} className="w-full">
-                      {loadingGaps ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Analyserar...</> : 'Analysera mina kompetensgap'}
+              <div className="panel p-6">
+                <h2 className="flex items-center gap-2 text-base font-semibold">
+                  <Target className="h-4 w-4 text-primary" aria-hidden />
+                  Kompetensgap
+                </h2>
+                <p className="mb-5 text-sm text-muted-foreground">AI:n jämför kompetenserna i ditt CV med annonsens krav och visar vad du har och vad som saknas.</p>
+                {!hasCv ? (
+                  <div className="rounded-xl border border-dashed border-border p-5 text-center">
+                    <p className="text-sm font-medium">Lägg till ditt CV först</p>
+                    <p className="mt-1 text-xs text-muted-foreground">Analysen bygger på kompetenserna i ditt CV. Ju mer detaljerat det är, desto träffsäkrare blir den.</p>
+                    <Button size="sm" asChild className="mt-4">
+                      <Link href="/seeker/profile">Ladda upp CV</Link>
                     </Button>
+                  </div>
+                ) : !skillGaps ? (
+                  <Button onClick={analyzeGaps} disabled={loadingGaps}>
+                    {loadingGaps
+                      ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />Analyserar…</>
+                      : <><Sparkles className="mr-2 h-4 w-4" aria-hidden />Analysera mina kompetensgap</>}
+                  </Button>
+                ) : (
+                  <div className="space-y-5">
+                    <div className="flex items-center gap-4 rounded-xl border border-border bg-muted/30 p-4">
+                      <ScoreRing score={skillGaps.match_score} size="md" />
+                      <div className="min-w-0">
+                        <p className={`text-sm font-semibold ${matchLevelText[matchLevel(skillGaps.match_score)]}`}>
+                          {matchLevelLabel[matchLevel(skillGaps.match_score)]}
+                        </p>
+                        <p className="mt-0.5 text-sm text-muted-foreground">{skillGaps.gap_summary}</p>
+                      </div>
                     </div>
-                  ) : (
-                    <>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Matchningspoäng</span>
-                          <span className="font-bold gradient-text">{skillGaps.match_score}%</span>
-                        </div>
-                        <Progress value={skillGaps.match_score} className="h-2" />
-                      </div>
-                      <p className="text-sm text-muted-foreground">{skillGaps.gap_summary}</p>
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-xs font-medium text-green-600 dark:text-green-400 mb-2 flex items-center gap-1">
-                            <CheckCircle className="h-3 w-3" /> Du har ({skillGaps.matching_skills.length})
-                          </p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {skillGaps.matching_skills.map(s => (
-                              <Badge key={s} className="text-xs bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-0">{s}</Badge>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <p className="text-xs font-medium text-red-600 dark:text-red-400 mb-2 flex items-center gap-1">
-                            <XCircle className="h-3 w-3" /> Du saknar ({skillGaps.missing_skills.length})
-                          </p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {skillGaps.missing_skills.map(s => (
-                              <Badge key={s} variant="destructive" className="text-xs">{s}</Badge>
-                            ))}
-                          </div>
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <div>
+                        <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-mint-foreground">
+                          <CheckCircle className="h-3.5 w-3.5" aria-hidden />Du har ({skillGaps.matching_skills.length})
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {skillGaps.matching_skills.map(s => (
+                            <span key={s} className="rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint-foreground">{s}</span>
+                          ))}
                         </div>
                       </div>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
+                      <div>
+                        <p className="mb-2 flex items-center gap-1.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+                          <XCircle className="h-3.5 w-3.5" aria-hidden />Saknas ({skillGaps.missing_skills.length})
+                        </p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {skillGaps.missing_skills.length === 0
+                            ? <span className="text-xs text-muted-foreground">Inget saknas</span>
+                            : skillGaps.missing_skills.map(s => (
+                              <span key={s} className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs text-amber-700 dark:text-amber-400">{s}</span>
+                            ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </TabsContent>
 
             <TabsContent value="interview" className="mt-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4 text-primary" />
-                    AI-genererade intervjufrågor
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {questions.length === 0 ? (
-                    <Button onClick={generateQuestions} disabled={loadingQuestions} className="w-full">
-                      {loadingQuestions ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Genererar frågor...</> : 'Generera intervjufrågor'}
-                    </Button>
-                  ) : (
-                    <div className="space-y-4">
-                      {questions.map((q, i) => (
-                        <div key={i} className="p-4 rounded-lg bg-muted/50">
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <p className="font-medium text-sm">{i + 1}. {q.question}</p>
-                            <Badge variant="outline" className={`text-xs flex-shrink-0 ${categoryColors[q.category] ?? ''}`}>
+              <div className="panel p-6">
+                <h2 className="flex items-center gap-2 text-base font-semibold">
+                  <MessageSquare className="h-4 w-4 text-primary" aria-hidden />
+                  Förbered intervjun
+                </h2>
+                <p className="mb-5 text-sm text-muted-foreground">Frågor som är troliga för just den här rollen, med en förklaring till varför de ställs.</p>
+                {questions.length === 0 ? (
+                  <Button onClick={generateQuestions} disabled={loadingQuestions}>
+                    {loadingQuestions
+                      ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden />Tar fram frågor…</>
+                      : <><Sparkles className="mr-2 h-4 w-4" aria-hidden />Ta fram intervjufrågor</>}
+                  </Button>
+                ) : (
+                  <ol className="space-y-3">
+                    {questions.map((q, i) => (
+                      <li key={i} className="flex gap-3 rounded-xl border border-border bg-muted/30 p-4">
+                        <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{i + 1}</span>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-start justify-between gap-2">
+                            <p className="text-sm font-medium">{q.question}</p>
+                            <span className={`flex-shrink-0 rounded-full px-2 py-0.5 text-xs ${categoryColors[q.category] ?? 'bg-muted text-muted-foreground'}`}>
                               {q.category}
-                            </Badge>
+                            </span>
                           </div>
-                          <p className="text-xs text-muted-foreground">{q.why}</p>
+                          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{q.why}</p>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+              </div>
             </TabsContent>
           </Tabs>
         </div>
