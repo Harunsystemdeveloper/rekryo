@@ -17,7 +17,7 @@ import {
 import {
   Loader2, Star, StarOff, MessageSquare, Search,
   Brain, ArrowLeft, Users, MapPin, LayoutList, Columns, Download, StickyNote, Pencil, ClipboardCheck,
-  ChevronDown, ChevronUp, Sparkles
+  ChevronDown, ChevronUp, Sparkles, Check, MoreHorizontal
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -25,6 +25,8 @@ import { CandidateCrmPanel } from '@/components/recruiter/candidate-crm-panel'
 import { InterviewScheduleButton } from '@/components/recruiter/interview-schedule-button'
 import { InterviewScorecardPanel } from '@/components/recruiter/interview-scorecard-panel'
 import { MatchBreakdownView } from '@/components/recruiter/match-breakdown-view'
+import { ScoreRing, matchLevel, matchLevelLabel, matchLevelText } from '@/components/match/score-ring'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { InviteCandidateDialog } from '@/components/recruiter/invite-candidate-dialog'
 import type { MatchBreakdown } from '@/types/database'
 
@@ -198,6 +200,8 @@ export function CandidatesClient({
     setApps(apps.map(a => a.id === appId ? { ...a, status } : a))
     toast.success('Status uppdaterad')
   }
+
+  const required = new Set((job.skills_required ?? []).map(s => s.toLowerCase()))
 
   const filtered = apps.filter(app => {
     const seeker = app.seeker
@@ -419,155 +423,178 @@ export function CandidatesClient({
         </div>
       )}
 
-      {/* List view — Candidates */}
+      {/* Listvy */}
       {viewMode === 'list' && filtered.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">
-          <Users className="h-12 w-12 mx-auto mb-3 opacity-30" />
-          <p className="font-medium">
+        <div className="panel flex flex-col items-center px-6 py-14 text-center">
+          <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <Users className="h-6 w-6" aria-hidden />
+          </span>
+          <p className="font-semibold">
             {apps.length === 0 ? 'Inga kandidater ännu' : 'Inga kandidater matchar filtret'}
           </p>
-          {apps.length === 0 && (
-            <Button className="mt-4" onClick={runAiMatch} disabled={matching}>
-              <Brain className="mr-2 h-4 w-4" /> Hitta kandidater med AI
-            </Button>
-          )}
+          <p className="mt-1 max-w-sm text-sm text-muted-foreground">
+            {apps.length === 0
+              ? 'När någon söker jobbet dyker kandidaten upp här, redo att AI-matchas.'
+              : 'Prova att rensa sökningen eller välja en annan status eller erfarenhetsnivå.'}
+          </p>
         </div>
-      ) : (
-        <div className="grid gap-4">
+      ) : viewMode === 'list' && (
+        <ul className="grid gap-4">
           {filtered.map(app => {
             const seeker = app.seeker
-            const initials = seeker?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) ?? '?'
+            const name = seeker?.full_name ?? 'Anonym kandidat'
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+            const level = app.match_score != null ? matchLevel(app.match_score) : null
+            const skills = app.cv?.skills ?? []
+            const matched = skills.filter(s => required.has(s.toLowerCase()))
+            const other = skills.filter(s => !required.has(s.toLowerCase()))
+            const open = expandedBreakdown.has(app.id)
             return (
-              <Card key={app.id} className={`panel-hover ${app.is_shortlisted ? 'ring-2 ring-primary/30' : ''}`}>
-                <CardContent className="pt-5 pb-5">
-                  <div className="flex flex-col sm:flex-row items-start gap-4">
-                    <Avatar className="h-12 w-12 flex-shrink-0">
-                      <AvatarImage src={seeker?.avatar_url ?? ''} />
-                      <AvatarFallback className="gradient-primary text-white text-sm">{initials}</AvatarFallback>
-                    </Avatar>
+              <li key={app.id} className={`panel overflow-hidden ${app.is_shortlisted ? 'ring-1 ring-mint/50' : ''}`}>
+                <div className="flex flex-col gap-5 p-5 sm:flex-row sm:p-6">
+                  {/* Poäng */}
+                  <div className="flex items-center gap-3 sm:w-24 sm:flex-col sm:gap-2 sm:text-center">
+                    {app.match_score != null && level ? (
+                      <>
+                        <ScoreRing score={app.match_score} size="md" />
+                        <span className={`text-xs font-medium ${matchLevelText[level]}`}>{matchLevelLabel[level]}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full border-2 border-dashed border-border text-sm text-muted-foreground" aria-hidden>–</span>
+                        <span className="text-xs text-muted-foreground">Ej matchad</span>
+                      </>
+                    )}
+                  </div>
 
-                    <div className="flex-1 min-w-0 w-full">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <p className="font-semibold">{seeker?.full_name ?? 'Anonym kandidat'}</p>
-                          {seeker?.headline && <p className="text-sm text-muted-foreground">{seeker.headline}</p>}
-                          {seeker?.location && (
-                            <p className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-                              <MapPin className="h-3 w-3" />{seeker.location}
-                            </p>
+                  {/* Kandidat */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start gap-3">
+                      <Avatar className="h-10 w-10 flex-shrink-0">
+                        <AvatarImage src={seeker?.avatar_url ?? ''} alt="" />
+                        <AvatarFallback className="gradient-primary text-xs text-white">{initials}</AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="font-semibold">{name}</h3>
+                          {app.is_shortlisted && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2 py-0.5 text-xs font-medium text-mint-foreground">
+                              <Star className="h-3 w-3 fill-current" aria-hidden />Shortlistad
+                            </span>
                           )}
                         </div>
-                        {app.match_score != null && (
-                          <div className="text-center flex-shrink-0">
-                            <p className="text-2xl font-bold gradient-text">{app.match_score}%</p>
-                            <p className="text-xs text-muted-foreground">AI-match</p>
-                            <Progress value={app.match_score} className="h-1 w-16 mt-1" />
-                          </div>
-                        )}
+                        <p className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-sm text-muted-foreground">
+                          {seeker?.headline && <span>{seeker.headline}</span>}
+                          {seeker?.location && <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" aria-hidden />{seeker.location}</span>}
+                          {app.cv?.experience_years != null && <span>{app.cv.experience_years} års erfarenhet</span>}
+                        </p>
                       </div>
+                    </div>
 
-                      {app.ai_summary && (
-                        <p className="text-sm text-muted-foreground mt-2 italic">{app.ai_summary}</p>
-                      )}
+                    {app.ai_summary && (
+                      <div className="mt-4 rounded-lg border border-primary/15 bg-primary/5 px-3.5 py-3">
+                        <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-primary">
+                          <Sparkles className="h-3 w-3" aria-hidden />AI-bedömning
+                        </p>
+                        <p className="text-sm leading-relaxed">{app.ai_summary}</p>
+                      </div>
+                    )}
 
-                      {app.match_breakdown && (
-                        <div className="mt-2">
-                          <button
-                            onClick={() => toggleBreakdown(app.id)}
-                            className="text-xs text-primary flex items-center gap-1 font-medium hover:underline"
-                          >
-                            <Sparkles className="h-3 w-3" />
-                            Varför denna poäng?
-                            {expandedBreakdown.has(app.id) ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                          </button>
-                          {expandedBreakdown.has(app.id) && (
-                            <div className="mt-2">
-                              <MatchBreakdownView breakdown={app.match_breakdown} />
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {app.cv?.experience_years != null && (
-                          <Badge variant="outline" className="text-xs">{app.cv.experience_years} år erfarenhet</Badge>
-                        )}
-                        {app.cv?.skills?.slice(0, 4).map(s => (
-                          <Badge key={s} variant="secondary" className="text-xs">{s}</Badge>
+                    {(matched.length > 0 || other.length > 0 || (app.cv?.languages?.length ?? 0) > 0) && (
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {matched.map(s => (
+                          <span key={s} className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint-foreground" title="Krävs i annonsen">
+                            <Check className="h-3 w-3" aria-hidden />{s}
+                          </span>
+                        ))}
+                        {other.slice(0, Math.max(0, 6 - matched.length)).map(s => (
+                          <span key={s} className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">{s}</span>
                         ))}
                         {app.cv?.languages?.slice(0, 2).map(l => (
-                          <Badge key={l} variant="outline" className="text-xs">{l}</Badge>
+                          <span key={l} className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground">{l}</span>
                         ))}
                       </div>
+                    )}
 
-                      {app.skill_gaps && app.skill_gaps.length > 0 && (
-                        <div className="mt-2">
-                          <p className="text-xs text-muted-foreground mb-1">Saknar:</p>
-                          <div className="flex flex-wrap gap-1">
-                            {app.skill_gaps.slice(0, 3).map(s => (
-                              <Badge key={s} variant="destructive" className="text-xs">{s}</Badge>
-                            ))}
+                    {app.skill_gaps && app.skill_gaps.length > 0 && (
+                      <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                        <span className="text-xs text-muted-foreground">Saknar:</span>
+                        {app.skill_gaps.slice(0, 4).map(s => (
+                          <span key={s} className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs text-amber-700 dark:text-amber-400">{s}</span>
+                        ))}
+                      </div>
+                    )}
+
+                    {app.match_breakdown && (
+                      <div className="mt-4">
+                        <button
+                          type="button"
+                          onClick={() => toggleBreakdown(app.id)}
+                          aria-expanded={open}
+                          className="flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                        >
+                          Varför denna poäng?
+                          {open ? <ChevronUp className="h-4 w-4" aria-hidden /> : <ChevronDown className="h-4 w-4" aria-hidden />}
+                        </button>
+                        {open && (
+                          <div className="mt-3">
+                            <MatchBreakdownView breakdown={app.match_breakdown} />
                           </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col gap-2 flex-shrink-0">
-                      <Select items={STATUS_ITEMS} value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
-                        <SelectTrigger className="h-8 text-xs w-36">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {statusOptions.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
-                        </SelectContent>
-                      </Select>
-                      <Button
-                        size="sm"
-                        variant={app.is_shortlisted ? 'default' : 'outline'}
-                        onClick={() => toggleShortlist(app.id, app.is_shortlisted)}
-                      >
-                        {app.is_shortlisted
-                          ? <><StarOff className="mr-1 h-3.5 w-3.5" />Avlista</>
-                          : <><Star className="mr-1 h-3.5 w-3.5" />Shortlist</>}
-                      </Button>
-                      <Button size="sm" variant="outline" asChild>
-                        <Link href={`/messages?user=${seeker?.id}`}>
-                          <MessageSquare className="mr-1 h-3.5 w-3.5" />Chatta
-                        </Link>
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openCrm(seeker?.id ?? '', seeker?.full_name ?? 'Kandidat')}
-                      >
-                        <StickyNote className="mr-1 h-3.5 w-3.5" />Anteckna
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openOverride(app.id, seeker?.full_name ?? 'Kandidat', app.match_score)}
-                        title="Överstyr AI-poäng (AI Act: human oversight)"
-                      >
-                        <Pencil className="mr-1 h-3.5 w-3.5" />Justera poäng
-                      </Button>
-                      <InterviewScheduleButton
-                        applicationId={app.id}
-                        seekerId={seeker?.id ?? ''}
-                      />
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openScorecard(app.id, seeker?.id ?? '', seeker?.full_name ?? 'Kandidat', app.interview_questions)}
-                      >
-                        <ClipboardCheck className="mr-1 h-3.5 w-3.5" />Scorecard
-                      </Button>
-                    </div>
+                        )}
+                      </div>
+                    )}
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+
+                {/* Åtgärder */}
+                <div className="flex flex-wrap items-center gap-2 border-t border-border bg-muted/30 px-5 py-3 sm:px-6">
+                  <Select items={STATUS_ITEMS} value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
+                    <SelectTrigger className="h-8 w-36 text-xs" aria-label={`Status för ${name}`}>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {statusOptions.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    size="sm"
+                    variant={app.is_shortlisted ? 'secondary' : 'outline'}
+                    onClick={() => toggleShortlist(app.id, app.is_shortlisted)}
+                    aria-pressed={app.is_shortlisted}
+                  >
+                    {app.is_shortlisted
+                      ? <><StarOff className="mr-1 h-3.5 w-3.5" aria-hidden />Ta bort från shortlist</>
+                      : <><Star className="mr-1 h-3.5 w-3.5" aria-hidden />Shortlista</>}
+                  </Button>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link href={`/messages?user=${seeker?.id}`}>
+                      <MessageSquare className="mr-1 h-3.5 w-3.5" aria-hidden />Chatta
+                    </Link>
+                  </Button>
+                  <InterviewScheduleButton applicationId={app.id} seekerId={seeker?.id ?? ''} />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={<Button size="sm" variant="ghost" className="ml-auto" aria-label={`Fler åtgärder för ${name}`} />}
+                    >
+                      <MoreHorizontal className="h-4 w-4" aria-hidden />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-52">
+                      <DropdownMenuItem onClick={() => openCrm(seeker?.id ?? '', name)}>
+                        <StickyNote className="mr-2 h-4 w-4" aria-hidden />Anteckningar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openScorecard(app.id, seeker?.id ?? '', name, app.interview_questions)}>
+                        <ClipboardCheck className="mr-2 h-4 w-4" aria-hidden />Intervjuutvärdering
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => openOverride(app.id, name, app.match_score)}>
+                        <Pencil className="mr-2 h-4 w-4" aria-hidden />Justera AI-poäng
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
       )}
 
       {/* Human override dialog — AI Act Article 14 */}
