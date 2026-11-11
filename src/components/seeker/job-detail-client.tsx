@@ -35,6 +35,8 @@ const markdownComponents = {
   strong: (p: ComponentPropsWithoutRef<'strong'>) => <strong className="font-semibold text-foreground" {...p} />,
 }
 
+const workTypeLabel: Record<string, string> = { remote: 'Distans', hybrid: 'Hybrid', 'on-site': 'På plats' }
+
 interface Props {
   job: {
     id: string; title: string; description: string; requirements: string | null
@@ -174,7 +176,7 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
                     <MapPin className="h-3.5 w-3.5" />{job.location}
                   </span>
                 )}
-                {job.work_type && <Badge variant="outline">{job.work_type}</Badge>}
+                {job.work_type && <Badge variant="outline">{workTypeLabel[job.work_type] ?? job.work_type}</Badge>}
                 {job.experience_level && <Badge variant="outline">{job.experience_level}</Badge>}
                 {(() => {
                   const cur = job.currency ?? ''
@@ -208,7 +210,13 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
                 )}
               </div>
             </div>
-            <button onClick={toggleSave} className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0">
+            <button
+              type="button"
+              onClick={toggleSave}
+              aria-pressed={saved}
+              aria-label={saved ? 'Ta bort från sparade jobb' : 'Spara jobbet'}
+              className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0"
+            >
               {saved ? <BookmarkCheck className="h-6 w-6 text-primary" /> : <Bookmark className="h-6 w-6" />}
             </button>
           </div>
@@ -508,7 +516,7 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
                           <MapPin className="h-2.5 w-2.5 mr-1" />{sj.location}
                         </Badge>
                       )}
-                      {sj.work_type && <Badge variant="outline" className="text-xs">{sj.work_type}</Badge>}
+                      {sj.work_type && <Badge variant="outline" className="text-xs">{workTypeLabel[sj.work_type] ?? sj.work_type}</Badge>}
                     </div>
                     {sj.skills_required && (
                       <div className="flex flex-wrap gap-1">
