@@ -105,15 +105,22 @@ export function JobsListClient({ jobs: initialJobs, userId, seekerSkills }: { jo
 
   return (
     <div className="space-y-6">
-      {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl border bg-muted/30">
-        <div className="relative z-10 px-6 py-8 sm:px-10 sm:py-10 max-w-xl">
-          <h1 className="text-2xl sm:text-3xl font-bold">Hitta ditt nästa jobb</h1>
-          <p className="text-muted-foreground mt-2">
-            <span className="font-semibold text-foreground">{notExpiredCount}</span> aktiva annonser just nu — AI:n räknar ut din matchningspoäng automatiskt när du söker.
+      {/* Rubrik: antal jobb och hur poängen fungerar */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Hitta ditt nästa jobb</h1>
+          <p className="mt-1.5 max-w-2xl text-muted-foreground">
+            <strong className="font-semibold text-foreground">{notExpiredCount}</strong> lediga jobb.
+            {seekerSkills?.length
+              ? ' Ringen visar hur många av jobbets kompetenser du har. När du söker gör AI:n en fullständig bedömning 0–100.'
+              : ' Ladda upp ditt CV så ser du hur väl du matchar varje jobb.'}
           </p>
         </div>
-        <JobSearchIllustration className="pointer-events-none absolute -right-6 -bottom-8 h-56 w-auto opacity-90 hidden sm:block" />
+        {!seekerSkills?.length && (
+          <Button asChild className="self-start lg:self-auto">
+            <Link href="/seeker/profile">Ladda upp CV</Link>
+          </Button>
+        )}
       </div>
 
       {/* Filter: sökfält, arbetsform som knappar, lägsta lön och sortering */}
