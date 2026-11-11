@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { StepBasicInfo } from './step-basic-info'
 import { StepRoleDetails } from './step-role-details'
 import { StepAvatar } from './step-avatar'
-import { Check } from 'lucide-react'
+import { Check, UserRound, Sparkles, Building2, Camera } from 'lucide-react'
 import type { Profile } from '@/types/database'
 
 interface Props { profile: Profile }
@@ -12,6 +12,7 @@ interface Props { profile: Profile }
 export function OnboardingWizard({ profile }: Props) {
   const [step, setStep] = useState(1)
   const totalSteps = 3
+  const isRecruiter = profile.user_type === 'recruiter'
 
   function next() {
     if (step < totalSteps) setStep(step + 1)
@@ -21,57 +22,52 @@ export function OnboardingWizard({ profile }: Props) {
     if (step > 1) setStep(step - 1)
   }
 
-  const stepLabels = [
-    { label: 'Grundinfo', sub: 'Namn & bio' },
-    {
-      label: profile.user_type === 'recruiter' ? 'Företag' : 'Kompetenser',
-      sub: profile.user_type === 'recruiter' ? 'Företagsinfo' : 'Dina skills',
-    },
-    { label: 'Profilbild', sub: 'Valfritt' },
+  const steps = [
+    { label: 'Om dig', icon: UserRound },
+    { label: isRecruiter ? 'Företag' : 'Kompetenser', icon: isRecruiter ? Building2 : Sparkles },
+    { label: 'Profilbild', icon: Camera },
   ]
 
-  const progressPct = ((step - 1) / (totalSteps - 1)) * 100
-
   return (
-    <div className="w-full max-w-lg mx-auto">
-      {/* Step indicator */}
-      <div className="mb-8 px-2">
-        <div className="relative flex justify-between items-start">
-          {/* Background track */}
-          <div className="absolute left-5 right-5 top-5 h-0.5 bg-border z-0" />
-          {/* Progress track */}
+    <div className="w-full">
+      {/* Stegindikator: ikon per steg och en förloppsrad */}
+      <nav aria-label="Steg i kom igång" className="mb-8">
+        <div className="mb-3 flex items-center justify-between text-sm">
+          <span className="font-medium">Steg {step} av {totalSteps}</span>
+          <span className="text-muted-foreground">{steps[step - 1].label}</span>
+        </div>
+        <div className="mb-5 h-1.5 overflow-hidden rounded-full bg-muted" aria-hidden>
           <div
-            className="absolute left-5 top-5 h-0.5 gradient-primary z-[1] transition-all duration-500"
-            style={{ width: `calc(${progressPct}% - 0px)`, maxWidth: 'calc(100% - 40px)' }}
+            className="h-full rounded-full bg-gradient-to-r from-primary to-mint transition-[width] duration-500"
+            style={{ width: `${(step / totalSteps) * 100}%` }}
           />
-
-          {stepLabels.map((s, i) => {
+        </div>
+        <ol className="grid grid-cols-3 gap-2">
+          {steps.map((s, i) => {
             const num = i + 1
             const done = num < step
             const active = num === step
             return (
-              <div key={i} className="relative z-[2] flex flex-col items-center gap-2 w-20">
-                <div className={`
-                  h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300
-                  ${done ? 'gradient-primary text-white shadow-md shadow-primary/30' : ''}
-                  ${active ? 'bg-background border-2 border-primary text-primary shadow-[0_0_0_4px_rgba(99,102,241,0.15)]' : ''}
-                  ${!done && !active ? 'bg-background border-2 border-border text-muted-foreground' : ''}
-                `}>
-                  {done ? <Check className="h-4 w-4" strokeWidth={2.5} /> : num}
-                </div>
-                <div className="text-center">
-                  <p className={`text-xs font-semibold leading-tight ${active ? 'text-foreground' : done ? 'text-primary' : 'text-muted-foreground'}`}>
-                    {s.label}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground leading-tight">{s.sub}</p>
-                </div>
-              </div>
+              <li
+                key={s.label}
+                aria-current={active ? 'step' : undefined}
+                className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-sm transition-colors ${
+                  active ? 'border-primary/50 bg-primary/[0.06]' : 'border-border'
+                }`}
+              >
+                <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg ${
+                  done ? 'bg-mint/15 text-mint-foreground' : active ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground'
+                }`}>
+                  {done ? <Check className="h-4 w-4" strokeWidth={2.5} aria-hidden /> : <s.icon className="h-4 w-4" aria-hidden />}
+                </span>
+                <span className={`hidden truncate font-medium sm:inline ${active ? 'text-foreground' : 'text-muted-foreground'}`}>{s.label}</span>
+                <span className="sr-only">{done ? '(klart)' : active ? '(pågår)' : ''}</span>
+              </li>
             )
           })}
-        </div>
-      </div>
+        </ol>
+      </nav>
 
-      {/* Step content */}
       <div key={step} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
         {step === 1 && <StepBasicInfo profile={profile} onNext={next} />}
         {step === 2 && <StepRoleDetails profile={profile} onNext={next} onBack={back} />}
