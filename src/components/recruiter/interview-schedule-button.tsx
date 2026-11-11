@@ -26,24 +26,31 @@ export function InterviewScheduleButton({ applicationId, seekerId }: Props) {
   const [meetingLink, setMeetingLink] = useState('')
   const [notes, setNotes] = useState('')
 
-  async function loadSchedule() {
+  // Laddningsläget sätts när dialogen öppnas (i klickhanteraren) och hämtningen sker i
+  // effekten med state i callbacken. ignore hindrar att ett sent svar skriver över.
+  function openDialog() {
     setLoading(true)
-    const res = await fetch(`/api/interview-schedule?application_id=${applicationId}`)
-    const data = await res.json()
-    setSchedule(data.schedule)
-    if (data.schedule) {
-      setProposedTimes(data.schedule.proposed_times)
-      setLocation(data.schedule.location ?? '')
-      setMeetingLink(data.schedule.meeting_link ?? '')
-      setNotes(data.schedule.notes ?? '')
-    }
-    setLoading(false)
+    setOpen(true)
   }
 
   useEffect(() => {
-    if (open) loadSchedule()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
+    if (!open) return
+    let ignore = false
+    fetch(`/api/interview-schedule?application_id=${applicationId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (ignore) return
+        setSchedule(data.schedule)
+        if (data.schedule) {
+          setProposedTimes(data.schedule.proposed_times)
+          setLocation(data.schedule.location ?? '')
+          setMeetingLink(data.schedule.meeting_link ?? '')
+          setNotes(data.schedule.notes ?? '')
+        }
+        setLoading(false)
+      })
+    return () => { ignore = true }
+  }, [open, applicationId])
 
   async function save() {
     const validTimes = proposedTimes.filter(t => t.trim())
@@ -90,7 +97,7 @@ export function InterviewScheduleButton({ applicationId, seekerId }: Props) {
 
   return (
     <>
-      <Button size="sm" variant="outline" onClick={() => setOpen(true)} className="gap-1">
+      <Button size="sm" variant="outline" onClick={openDialog} className="gap-1">
         <Calendar className="h-3.5 w-3.5" />
         {schedule && schedule.status !== 'cancelled' ? 'Intervju' : 'Boka intervju'}
         {statusBadge && <span className="ml-1">{statusBadge}</span>}
