@@ -4,7 +4,6 @@ import { useState, type ComponentPropsWithoutRef } from 'react'
 import Link from 'next/link'
 import ReactMarkdown from 'react-markdown'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -552,38 +551,39 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
         </div>
       </div>
 
-      {/* Similar jobs */}
+      {/* Liknande jobb */}
       {similarJobs.length > 0 && (
-        <div className="mt-8">
-          <h2 className="text-lg font-semibold mb-4">Liknande jobb</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <section aria-labelledby="similar-jobs" className="pt-4">
+          <h2 id="similar-jobs" className="text-lg font-semibold">Liknande jobb</h2>
+          <p className="mb-4 text-sm text-muted-foreground">Annonser som kräver några av samma kompetenser</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {similarJobs.map(sj => (
-              <Link key={sj.id} href={`/seeker/jobs/${sj.id}`}>
-                <Card className="hover:shadow-md transition-shadow h-full">
-                  <CardContent className="pt-4 pb-4 space-y-2">
-                    <p className="font-medium text-sm leading-snug">{sj.title}</p>
-                    <p className="text-xs text-muted-foreground">{sj.company_profile?.company_name ?? 'Okänt företag'}</p>
-                    <div className="flex flex-wrap gap-1">
-                      {sj.location && (
-                        <Badge variant="outline" className="text-xs">
-                          <MapPin className="h-2.5 w-2.5 mr-1" />{sj.location}
-                        </Badge>
-                      )}
-                      {sj.work_type && <Badge variant="outline" className="text-xs">{workTypeLabel[sj.work_type] ?? sj.work_type}</Badge>}
-                    </div>
-                    {sj.skills_required && (
-                      <div className="flex flex-wrap gap-1">
-                        {sj.skills_required.slice(0, 3).map(s => (
-                          <Badge key={s} variant="secondary" className="text-xs">{s}</Badge>
-                        ))}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+              <Link
+                key={sj.id}
+                href={`/seeker/jobs/${sj.id}`}
+                className="panel panel-hover flex h-full flex-col gap-3 p-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                <div>
+                  <p className="font-medium leading-snug">{sj.title}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{sj.company_profile?.company_name ?? 'Okänt företag'}</p>
+                </div>
+                <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                  {sj.location && <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" aria-hidden />{sj.location}</span>}
+                  {sj.work_type && <span>{workTypeLabel[sj.work_type] ?? sj.work_type}</span>}
+                </p>
+                {sj.skills_required && sj.skills_required.length > 0 && (
+                  <div className="mt-auto flex flex-wrap gap-1">
+                    {sj.skills_required.slice(0, 4).map(s => seekerSkills.has(s.toLowerCase()) ? (
+                      <span key={s} className="rounded-full bg-mint/15 px-2 py-0.5 text-xs font-medium text-mint-foreground">{s}</span>
+                    ) : (
+                      <span key={s} className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">{s}</span>
+                    ))}
+                  </div>
+                )}
               </Link>
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   )
