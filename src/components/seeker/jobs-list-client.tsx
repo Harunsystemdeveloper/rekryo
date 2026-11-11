@@ -32,6 +32,10 @@ interface Job {
 
 const PAGE_SIZE = 12
 
+// Base UI:s Select visar värdet ("all", "newest") om den inte får veta etiketterna
+const WORK_TYPE_ITEMS = { all: 'Alla former', remote: 'Distans', hybrid: 'Hybrid', 'on-site': 'På plats' }
+const SORT_ITEMS = { newest: 'Nyast först', match: 'Bäst match', salary: 'Högst lön', deadline: 'Sista datum' }
+
 function daysLeft(deadline: string): number {
   return Math.ceil((new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
 }
@@ -133,6 +137,7 @@ export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; use
             />
           </div>
           <Select
+            items={WORK_TYPE_ITEMS}
             value={workType}
             onValueChange={v => handleFilter(() => setWorkType(v ?? 'all'))}
           >
@@ -141,12 +146,13 @@ export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; use
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Alla former</SelectItem>
-              <SelectItem value="remote">Remote</SelectItem>
+              <SelectItem value="remote">Distans</SelectItem>
               <SelectItem value="hybrid">Hybrid</SelectItem>
               <SelectItem value="on-site">På plats</SelectItem>
             </SelectContent>
           </Select>
           <Select
+            items={SORT_ITEMS}
             value={sortBy}
             onValueChange={v => handleFilter(() => setSortBy(v ?? 'newest'))}
           >
