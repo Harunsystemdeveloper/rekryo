@@ -138,7 +138,9 @@ export function PrivacySettingsClient() {
               <li>CV-data och AI-analys</li>
               <li>Alla ansökningar och status</li>
               <li>Sparade jobb</li>
-              <li>Meddelandehistorik</li>
+              <li>Dina konversationer och de meddelanden du skickat</li>
+              <li>Alla AI-beslut som berört dig, till exempel matchningspoäng och CV-analyser</li>
+              <li>Frivilliga uppgifter för rättvis rekrytering, om du lämnat sådana</li>
               <li>Företagsprofil (för rekryterare)</li>
             </ul>
           </div>
