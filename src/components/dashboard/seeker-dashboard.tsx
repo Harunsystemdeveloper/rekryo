@@ -13,6 +13,7 @@ import {
 
 import { RecommendedJobCard, type DashboardJob } from '@/components/dashboard/recommended-job-card'
 import { ProfileStrengthCard, getProfileStrength } from '@/components/dashboard/profile-strength-card'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 import { EmptyActivityIllustration, EmptyApplicationsIllustration, EmptyGapsIllustration } from '@/components/illustrations/empty-states'
 import type { Profile, CvProfile, Application } from '@/types/database'
 
@@ -165,6 +166,7 @@ export function SeekerDashboard({ profile, cvProfile, applications, savedJobsCou
               <div>
                 <h2 className="text-base font-semibold">Senaste ansökningar</h2>
                 <p className="text-sm text-muted-foreground">Status och matchning för det du sökt</p>
+                {applications.some(a => a.match_score != null) && <ScoreExplainer variant="seeker" className="mt-1.5" />}
               </div>
               {applications.length > 0 && (
                 <Button variant="ghost" size="sm" asChild>

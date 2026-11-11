@@ -8,6 +8,7 @@ import { MapPin, Briefcase, MessageSquare, Globe, Clock, Users, TrendingUp } fro
 import { WithdrawButton } from '@/components/seeker/withdraw-button'
 import { ApplicationTimeline } from '@/components/seeker/application-timeline'
 import { MIN_APPLICANTS_FOR_RANKING, percentileBucketLabel, computePercentile } from '@/lib/applications/ranking'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = { title: 'Mina ansökningar' }
@@ -191,6 +192,7 @@ export default async function ApplicationsPage() {
                         <div className="text-center">
                           <p className="text-xl font-bold gradient-text">{app.match_score}%</p>
                           <p className="text-xs text-muted-foreground">match</p>
+                          <ScoreExplainer variant="seeker" className="mt-1" />
                         </div>
                       )}
                       <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${cfg.color}`}>

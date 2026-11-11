@@ -5,6 +5,7 @@ import { MapPin, Bookmark, BookmarkCheck, Clock, Building2, Check, AlertTriangle
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { ScoreRing, matchLevel, matchLevelLabel, matchLevelText } from '@/components/match/score-ring'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 
 export interface JobListItem {
   id: string
@@ -125,7 +126,8 @@ export function JobListCard({
                 {aiScore != null && (
                   <p className="text-muted-foreground">
                     AI:n har bedömt din ansökan till <strong className="text-foreground">{aiScore} av 100</strong>.
-                    Bedömningen granskas av en rekryterare som fattar beslutet.
+                    Bedömningen granskas av en rekryterare som fattar beslutet.{' '}
+                    <ScoreExplainer variant="seeker" className="align-middle" />
                   </p>
                 )}
                 <p className="text-muted-foreground">

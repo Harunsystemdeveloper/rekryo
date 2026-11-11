@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScoreRing, matchLevel, matchLevelLabel, matchLevelText } from '@/components/match/score-ring'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 import {
   MapPin, Globe, Bookmark, BookmarkCheck, Loader2,
   Target, MessageSquare, CheckCircle, XCircle, ArrowLeft, Calendar, AlertCircle, Share2, FileWarning,
@@ -323,6 +324,7 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
                           {matchLevelLabel[matchLevel(skillGaps.match_score)]}
                         </p>
                         <p className="mt-0.5 text-sm text-muted-foreground">{skillGaps.gap_summary}</p>
+                        <ScoreExplainer variant="preview" className="mt-1.5" />
                       </div>
                     </div>
                     <div className="grid gap-5 sm:grid-cols-2">
@@ -430,6 +432,7 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
                           {matchLevelLabel[matchLevel(application.match_score)]}
                         </p>
                         <p className="text-xs text-muted-foreground">AI-poäng mot annonsens krav</p>
+                        <ScoreExplainer variant="seeker" className="mt-1" />
                       </div>
                     </div>
                   ) : (
