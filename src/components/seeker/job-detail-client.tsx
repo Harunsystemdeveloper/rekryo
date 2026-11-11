@@ -274,10 +274,10 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
             <TabsList>
               <TabsTrigger value="description">Beskrivning</TabsTrigger>
               <TabsTrigger value="skillgap">
-                <Target className="mr-1.5 h-3.5 w-3.5" />Kompetensgap
+                <Target className="mr-1.5 hidden h-3.5 w-3.5 sm:inline" aria-hidden />Kompetensgap
               </TabsTrigger>
               <TabsTrigger value="interview">
-                <MessageSquare className="mr-1.5 h-3.5 w-3.5" />Intervjufrågor
+                <MessageSquare className="mr-1.5 hidden h-3.5 w-3.5 sm:inline" aria-hidden />Intervjufrågor
               </TabsTrigger>
             </TabsList>
 
