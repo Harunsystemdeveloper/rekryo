@@ -12,7 +12,7 @@ export default async function SeekerJobsPage() {
 
   // Jobb vars sista ansökningsdag har passerat räknas inte som aktiva någonstans
   const now = new Date().toISOString()
-  const [{ data: jobs }, { data: savedJobs }, { data: applications }] = await Promise.all([
+  const [{ data: jobs }, { data: savedJobs }, { data: applications }, { data: cvProfile }] = await Promise.all([
     supabase
       .from('jobs')
       .select('*')
@@ -21,6 +21,7 @@ export default async function SeekerJobsPage() {
       .order('created_at', { ascending: false }),
     supabase.from('saved_jobs').select('job_id').eq('seeker_id', user.id),
     supabase.from('applications').select('job_id, match_score, status').eq('seeker_id', user.id),
+    supabase.from('cv_profiles').select('skills').eq('seeker_id', user.id).maybeSingle(),
   ])
 
   // Fetch company profiles separately to avoid FK join issues
@@ -43,5 +44,5 @@ export default async function SeekerJobsPage() {
     user_application: applicationMap.get(job.id) ?? null,
   }))
 
-  return <JobsListClient jobs={enrichedJobs} userId={user.id} />
+  return <JobsListClient jobs={enrichedJobs} userId={user.id} seekerSkills={cvProfile?.skills ?? null} />
 }

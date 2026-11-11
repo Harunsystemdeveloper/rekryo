@@ -1,34 +1,14 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import Link from 'next/link'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { MapPin, Bookmark, BookmarkCheck, Search, Clock, ChevronLeft, ChevronRight, SlidersHorizontal, AlertCircle, Building2 } from 'lucide-react'
+import { Search, ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import { JobSearchIllustration } from '@/components/illustrations/job-search-illustration'
-
-interface Job {
-  id: string
-  title: string
-  description: string
-  skills_required: string[] | null
-  location: string | null
-  work_type: string | null
-  salary_min: number | null
-  salary_max: number | null
-  currency: string
-  created_at: string
-  deadline: string | null
-  is_saved: boolean
-  user_application: { match_score: number | null; status: string } | null
-  company_profile: { company_name: string; logo_url: string | null; industry: string | null } | null
-}
+import { JobListCard, type JobListItem } from '@/components/seeker/job-list-card'
 
 const PAGE_SIZE = 12
 
@@ -36,11 +16,15 @@ const PAGE_SIZE = 12
 const WORK_TYPE_ITEMS = { all: 'Alla former', remote: 'Distans', hybrid: 'Hybrid', 'on-site': 'På plats' }
 const SORT_ITEMS = { newest: 'Nyast först', match: 'Bäst match', salary: 'Högst lön', deadline: 'Sista datum' }
 
-function daysLeft(deadline: string): number {
-  return Math.ceil((new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+// Samma poäng som jobbkortet visar: AI-poäng om jobbet är sökt, annars kompetensöverlapp
+function jobScore(job: JobListItem, skills: Set<string>): number {
+  if (job.user_application?.match_score != null) return job.user_application.match_score
+  const required = job.skills_required ?? []
+  if (required.length === 0 || skills.size === 0) return -1
+  return Math.round((required.filter(r => skills.has(r.toLowerCase())).length / required.length) * 100)
 }
 
-export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; userId: string }) {
+export function JobsListClient({ jobs: initialJobs, userId, seekerSkills }: { jobs: JobListItem[]; userId: string; seekerSkills: string[] | null }) {
   const [jobs, setJobs] = useState(initialJobs)
   const [search, setSearch] = useState('')
   const [workType, setWorkType] = useState('all')
@@ -76,10 +60,12 @@ export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; use
     })
   }, [jobs, search, workType, minSalary])
 
+  const skillSet = useMemo(() => new Set((seekerSkills ?? []).map(s => s.toLowerCase())), [seekerSkills])
+
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
       if (sortBy === 'match') {
-        return (b.user_application?.match_score ?? -1) - (a.user_application?.match_score ?? -1)
+        return jobScore(b, skillSet) - jobScore(a, skillSet)
       }
       if (sortBy === 'salary') {
         return (b.salary_max ?? 0) - (a.salary_max ?? 0)
@@ -92,7 +78,7 @@ export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; use
       // newest (default)
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     })
-  }, [filtered, sortBy])
+  }, [filtered, sortBy, skillSet])
 
   const totalPages = Math.ceil(sorted.length / PAGE_SIZE)
   const paginated = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -213,106 +199,9 @@ export function JobsListClient({ jobs: initialJobs, userId }: { jobs: Job[]; use
         </div>
       ) : (
         <div className="grid gap-4">
-          {paginated.map(job => {
-            const days = job.deadline ? daysLeft(job.deadline) : null
-            const urgentDeadline = days !== null && days <= 3
-
-            const initials = (job.company_profile?.company_name ?? '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
-
-            return (
-              <Card key={job.id} className="group hover:shadow-md transition-shadow">
-                <CardContent className="pt-5 pb-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <Avatar className="h-11 w-11 rounded-lg flex-shrink-0 border">
-                      <AvatarImage src={job.company_profile?.logo_url ?? ''} className="object-contain" />
-                      <AvatarFallback className="rounded-lg bg-muted text-muted-foreground text-sm">
-                        {job.company_profile ? initials : <Building2 className="h-4 w-4" />}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start gap-2 flex-wrap">
-                        <Link href={`/seeker/jobs/${job.id}`} className="hover:underline flex-1 min-w-0">
-                          <h3 className="font-semibold text-base group-hover:text-primary transition-colors">
-                            {job.title}
-                          </h3>
-                        </Link>
-                        {days !== null && (
-                          <span className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full flex-shrink-0 ${
-                            urgentDeadline
-                              ? 'bg-destructive/10 text-destructive font-medium'
-                              : 'bg-muted text-muted-foreground'
-                          }`}>
-                            <AlertCircle className="h-2.5 w-2.5" />
-                            {days <= 0 ? 'Sista dag!' : `${days} dag${days !== 1 ? 'ar' : ''} kvar`}
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {job.company_profile?.company_name ?? 'Okänt företag'}
-                        {job.company_profile?.industry && ` · ${job.company_profile.industry}`}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {job.location && (
-                          <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <MapPin className="h-3 w-3" />{job.location}
-                          </span>
-                        )}
-                        {job.work_type && (
-                          <Badge variant="outline" className="text-xs">{job.work_type}</Badge>
-                        )}
-                        {job.salary_min && job.salary_max && (
-                          <span className="text-xs text-muted-foreground font-medium">
-                            {job.salary_min.toLocaleString('sv-SE')}–{job.salary_max.toLocaleString('sv-SE')} {job.currency}/mån
-                          </span>
-                        )}
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          {new Date(job.created_at).toLocaleDateString('sv-SE')}
-                        </span>
-                      </div>
-
-                      {job.skills_required && job.skills_required.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-3">
-                          {job.skills_required.slice(0, 5).map(s => (
-                            <Badge key={s} variant="secondary" className="text-xs">{s}</Badge>
-                          ))}
-                          {job.skills_required.length > 5 && (
-                            <Badge variant="secondary" className="text-xs">+{job.skills_required.length - 5}</Badge>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                      {job.user_application?.match_score != null && (
-                        <div className="text-center">
-                          <p className="text-lg font-bold gradient-text">{job.user_application.match_score}%</p>
-                          <p className="text-xs text-muted-foreground">match</p>
-                        </div>
-                      )}
-                      <button
-                        onClick={() => toggleSave(job.id, job.is_saved)}
-                        className="text-muted-foreground hover:text-primary transition-colors"
-                        aria-label={job.is_saved ? 'Ta bort bokmärke' : 'Spara jobb'}
-                      >
-                        {job.is_saved
-                          ? <BookmarkCheck className="h-5 w-5 text-primary" />
-                          : <Bookmark className="h-5 w-5" />}
-                      </button>
-                      {job.user_application ? (
-                        <Badge variant="outline" className="text-xs">Sökt</Badge>
-                      ) : (
-                        <Button size="sm" asChild>
-                          <Link href={`/seeker/jobs/${job.id}`}>Ansök</Link>
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          })}
+          {paginated.map(job => (
+            <JobListCard key={job.id} job={job} seekerSkills={seekerSkills} onToggleSave={toggleSave} />
+          ))}
         </div>
       )}
 
