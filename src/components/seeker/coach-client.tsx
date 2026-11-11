@@ -15,7 +15,7 @@ interface Message {
 const STORAGE_KEY_PREFIX = 'rekryo:coach:'
 
 const GREETING = (name: string) =>
-  `Hej ${name}! 👋 Jag är din AI-karriärcoach på Rekryo.\n\nJag har tillgång till din profil, dina ansökningar och alla aktiva jobb — så jag kan ge dig personliga, exakta råd (inte gissningar).\n\nVad kan jag hjälpa dig med idag?`
+  `Hej ${name}! Jag är din AI-karriärcoach på Rekryo.\n\nJag ser din profil, dina ansökningar och de aktiva jobben, så mina råd utgår från din situation. Dubbelkolla gärna det som är viktigt för dig.\n\nVad kan jag hjälpa dig med idag?`
 
 const SUGGESTED = [
   { icon: FileText, title: 'Analysera mitt CV', prompt: 'Analysera mitt CV och ge förbättringstips' },
