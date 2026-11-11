@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Send, Loader2, Sparkles, RotateCcw, Search, Copy, Check, FileText, Target, PenLine, MessagesSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import ReactMarkdown from 'react-markdown'
@@ -79,37 +78,37 @@ function CopyButton({ text }: { text: string }) {
   )
 }
 
-function MessageBubble({ msg, userName }: { msg: Message; userName: string }) {
-  const isUser = msg.role === 'user'
-  const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+function CoachAvatar() {
+  return (
+    <span className="gradient-primary mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg shadow-sm shadow-primary/30">
+      <Sparkles className="h-3.5 w-3.5 text-white" aria-hidden />
+    </span>
+  )
+}
+
+// Coachens svar visas som ren text i full bredd (som i moderna AI-chattar), dina egna
+// frågor som en diskret bubbla till höger.
+function MessageBubble({ msg }: { msg: Message }) {
+  if (msg.role === 'user') {
+    return (
+      <div className="flex justify-end">
+        <div className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-primary/10 px-4 py-2.5 text-[15px] leading-relaxed">
+          <span className="sr-only">Du: </span>
+          {msg.content}
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-      <Avatar className="h-8 w-8 flex-shrink-0 mt-1">
-        {isUser ? (
-          <AvatarFallback className="gradient-primary text-white text-xs font-bold">{initials}</AvatarFallback>
-        ) : (
-          <AvatarFallback className="bg-primary/10 text-primary">
-            <Sparkles className="h-4 w-4" />
-          </AvatarFallback>
-        )}
-      </Avatar>
-      <div className={`max-w-[80%] sm:max-w-[70%] space-y-1 ${isUser ? 'items-end' : 'items-start'} flex flex-col`}>
-        <p className="text-xs text-muted-foreground px-1">
-          {isUser ? 'Du' : 'Karriärcoach'}
-        </p>
-        <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-          isUser
-            ? 'gradient-primary text-white rounded-tr-sm whitespace-pre-wrap'
-            : 'bg-muted rounded-tl-sm'
-        }`}>
-          {isUser ? msg.content : (
-            <div className="prose-coach">
-              <ReactMarkdown>{msg.content}</ReactMarkdown>
-            </div>
-          )}
+    <div className="flex gap-3">
+      <CoachAvatar />
+      <div className="min-w-0 flex-1">
+        <p className="mb-1 text-xs font-medium text-muted-foreground">Karriärcoach</p>
+        <div className="prose-coach text-[15px] leading-relaxed">
+          <ReactMarkdown>{msg.content}</ReactMarkdown>
         </div>
-        {!isUser && msg.content && <CopyButton text={msg.content} />}
+        {msg.content && <div className="mt-2"><CopyButton text={msg.content} /></div>}
       </div>
     </div>
   )
@@ -119,15 +118,11 @@ function ToolStatus({ labels }: { labels: string[] }) {
   if (labels.length === 0) return null
   return (
     <div className="flex gap-3">
-      <Avatar className="h-8 w-8 flex-shrink-0 mt-1">
-        <AvatarFallback className="bg-primary/10 text-primary">
-          <Sparkles className="h-4 w-4" />
-        </AvatarFallback>
-      </Avatar>
-      <div className="flex flex-col gap-1.5">
+      <CoachAvatar />
+      <div className="flex flex-col gap-1.5 pt-0.5" aria-live="polite">
         {labels.map((label, i) => (
-          <div key={i} className="flex items-center gap-2 text-xs text-primary bg-primary/5 border border-primary/15 rounded-full px-3 py-1.5 w-fit">
-            <Search className="h-3 w-3 animate-pulse" />
+          <div key={i} className="flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 text-xs text-primary">
+            <Search className="h-3 w-3 animate-pulse" aria-hidden />
             {label}…
           </div>
         ))}
@@ -139,20 +134,11 @@ function ToolStatus({ labels }: { labels: string[] }) {
 function TypingIndicator() {
   return (
     <div className="flex gap-3">
-      <Avatar className="h-8 w-8 flex-shrink-0 mt-1">
-        <AvatarFallback className="bg-primary/10 text-primary">
-          <Sparkles className="h-4 w-4" />
-        </AvatarFallback>
-      </Avatar>
-      <div className="flex flex-col space-y-1">
-        <p className="text-xs text-muted-foreground px-1">Karriärcoach</p>
-        <div className="bg-muted rounded-2xl rounded-tl-sm px-4 py-3">
-          <div className="flex gap-1 items-center h-4">
-            <span className="h-2 w-2 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:0ms]" />
-            <span className="h-2 w-2 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:150ms]" />
-            <span className="h-2 w-2 rounded-full bg-muted-foreground/50 animate-bounce [animation-delay:300ms]" />
-          </div>
-        </div>
+      <CoachAvatar />
+      <div className="flex h-7 items-center gap-1" role="status" aria-label="Coachen skriver">
+        <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60 [animation-delay:0ms]" />
+        <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60 [animation-delay:150ms]" />
+        <span className="h-2 w-2 animate-bounce rounded-full bg-primary/60 [animation-delay:300ms]" />
       </div>
     </div>
   )
@@ -323,11 +309,11 @@ export function CoachClient({ profile }: { profile: Profile }) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto py-6 space-y-5">
+      <div className="flex-1 space-y-7 overflow-y-auto py-8">
         {messages.length <= 1 ? (
           <WelcomeView firstName={firstName} disabled={loading || streaming} onPick={sendMessage} />
         ) : messages.map((msg, i) => (
-          <MessageBubble key={i} msg={msg} userName={profile.full_name ?? 'Du'} />
+          <MessageBubble key={i} msg={msg} />
         ))}
         {streaming && <ToolStatus labels={activeTools} />}
         {isTyping && <TypingIndicator />}
