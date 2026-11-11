@@ -115,6 +115,9 @@ export function NotificationsBell({ userId, userType = 'job_seeker' }: { userId:
   }
 
   useEffect(() => {
+    // Första hämtningen vid start. State sätts först efter nätverkssvaren, och samma
+    // funktion används när realtidskanalen meddelar en ny ansökan.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadNotifications()
 
     const channel = supabase

@@ -162,6 +162,9 @@ export function CoachClient({ profile }: { profile: Profile }) {
       const saved = localStorage.getItem(storageKey)
       if (saved) {
         const parsed: Message[] = JSON.parse(saved)
+        // localStorage finns bara i webbläsaren, så sparad konversation kan först läsas
+        // efter monteringen. Att läsa den vid första renderingen ger hydreringsfel.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (Array.isArray(parsed) && parsed.length > 0) setMessages(parsed)
       }
     } catch {
