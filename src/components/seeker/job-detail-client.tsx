@@ -9,9 +9,11 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   MapPin, Globe, Bookmark, BookmarkCheck, Loader2,
-  Brain, Target, MessageSquare, CheckCircle, XCircle, ArrowLeft, Calendar, AlertCircle, Share2, FileWarning
+  Brain, Target, MessageSquare, CheckCircle, XCircle, ArrowLeft, Calendar, AlertCircle, Share2, FileWarning,
+  Building2, Briefcase, Wallet
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { daysUntil } from '@/lib/utils'
@@ -136,6 +138,11 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
     setLoadingQuestions(false)
   }
 
+  const required = job.skills_required ?? []
+  const seekerSkills = new Set((cvProfile?.skills ?? []).map(s => s.toLowerCase()))
+  const overlap = required.filter(s => seekerSkills.has(s.toLowerCase())).length
+  const companyInitials = (job.company_profile?.company_name ?? job.title).split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+
   const categoryColors: Record<string, string> = {
     teknisk: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
     beteendemässig: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
@@ -144,7 +151,7 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex items-center justify-between">
         <Link href="/seeker/jobs" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-3 w-3" /> Tillbaka till jobb
@@ -160,74 +167,101 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
         </button>
       </div>
 
-      {/* Header card */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-start justify-between gap-4">
+      {/* Rubrik */}
+      <section className="panel p-6 sm:p-8">
+        <div className="flex items-start gap-4">
+          <Avatar className="h-14 w-14 flex-shrink-0 rounded-xl">
+            <AvatarImage src={job.company_profile?.logo_url ?? ''} alt="" className="object-contain" />
+            <AvatarFallback className="gradient-primary rounded-xl text-base font-semibold text-white">{companyInitials}</AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{job.title}</h1>
+            <p className="mt-1 text-muted-foreground">
+              {job.company_profile?.company_name ?? 'Okänt företag'}
+              {job.company_profile?.industry && ` · ${job.company_profile.industry}`}
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant={saved ? 'secondary' : 'outline'}
+            size="sm"
+            onClick={toggleSave}
+            aria-pressed={saved}
+            className="flex-shrink-0"
+          >
+            {saved ? <BookmarkCheck className="h-4 w-4 sm:mr-1.5" aria-hidden /> : <Bookmark className="h-4 w-4 sm:mr-1.5" aria-hidden />}
+            <span className="sr-only sm:not-sr-only">{saved ? 'Sparad' : 'Spara'}</span>
+          </Button>
+        </div>
+
+        <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+          {job.location && (
+            <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4" aria-hidden />{job.location}</span>
+          )}
+          {job.work_type && (
+            <span className="inline-flex items-center gap-1.5"><Building2 className="h-4 w-4" aria-hidden />{workTypeLabel[job.work_type] ?? job.work_type}</span>
+          )}
+          {job.experience_level && (
+            <span className="inline-flex items-center gap-1.5"><Briefcase className="h-4 w-4" aria-hidden />{job.experience_level}</span>
+          )}
+          {(() => {
+            const cur = job.currency ?? ''
+            if (cur.startsWith('ök')) return <span className="inline-flex items-center gap-1.5"><Wallet className="h-4 w-4" aria-hidden />Lön enligt överenskommelse</span>
+            if (job.salary_min || job.salary_max) {
+              const label = cur.startsWith('fast+rörlig') ? 'Fast + rörlig' : cur.startsWith('provision') ? 'Provision' : cur.startsWith('SEK/tim') ? 'SEK/tim' : cur.startsWith('SEK/år') ? 'SEK/år' : 'SEK/mån'
+              const range = job.salary_min && job.salary_max
+                ? `${job.salary_min.toLocaleString('sv-SE')}–${job.salary_max.toLocaleString('sv-SE')}`
+                : job.salary_min ? `från ${job.salary_min.toLocaleString('sv-SE')}` : `upp till ${job.salary_max?.toLocaleString('sv-SE')}`
+              return <span className="inline-flex items-center gap-1.5 font-medium text-foreground"><Wallet className="h-4 w-4 text-muted-foreground" aria-hidden />{range} {label}</span>
+            }
+            return null
+          })()}
+          {job.deadline && (() => {
+            const days = daysUntil(job.deadline)
+            const urgent = days <= 3
+            return (
+              <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 ${urgent ? 'bg-destructive/10 font-medium text-destructive' : 'bg-muted'}`}>
+                {urgent ? <AlertCircle className="h-3.5 w-3.5" aria-hidden /> : <Calendar className="h-3.5 w-3.5" aria-hidden />}
+                {days <= 0 ? 'Sista dag idag' : `Sök senast ${new Date(job.deadline).toLocaleDateString('sv-SE', { day: 'numeric', month: 'long' })} · ${days} ${days === 1 ? 'dag' : 'dagar'} kvar`}
+              </span>
+            )
+          })()}
+          {job.company_profile?.website && (
+            <a href={job.company_profile.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
+              <Globe className="h-4 w-4" aria-hidden />Webbplats
+            </a>
+          )}
+        </div>
+
+        {required.length > 0 && (
+          <div className="mt-6 flex flex-col gap-4 border-t border-border pt-5 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 className="text-2xl font-bold">{job.title}</h1>
-              <p className="text-muted-foreground mt-1">
-                {job.company_profile?.company_name ?? 'Okänt företag'}
-                {job.company_profile?.industry && ` · ${job.company_profile.industry}`}
-              </p>
-              <div className="flex flex-wrap gap-3 mt-3">
-                {job.location && (
-                  <span className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5" />{job.location}
+              <p className="mb-2 text-xs font-medium text-muted-foreground">Krävda kompetenser</p>
+              <div className="flex flex-wrap gap-1.5">
+                {required.map(s => seekerSkills.has(s.toLowerCase()) ? (
+                  <span key={s} className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint-foreground">
+                    <CheckCircle className="h-3 w-3" aria-hidden />{s}<span className="sr-only"> (du har den)</span>
                   </span>
-                )}
-                {job.work_type && <Badge variant="outline">{workTypeLabel[job.work_type] ?? job.work_type}</Badge>}
-                {job.experience_level && <Badge variant="outline">{job.experience_level}</Badge>}
-                {(() => {
-                  const cur = job.currency ?? ''
-                  if (cur.startsWith('ök')) return <span className="text-sm text-muted-foreground font-medium">Lön enligt överenskommelse</span>
-                  if (job.salary_min || job.salary_max) {
-                    const label = cur.startsWith('fast+rörlig') ? 'Fast + rörlig' : cur.startsWith('provision') ? 'Provision' : cur.startsWith('SEK/tim') ? 'SEK/tim' : cur.startsWith('SEK/år') ? 'SEK/år' : 'SEK/mån'
-                    const range = job.salary_min && job.salary_max
-                      ? `${job.salary_min.toLocaleString('sv-SE')}–${job.salary_max.toLocaleString('sv-SE')}`
-                      : job.salary_min ? `från ${job.salary_min.toLocaleString('sv-SE')}` : `upp till ${job.salary_max?.toLocaleString('sv-SE')}`
-                    return <span className="text-sm font-medium text-foreground">{range} {label}</span>
-                  }
-                  return null
-                })()}
-                {job.deadline && (() => {
-                  const days = daysUntil(job.deadline)
-                  const urgent = days <= 3
-                  return (
-                    <span className={`flex items-center gap-1 text-sm px-2 py-0.5 rounded-full ${
-                      urgent ? 'bg-destructive/10 text-destructive font-medium' : 'bg-muted text-muted-foreground'
-                    }`}>
-                      {urgent ? <AlertCircle className="h-3.5 w-3.5" /> : <Calendar className="h-3.5 w-3.5" />}
-                      {days <= 0 ? 'Sista dag!' : `Sista dag: ${new Date(job.deadline).toLocaleDateString('sv-SE')} (${days} dag${days !== 1 ? 'ar' : ''} kvar)`}
-                    </span>
-                  )
-                })()}
-                {job.company_profile?.website && (
-                  <a href={job.company_profile.website} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-primary hover:underline">
-                    <Globe className="h-3.5 w-3.5" /> Webbplats
-                  </a>
-                )}
+                ) : (
+                  <span key={s} className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground">{s}</span>
+                ))}
               </div>
             </div>
-            <button
-              type="button"
-              onClick={toggleSave}
-              aria-pressed={saved}
-              aria-label={saved ? 'Ta bort från sparade jobb' : 'Spara jobbet'}
-              className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0"
-            >
-              {saved ? <BookmarkCheck className="h-6 w-6 text-primary" /> : <Bookmark className="h-6 w-6" />}
-            </button>
+            {hasCv && (
+              <div className="sm:w-56">
+                <div className="mb-1.5 flex items-baseline justify-between text-sm">
+                  <span className="text-muted-foreground">Kompetensöverlapp</span>
+                  <span className="font-semibold tabular-nums">{overlap} av {required.length}</span>
+                </div>
+                <div className="h-2 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-mint" style={{ width: `${(overlap / required.length) * 100}%` }} />
+                </div>
+                <p className="mt-1.5 text-xs text-muted-foreground">Räknat på ditt CV, inte AI-poängen</p>
+              </div>
+            )}
           </div>
-
-          {job.skills_required && job.skills_required.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-4">
-              {job.skills_required.map(s => <Badge key={s} variant="secondary">{s}</Badge>)}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        )}
+      </section>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Main content */}
