@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Send, Loader2, Sparkles, RotateCcw, Search, Copy, Check } from 'lucide-react'
+import { Send, Loader2, Sparkles, RotateCcw, Search, Copy, Check, FileText, Target, PenLine, MessagesSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import ReactMarkdown from 'react-markdown'
 import type { Profile } from '@/types/database'
@@ -20,12 +20,46 @@ const GREETING = (name: string) =>
   `Hej ${name}! 👋 Jag är din AI-karriärcoach på Rekryo.\n\nJag har tillgång till din profil, dina ansökningar och alla aktiva jobb — så jag kan ge dig personliga, exakta råd (inte gissningar).\n\nVad kan jag hjälpa dig med idag?`
 
 const SUGGESTED = [
-  'Analysera mitt CV och ge förbättringstips',
-  'Vilket jobb passar mig bäst just nu?',
-  'Hjälp mig skriva ett personligt brev',
-  'Vad saknar jag för att höja mitt matchningspoäng?',
-  'Hur förbereder jag mig för en intervju?',
+  { icon: FileText, title: 'Analysera mitt CV', prompt: 'Analysera mitt CV och ge förbättringstips' },
+  { icon: Target, title: 'Vilket jobb passar mig bäst?', prompt: 'Vilket jobb passar mig bäst just nu, och vad saknar jag för att höja mitt matchningspoäng?' },
+  { icon: PenLine, title: 'Skriv ett personligt brev', prompt: 'Hjälp mig skriva ett personligt brev' },
+  { icon: MessagesSquare, title: 'Förbered mig för intervju', prompt: 'Hur förbereder jag mig för en intervju?' },
 ]
+
+// Startvy innan första frågan: en hälsning och förslag som kort, i stället för en
+// ensam välkomstbubbla och små länkar längst ner.
+function WelcomeView({ firstName, disabled, onPick }: { firstName: string; disabled: boolean; onPick: (prompt: string) => void }) {
+  return (
+    <div className="flex h-full flex-col items-center justify-center px-2 py-10 text-center">
+      <span className="gradient-primary mb-6 flex h-14 w-14 items-center justify-center rounded-2xl shadow-lg shadow-primary/30">
+        <Sparkles className="h-7 w-7 text-white" aria-hidden />
+      </span>
+      <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Hur kan jag hjälpa dig, {firstName}?</h2>
+      <p className="mt-2 max-w-md text-muted-foreground">
+        Jag ser din profil, dina ansökningar och de aktiva jobben, så råden utgår från din situation.
+      </p>
+      <div className="mt-8 grid w-full max-w-2xl gap-3 sm:grid-cols-2">
+        {SUGGESTED.map(s => (
+          <button
+            key={s.title}
+            type="button"
+            disabled={disabled}
+            onClick={() => onPick(s.prompt)}
+            className="panel panel-hover flex items-start gap-3 p-4 text-left disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          >
+            <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <s.icon className="h-4 w-4" aria-hidden />
+            </span>
+            <span>
+              <span className="block text-sm font-medium">{s.title}</span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">{s.prompt}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false)
@@ -290,32 +324,15 @@ export function CoachClient({ profile }: { profile: Profile }) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto py-6 space-y-5">
-        {messages.map((msg, i) => (
+        {messages.length <= 1 ? (
+          <WelcomeView firstName={firstName} disabled={loading || streaming} onPick={sendMessage} />
+        ) : messages.map((msg, i) => (
           <MessageBubble key={i} msg={msg} userName={profile.full_name ?? 'Du'} />
         ))}
         {streaming && <ToolStatus labels={activeTools} />}
         {isTyping && <TypingIndicator />}
         <div ref={bottomRef} />
       </div>
-
-      {/* Suggested questions — only show at start */}
-      {messages.length <= 1 && (
-        <div className="pb-4 flex-shrink-0">
-          <p className="text-xs text-muted-foreground mb-2 px-1">Föreslagna frågor:</p>
-          <div className="flex flex-wrap gap-2">
-            {SUGGESTED.map(q => (
-              <button
-                key={q}
-                onClick={() => sendMessage(q)}
-                disabled={loading || streaming}
-                className="text-xs px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary hover:bg-primary/15 transition-colors disabled:opacity-50"
-              >
-                {q}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Input */}
       <div className="flex gap-2 pt-4 border-t flex-shrink-0">
