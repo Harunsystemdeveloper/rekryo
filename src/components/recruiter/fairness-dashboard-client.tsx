@@ -97,7 +97,100 @@ function DimensionCard({ result }: { result: DimensionResult }) {
   )
 }
 
-export function FairnessDashboardClient({ jobs }: { jobs: { id: string; title: string }[] }) {
+export interface FairnessOverview {
+  total: number
+  scored: number
+  averageScore: number | null
+  buckets: { label: string; count: number }[]
+  statusCounts: Record<string, number>
+  overrides: number
+}
+
+const BUCKET_COLORS = ['bg-amber-500', 'bg-amber-500/70', 'bg-primary', 'bg-mint/80', 'bg-mint']
+
+const FUNNEL = [
+  { key: 'pending', label: 'Nya' },
+  { key: 'reviewed', label: 'Granskade' },
+  { key: 'shortlisted', label: 'Shortlistade' },
+  { key: 'accepted', label: 'Accepterade' },
+  { key: 'rejected', label: 'Avvisade' },
+]
+
+function OverviewSection({ overview }: { overview: FairnessOverview }) {
+  const maxBucket = Math.max(1, ...overview.buckets.map(b => b.count))
+  const maxStatus = Math.max(1, ...FUNNEL.map(f => overview.statusCounts[f.key] ?? 0))
+
+  return (
+    <section aria-labelledby="overview" className="space-y-4">
+      <div>
+        <h2 id="overview" className="text-lg font-semibold">Översikt</h2>
+        <p className="text-sm text-muted-foreground">Alla dina annonser. Bygger bara på ansökningar och poäng, inga personuppgifter om grupper.</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {[
+          { label: 'Ansökningar', value: overview.total },
+          { label: 'AI-matchade', value: overview.scored },
+          { label: 'Snittpoäng', value: overview.averageScore ?? '–' },
+          { label: 'Mänskliga justeringar', value: overview.overrides },
+        ].map(stat => (
+          <div key={stat.label} className="panel p-5">
+            <span className="block text-2xl font-semibold leading-none tabular-nums">{stat.value}</span>
+            <span className="mt-1.5 block text-sm text-muted-foreground">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="panel p-6">
+          <h3 className="text-base font-semibold">Poängfördelning</h3>
+          <p className="mb-5 text-sm text-muted-foreground">Hur AI-poängen sprider sig över alla matchade kandidater</p>
+          {overview.scored === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">Inga kandidater är AI-matchade ännu.</p>
+          ) : (
+            <div className="flex h-44 items-end gap-3" role="img" aria-label={`Poängfördelning: ${overview.buckets.map(b => `${b.label}: ${b.count}`).join(', ')}`}>
+              {overview.buckets.map((b, i) => (
+                <div key={b.label} className="flex h-full flex-1 flex-col items-center justify-end gap-1.5">
+                  <span className="text-xs font-semibold tabular-nums">{b.count}</span>
+                  <div className={`w-full rounded-t-md ${BUCKET_COLORS[i]}`} style={{ height: `${Math.max(b.count ? 6 : 2, (b.count / maxBucket) * 100)}%` }} />
+                  <span className="text-[11px] text-muted-foreground">{b.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="panel p-6">
+          <h3 className="text-base font-semibold">Urvalstratt</h3>
+          <p className="mb-5 text-sm text-muted-foreground">Var i processen ansökningarna befinner sig just nu</p>
+          {overview.total === 0 ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">Inga ansökningar ännu.</p>
+          ) : (
+            <ul className="space-y-3">
+              {FUNNEL.map(f => {
+                const count = overview.statusCounts[f.key] ?? 0
+                return (
+                  <li key={f.key} className="grid grid-cols-[6.5rem_1fr_2rem] items-center gap-3 text-sm">
+                    <span className="text-muted-foreground">{f.label}</span>
+                    <div className="h-2.5 overflow-hidden rounded-full bg-muted">
+                      <div
+                        className={`h-full rounded-full ${f.key === 'rejected' ? 'bg-muted-foreground/40' : f.key === 'accepted' || f.key === 'shortlisted' ? 'bg-mint' : 'bg-primary'}`}
+                        style={{ width: `${(count / maxStatus) * 100}%` }}
+                      />
+                    </div>
+                    <span className="text-right font-semibold tabular-nums">{count}</span>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function FairnessDashboardClient({ jobs, overview }: { jobs: { id: string; title: string }[]; overview: FairnessOverview }) {
   const [jobId, setJobId] = useState<string>('all')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<AnalysisResult | null>(null)
@@ -117,50 +210,58 @@ export function FairnessDashboardClient({ jobs }: { jobs: { id: string; title: s
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Scale className="h-6 w-6 text-primary" />
-          Fairness & Bias-övervakning
-        </h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Anonymiserad gruppstatistik baserad på kandidaters frivilliga samtycke. Individuella uppgifter visas aldrig.
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-primary">EU AI Act · GDPR</p>
+        <h1 className="text-3xl font-semibold tracking-tight">Rättvisa i urvalet</h1>
+        <p className="mt-1.5 max-w-2xl text-muted-foreground">
+          Följ hur AI-poängen fördelar sig och om kandidater i olika grupper går vidare i olika takt. Det hjälper dig upptäcka mönster som en människa bör granska.
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
-        <Select items={jobItems} value={jobId} onValueChange={v => setJobId(v ?? 'all')}>
-          <SelectTrigger className="sm:w-64" aria-label="Välj annons"><SelectValue /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Alla mina jobbannonser</SelectItem>
-            {jobs.map(j => <SelectItem key={j.id} value={j.id}>{j.title}</SelectItem>)}
-          </SelectContent>
-        </Select>
-        <Button onClick={analyze} disabled={loading}>
-          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scale className="mr-2 h-4 w-4" />}
-          Analysera
-        </Button>
-      </div>
+      <OverviewSection overview={overview} />
 
-      {result && (
-        <>
-          {result.human_review_required && (
-            <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-800 px-4 py-3 text-sm text-amber-800 dark:text-amber-300 flex items-start gap-2">
-              <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-              <span><strong>Human Review Required.</strong> Analysen upptäckte en möjlig systematisk skillnad mellan grupper. Detta betyder inte nödvändigtvis att bias föreligger, men en människa bör granska matchningsresultaten manuellt innan beslut fattas.</span>
-            </div>
-          )}
-
-          <p className="text-xs text-muted-foreground">
-            {result.total_applications} ansökningar totalt, {result.total_candidates_with_demographics} kandidater har lämnat frivilliga uppgifter. Minsta gruppstorlek för att visas: {result.min_group_size}.
+      <section aria-labelledby="groups" className="space-y-4">
+        <div>
+          <h2 id="groups" className="text-lg font-semibold">Gruppanalys</h2>
+          <p className="text-sm text-muted-foreground">
+            Anonymiserad statistik per kön och åldersgrupp, baserad på uppgifter kandidaterna frivilligt lämnat. Enskilda personer visas aldrig.
           </p>
+        </div>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Select items={jobItems} value={jobId} onValueChange={v => setJobId(v ?? 'all')}>
+            <SelectTrigger className="sm:w-64" aria-label="Välj annons"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Alla mina jobbannonser</SelectItem>
+              {jobs.map(j => <SelectItem key={j.id} value={j.id}>{j.title}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Button onClick={analyze} disabled={loading}>
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scale className="mr-2 h-4 w-4" />}
+            Analysera
+          </Button>
+        </div>
 
-          <div className="grid gap-4">
-            <DimensionCard result={result.gender} />
-            <DimensionCard result={result.age_bucket} />
-          </div>
-        </>
-      )}
+        {result && (
+          <>
+            {result.human_review_required && (
+              <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-800 px-4 py-3 text-sm text-amber-800 dark:text-amber-300 flex items-start gap-2">
+                <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <span><strong>Human Review Required.</strong> Analysen upptäckte en möjlig systematisk skillnad mellan grupper. Detta betyder inte nödvändigtvis att bias föreligger, men en människa bör granska matchningsresultaten manuellt innan beslut fattas.</span>
+              </div>
+            )}
+
+            <p className="text-xs text-muted-foreground">
+              {result.total_applications} ansökningar totalt, {result.total_candidates_with_demographics} kandidater har lämnat frivilliga uppgifter. Minsta gruppstorlek för att visas: {result.min_group_size}.
+            </p>
+
+            <div className="grid gap-4">
+              <DimensionCard result={result.gender} />
+              <DimensionCard result={result.age_bucket} />
+            </div>
+          </>
+        )}
+      </section>
     </div>
   )
 }
