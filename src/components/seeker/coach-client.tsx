@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Send, Loader2, Sparkles, RotateCcw, Search, Copy, Check, FileText, Target, PenLine, MessagesSquare } from 'lucide-react'
+import { Send, Loader2, Sparkles, RotateCcw, Search, Copy, Check, FileText, Target, PenLine, MessagesSquare, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import ReactMarkdown from 'react-markdown'
 import type { Profile } from '@/types/database'
@@ -299,22 +299,26 @@ export function CoachClient({ profile }: { profile: Profile }) {
   const isTyping = loading || (streaming && activeTools.length === 0 && messages[messages.length - 1]?.content === '')
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] max-w-3xl mx-auto">
+    <div className="mx-auto flex h-[calc(100vh-8rem)] max-w-3xl flex-col">
 
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b flex-shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary/25">
-            <Sparkles className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <h1 className="font-bold text-lg">AI-karriärcoach</h1>
-            <p className="text-xs text-muted-foreground">Har tillgång till din profil, ansökningar och alla aktiva jobb</p>
-          </div>
+      {/* Rubrik: vad coachen har tillgång till och en tydlig knapp för ny konversation */}
+      <div className="flex flex-shrink-0 items-center justify-between gap-4 border-b border-border pb-4">
+        <div className="min-w-0">
+          <h1 className="flex items-center gap-2 text-lg font-semibold">
+            <Sparkles className="h-4 w-4 text-primary" aria-hidden />
+            AI-karriärcoach
+          </h1>
+          <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-muted-foreground">
+            <ShieldCheck className="h-3.5 w-3.5 flex-shrink-0 text-mint-foreground" aria-hidden />
+            Ser din profil, dina ansökningar och aktiva jobb. Konversationen sparas bara i din webbläsare.
+          </p>
         </div>
-        <Button variant="ghost" size="sm" onClick={reset} title="Ny konversation">
-          <RotateCcw className="h-4 w-4" />
-        </Button>
+        {messages.length > 1 && (
+          <Button variant="outline" size="sm" onClick={reset}>
+            <RotateCcw className="mr-1.5 h-3.5 w-3.5" aria-hidden />
+            Ny konversation
+          </Button>
+        )}
       </div>
 
       {/* Messages */}
