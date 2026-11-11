@@ -9,13 +9,15 @@ import type { Profile } from '@/types/database'
 export default async function RecruiterDashboard({ profile }: { profile: Profile }) {
   const supabase = await createClient()
 
-  const [{ data: jobs }, { count: appCount }, { count: pendingCount }] = await Promise.all([
+  // Antalen räknas separat: listan nedan är begränsad till de fem senaste annonserna
+  // och gav därför fel siffror så fort rekryteraren hade fler än fem.
+  const [{ data: jobs }, { count: jobCount }, { count: activeJobs }, { count: appCount }, { count: pendingCount }] = await Promise.all([
     supabase.from('jobs').select('*, applications(count)').eq('recruiter_id', profile.id).order('created_at', { ascending: false }).limit(5),
+    supabase.from('jobs').select('id', { count: 'exact', head: true }).eq('recruiter_id', profile.id),
+    supabase.from('jobs').select('id', { count: 'exact', head: true }).eq('recruiter_id', profile.id).eq('status', 'active'),
     supabase.from('applications').select('*, jobs!inner(recruiter_id)', { count: 'exact', head: true }).eq('jobs.recruiter_id', profile.id),
     supabase.from('applications').select('*, jobs!inner(recruiter_id)', { count: 'exact', head: true }).eq('jobs.recruiter_id', profile.id).eq('status', 'pending'),
   ])
-
-  const activeJobs = jobs?.filter(j => j.status === 'active').length ?? 0
 
   return (
     <div className="space-y-8">
@@ -43,7 +45,7 @@ export default async function RecruiterDashboard({ profile }: { profile: Profile
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold tabular-nums">{activeJobs}</div>
+            <div className="text-2xl font-bold tabular-nums">{activeJobs ?? 0}</div>
           </CardContent>
         </Card>
         <Card className="panel-hover">
@@ -54,7 +56,7 @@ export default async function RecruiterDashboard({ profile }: { profile: Profile
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold tabular-nums">{jobs?.length ?? 0}</div>
+            <div className="text-2xl font-bold tabular-nums">{jobCount ?? 0}</div>
           </CardContent>
         </Card>
         <Card className="panel-hover">
