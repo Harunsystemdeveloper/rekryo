@@ -49,6 +49,12 @@ const statusOptions = [
   { value: 'rejected', label: 'Avvisad' },
 ]
 
+// Base UI:s Select visar råvärdet i triggern ("pending", "all") om den inte får en
+// tabell från värde till etikett via items.
+const STATUS_ITEMS = Object.fromEntries(statusOptions.map(s => [s.value, s.label]))
+const STATUS_FILTER_ITEMS = { all: 'Alla statusar', ...STATUS_ITEMS }
+const EXPERIENCE_ITEMS = { all: 'All erfarenhet', '0': 'Ingen erfarenhet', '1-2': '1–2 år', '3-5': '3–5 år', '5-10': '5–10 år', '10+': '10+ år' }
+
 interface SuggestedProfile {
   id: string; full_name: string | null; avatar_url: string | null
   headline: string | null; location: string | null
@@ -268,7 +274,7 @@ export function CandidatesClient({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Sök namn, kompetens, plats..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
         </div>
-        <Select value={filterExp} onValueChange={(v) => setFilterExp(v ?? 'all')}>
+        <Select items={EXPERIENCE_ITEMS} value={filterExp} onValueChange={(v) => setFilterExp(v ?? 'all')}>
           <SelectTrigger className="w-full sm:w-40"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All erfarenhet</SelectItem>
@@ -279,7 +285,7 @@ export function CandidatesClient({
             <SelectItem value="10+">10+ år</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={filterStatus} onValueChange={(v) => setFilterStatus(v ?? 'all')}>
+        <Select items={STATUS_FILTER_ITEMS} value={filterStatus} onValueChange={(v) => setFilterStatus(v ?? 'all')}>
           <SelectTrigger className="w-full sm:w-40"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Alla statusar</SelectItem>
@@ -384,7 +390,7 @@ export function CandidatesClient({
                               </div>
                             )}
                             <div className="flex gap-1.5">
-                              <Select value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
+                              <Select items={STATUS_ITEMS} value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
                                 <SelectTrigger className="h-6 text-xs flex-1">
                                   <SelectValue />
                                 </SelectTrigger>
@@ -507,7 +513,7 @@ export function CandidatesClient({
                     </div>
 
                     <div className="flex flex-col gap-2 flex-shrink-0">
-                      <Select value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
+                      <Select items={STATUS_ITEMS} value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
                         <SelectTrigger className="h-8 text-xs w-36">
                           <SelectValue />
                         </SelectTrigger>
