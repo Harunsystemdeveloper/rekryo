@@ -54,17 +54,18 @@ export function InterviewScorecardPanel({ applicationId, seekerId, seekerName, s
   const [recommendation, setRecommendation] = useState<ScorecardRecommendation>('yes')
   const [notes, setNotes] = useState('')
 
-  async function load() {
-    setLoading(true)
-    const res = await fetch(`/api/interview-scorecards?application_id=${applicationId}`)
-    const data = await res.json()
-    setScorecards(data.scorecards ?? [])
-    setLoading(false)
-  }
-
+  // Hämtningen sker i effekten och state sätts i callbacken. ignore hindrar att ett
+  // sent svar för en tidigare ansökan skriver över det aktuella (kapplöpning).
   useEffect(() => {
-    load()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let ignore = false
+    fetch(`/api/interview-scorecards?application_id=${applicationId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (ignore) return
+        setScorecards(data.scorecards ?? [])
+        setLoading(false)
+      })
+    return () => { ignore = true }
   }, [applicationId])
 
   function addQuestion() {
