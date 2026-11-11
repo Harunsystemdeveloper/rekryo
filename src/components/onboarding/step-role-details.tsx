@@ -85,9 +85,9 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent className="p-6 sm:p-8">
         <div className="mb-6">
-          <h2 className="text-xl font-bold">
+          <h2 className="text-xl font-semibold tracking-tight">
             {isRecruiter ? 'Ditt företag' : 'Dina kompetenser'}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
@@ -112,7 +112,7 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
               <div className="space-y-2">
                 <Label>Bransch</Label>
                 <Select items={Object.fromEntries(INDUSTRIES.map(b => [b, b]))} onValueChange={(v) => setValue('industry', v as string)}>
-                  <SelectTrigger className="h-11"><SelectValue placeholder="Välj bransch" /></SelectTrigger>
+                  <SelectTrigger className="h-11 w-full"><SelectValue placeholder="Välj bransch" /></SelectTrigger>
                   <SelectContent>
                     {INDUSTRIES.map((b) => (
                       <SelectItem key={b} value={b}>{b}</SelectItem>
@@ -153,7 +153,7 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
               <div className="space-y-2">
                 <Label>Antal års erfarenhet</Label>
                 <Select items={EXPERIENCE_ITEMS} onValueChange={(v) => setValue('experience_years', v as string)}>
-                  <SelectTrigger className="h-11"><SelectValue placeholder="Välj erfarenhetsnivå" /></SelectTrigger>
+                  <SelectTrigger className="h-11 w-full"><SelectValue placeholder="Välj erfarenhetsnivå" /></SelectTrigger>
                   <SelectContent>
                     {Object.entries(EXPERIENCE_ITEMS).map(([value, label]) => (
                       <SelectItem key={value} value={value}>{label}</SelectItem>
@@ -167,7 +167,7 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
 
           <div className="flex gap-3 mt-2">
             <Button type="button" variant="outline" className="flex-1 h-11" onClick={onBack}>Tillbaka</Button>
-            <Button type="submit" disabled={loading} className="flex-1 h-11 gradient-primary text-white font-semibold">
+            <Button type="submit" disabled={loading} className="h-11 flex-1 font-semibold">
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Fortsätt
             </Button>

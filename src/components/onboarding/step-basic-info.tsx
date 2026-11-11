@@ -53,9 +53,9 @@ export function StepBasicInfo({ profile, onNext }: { profile: Profile; onNext: (
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent className="p-6 sm:p-8">
         <div className="mb-6">
-          <h2 className="text-xl font-bold">Berätta om dig själv</h2>
+          <h2 className="text-xl font-semibold tracking-tight">Berätta om dig själv</h2>
           <p className="text-sm text-muted-foreground mt-1">Den här informationen syns för andra på plattformen.</p>
         </div>
 
@@ -90,7 +90,7 @@ export function StepBasicInfo({ profile, onNext }: { profile: Profile; onNext: (
             <Textarea id="bio" placeholder="Berätta kort om dig själv..." rows={3} {...register('bio')} />
           </div>
 
-          <Button type="submit" disabled={loading} className="w-full h-11 gradient-primary text-white font-semibold mt-2">
+          <Button type="submit" disabled={loading} className="mt-2 h-11 w-full font-semibold">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Fortsätt
           </Button>

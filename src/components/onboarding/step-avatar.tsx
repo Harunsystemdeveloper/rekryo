@@ -50,9 +50,9 @@ export function StepAvatar({ profile, onNext, onBack }: { profile: Profile; onNe
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent className="p-6 sm:p-8">
         <div className="mb-6">
-          <h2 className="text-xl font-bold">Lägg till profilbild</h2>
+          <h2 className="text-xl font-semibold tracking-tight">Lägg till profilbild</h2>
           <p className="text-sm text-muted-foreground mt-1">Profiler med bild får fler svar. Helt valfritt.</p>
         </div>
 
@@ -79,7 +79,7 @@ export function StepAvatar({ profile, onNext, onBack }: { profile: Profile; onNe
           </Button>
 
           {file && (
-            <div className="flex items-center gap-1.5 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-full px-4 py-1.5 text-xs text-green-700 dark:text-green-400">
+            <div className="flex items-center gap-1.5 rounded-full bg-mint/10 px-4 py-1.5 text-xs font-medium text-mint-foreground">
               <Check className="h-3 w-3" strokeWidth={3} />
               {file.name}
             </div>
@@ -89,7 +89,7 @@ export function StepAvatar({ profile, onNext, onBack }: { profile: Profile; onNe
         <div className="flex gap-3 mt-6">
           <Button type="button" variant="outline" className="flex-1 h-11" onClick={onBack}>Tillbaka</Button>
           {file ? (
-            <Button className="flex-1 h-11 gradient-primary text-white font-semibold" onClick={handleUpload} disabled={loading}>
+            <Button className="h-11 flex-1 font-semibold" onClick={handleUpload} disabled={loading}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Spara & klar!
             </Button>
