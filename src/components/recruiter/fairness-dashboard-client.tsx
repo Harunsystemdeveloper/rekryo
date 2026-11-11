@@ -101,6 +101,7 @@ export function FairnessDashboardClient({ jobs }: { jobs: { id: string; title: s
   const [jobId, setJobId] = useState<string>('all')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<AnalysisResult | null>(null)
+  const jobItems = { all: 'Alla mina jobbannonser', ...Object.fromEntries(jobs.map(j => [j.id, j.title])) }
 
   async function analyze() {
     setLoading(true)
@@ -128,8 +129,8 @@ export function FairnessDashboardClient({ jobs }: { jobs: { id: string; title: s
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <Select value={jobId} onValueChange={v => setJobId(v ?? 'all')}>
-          <SelectTrigger className="sm:w-64"><SelectValue /></SelectTrigger>
+        <Select items={jobItems} value={jobId} onValueChange={v => setJobId(v ?? 'all')}>
+          <SelectTrigger className="sm:w-64" aria-label="Välj annons"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Alla mina jobbannonser</SelectItem>
             {jobs.map(j => <SelectItem key={j.id} value={j.id}>{j.title}</SelectItem>)}
