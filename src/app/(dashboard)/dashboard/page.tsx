@@ -49,11 +49,15 @@ export default async function DashboardPage() {
     recruiter_id: string
   }[] = []
 
+  // Utgångna jobb (passerat sista ansökningsdag) ska inte rekommenderas
+  const now = new Date().toISOString()
+
   if (cvProfile?.skills && cvProfile.skills.length > 0) {
     let query = supabase
       .from('jobs')
       .select('id, title, location, work_type, skills_required, salary_min, salary_max, currency, recruiter_id')
       .eq('status', 'active')
+      .or(`deadline.is.null,deadline.gte.${now}`)
       .overlaps('skills_required', cvProfile.skills)
       .limit(8)
 
@@ -88,6 +92,7 @@ export default async function DashboardPage() {
     .from('jobs')
     .select('id, title, location, work_type, skills_required, salary_min, salary_max, currency, recruiter_id')
     .eq('status', 'active')
+    .or(`deadline.is.null,deadline.gte.${now}`)
     .order('created_at', { ascending: false })
     .limit(Math.max(0, 6 - recommendedJobs.length))
   if (excludeIds.length > 0) {

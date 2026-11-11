@@ -10,11 +10,14 @@ export default async function SeekerJobsPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
+  // Jobb vars sista ansökningsdag har passerat räknas inte som aktiva någonstans
+  const now = new Date().toISOString()
   const [{ data: jobs }, { data: savedJobs }, { data: applications }] = await Promise.all([
     supabase
       .from('jobs')
       .select('*')
       .eq('status', 'active')
+      .or(`deadline.is.null,deadline.gte.${now}`)
       .order('created_at', { ascending: false }),
     supabase.from('saved_jobs').select('job_id').eq('seeker_id', user.id),
     supabase.from('applications').select('job_id, match_score, status').eq('seeker_id', user.id),
