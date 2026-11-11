@@ -10,10 +10,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { ScoreRing, matchLevel, matchLevelLabel, matchLevelText } from '@/components/match/score-ring'
 import {
   MapPin, Globe, Bookmark, BookmarkCheck, Loader2,
   Brain, Target, MessageSquare, CheckCircle, XCircle, ArrowLeft, Calendar, AlertCircle, Share2, FileWarning,
-  Building2, Briefcase, Wallet
+  Building2, Briefcase, Wallet, Sparkles
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { daysUntil } from '@/lib/utils'
@@ -38,6 +39,10 @@ const markdownComponents = {
 }
 
 const workTypeLabel: Record<string, string> = { remote: 'Distans', hybrid: 'Hybrid', 'on-site': 'På plats' }
+
+const applicationStatusLabel: Record<string, string> = {
+  pending: 'Sökt', reviewed: 'Granskad', shortlisted: 'Shortlistad', accepted: 'Accepterad', rejected: 'Avslutad',
+}
 
 interface Props {
   job: {
@@ -392,7 +397,7 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
           <Card className="sticky top-20">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">
-                {application ? 'Ansökan skickad' : 'Ansök nu'}
+                {application ? 'Din ansökan' : 'Ansök nu'}
               </CardTitle>
               {!application && (
                 <div className="flex gap-1 mt-2">
@@ -407,29 +412,44 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
             </CardHeader>
             <CardContent className="space-y-4">
               {application ? (
-                <div className="text-center space-y-3">
-                  <div className="h-12 w-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto">
-                    <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Ansökan skickad!</p>
-                    <p className="text-xs text-muted-foreground mt-1">Rekryteraren granskar din ansökan</p>
-                  </div>
-                  {application.match_score != null && (
-                    <div className="rounded-lg bg-muted/50 p-3 text-center">
-                      <p className="text-2xl font-bold gradient-text">{application.match_score}%</p>
-                      <p className="text-xs text-muted-foreground">AI-matchningspoäng</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {application.match_score >= 70 ? 'Stark matchning mot jobbets krav' : application.match_score >= 40 ? 'Delvis matchning — se kompetensgap' : 'Låg matchning mot jobbets krav'}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-mint/15 text-mint-foreground">
+                      <CheckCircle className="h-5 w-5" aria-hidden />
+                    </span>
+                    <div>
+                      <p className="font-semibold">Du har sökt jobbet</p>
+                      <p className="text-xs text-muted-foreground">
+                        Status: <span className="font-medium text-foreground">{applicationStatusLabel[application.status] ?? application.status}</span>
                       </p>
                     </div>
+                  </div>
+                  {application.match_score != null ? (
+                    <div className="flex items-center gap-4 rounded-xl border border-border bg-muted/30 p-4">
+                      <ScoreRing score={application.match_score} size="md" />
+                      <div>
+                        <p className={`text-sm font-semibold ${matchLevelText[matchLevel(application.match_score)]}`}>
+                          {matchLevelLabel[matchLevel(application.match_score)]}
+                        </p>
+                        <p className="text-xs text-muted-foreground">AI-poäng mot annonsens krav</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="rounded-xl border border-dashed border-border p-4 text-xs text-muted-foreground">
+                      Rekryteraren har inte låtit AI:n matcha ansökningarna ännu. Poängen dyker upp här när det är gjort.
+                    </p>
                   )}
                   {application.ai_summary && (
-                    <p className="text-xs text-muted-foreground italic leading-relaxed">{application.ai_summary}</p>
+                    <div>
+                      <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-primary">
+                        <Sparkles className="h-3 w-3" aria-hidden />AI:ns motivering
+                      </p>
+                      <p className="text-sm leading-relaxed text-muted-foreground">{application.ai_summary}</p>
+                    </div>
                   )}
-                  <Link href="/seeker/applications" className="block text-xs text-primary hover:underline">
-                    Se alla mina ansökningar →
-                  </Link>
+                  <Button variant="outline" size="sm" asChild className="w-full">
+                    <Link href="/seeker/applications">Mina ansökningar</Link>
+                  </Button>
                 </div>
               ) : !hasCv ? (
                 <div className="text-center space-y-3 py-2">
