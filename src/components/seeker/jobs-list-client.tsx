@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -221,19 +222,35 @@ export function JobsListClient({ jobs: initialJobs, userId, seekerSkills }: { jo
         )}
       </div>
 
-      {/* Results */}
+      {/* Resultat */}
       {sorted.length === 0 ? (
-        <div className="text-center py-16 text-muted-foreground">
-          <JobSearchIllustration className="h-32 w-auto mx-auto mb-4 opacity-70" />
+        <div className="panel flex flex-col items-center px-6 py-14 text-center">
+          <JobSearchIllustration className="mb-6 h-32 w-auto" />
           {jobs.length === 0 ? (
             <>
-              <p className="font-medium">Inga aktiva annonser just nu</p>
-              <p className="text-sm mt-1">Kom tillbaka snart — nya jobb publiceras dagligen</p>
+              <h2 className="text-xl font-semibold">Inga lediga jobb just nu</h2>
+              <p className="mt-2 max-w-md text-muted-foreground">
+                Nya annonser dyker upp här så fort arbetsgivare publicerar dem. Gör din profil redo under tiden,
+                så ser du direkt hur väl du matchar.
+              </p>
+              <div className="mt-6 flex flex-col gap-2 sm:flex-row">
+                <Button asChild><Link href="/seeker/profile">Förbättra din profil</Link></Button>
+                <Button variant="outline" asChild><Link href="/seeker/coach">Fråga karriärcoachen</Link></Button>
+              </div>
             </>
           ) : (
             <>
-              <p className="font-medium">Inga jobb matchar din sökning</p>
-              <p className="text-sm mt-1">Prova att ändra filter</p>
+              <h2 className="text-xl font-semibold">Inga jobb matchar dina filter</h2>
+              <p className="mt-2 max-w-md text-muted-foreground">
+                Det finns {jobs.length} lediga jobb, men inget passar alla filter samtidigt. Prova att söka bredare,
+                till exempel bara på ort eller yrkesroll.
+              </p>
+              <Button
+                className="mt-6"
+                onClick={() => { setSearch(''); setWorkType('all'); setMinSalary(''); setPage(1) }}
+              >
+                Rensa alla filter
+              </Button>
             </>
           )}
         </div>
