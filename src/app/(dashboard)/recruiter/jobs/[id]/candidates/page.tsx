@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { CandidatesClient } from '@/components/recruiter/candidates-client'
 import type { Metadata } from 'next'
@@ -34,10 +34,13 @@ export default async function CandidatesPage({ params }: { params: Promise<{ id:
   const shortlistedIds = new Set(shortlisted?.map(s => s.application_id) ?? [])
   const appliedSeekerIds = new Set((applications ?? []).map(a => a.seeker_id))
 
-  // Fetch cv_profiles separately (no direct FK from applications → cv_profiles)
+  // CV-uppgifterna hämtas med service role: RLS på cv_profiles släpper bara fram den egna
+  // raden, så med rekryterarens klient blev listan tom och kandidaterna saknade kompetenser.
+  // Ägarskapet till jobbet är kontrollerat ovan och urvalet begränsas till de som sökt just
+  // detta jobb, samma avgränsning som AI-matchningen använder.
   const seekerIds = [...appliedSeekerIds]
   const { data: cvProfiles } = seekerIds.length > 0
-    ? await supabase
+    ? await createAdminClient()
         .from('cv_profiles')
         .select('seeker_id, skills, experience_years, ai_summary, languages')
         .in('seeker_id', seekerIds)
