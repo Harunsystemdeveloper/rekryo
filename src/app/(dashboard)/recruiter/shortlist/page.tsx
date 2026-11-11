@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Star, MessageSquare, MapPin } from 'lucide-react'
 import type { Metadata } from 'next'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 
 export const metadata: Metadata = { title: 'Shortlist' }
 
@@ -91,6 +92,7 @@ export default async function ShortlistPage() {
                         <div className="text-center">
                           <p className="text-xl font-bold gradient-text">{app.match_score}%</p>
                           <p className="text-xs text-muted-foreground">match</p>
+                          <ScoreExplainer variant="recruiter" className="mt-1" />
                         </div>
                       )}
                       <Button size="sm" asChild>

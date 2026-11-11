@@ -23,6 +23,7 @@ import { InterviewScheduleButton } from '@/components/recruiter/interview-schedu
 import { InterviewScorecardPanel } from '@/components/recruiter/interview-scorecard-panel'
 import { MatchBreakdownView } from '@/components/recruiter/match-breakdown-view'
 import { ScoreRing, matchLevel, matchLevelLabel, matchLevelText } from '@/components/match/score-ring'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { InviteCandidateDialog } from '@/components/recruiter/invite-candidate-dialog'
 import type { MatchBreakdown } from '@/types/database'
@@ -471,11 +472,12 @@ export function CandidatesClient({
               <li key={app.id} className={`panel overflow-hidden ${app.is_shortlisted ? 'ring-1 ring-mint/50' : ''}`}>
                 <div className="flex flex-col gap-5 p-5 sm:flex-row sm:p-6">
                   {/* Poäng */}
-                  <div className="flex items-center gap-3 sm:w-24 sm:flex-col sm:gap-2 sm:text-center">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:w-32 sm:flex-col sm:flex-nowrap sm:gap-2 sm:text-center">
                     {app.match_score != null && level ? (
                       <>
                         <ScoreRing score={app.match_score} size="md" />
                         <span className={`text-xs font-medium ${matchLevelText[level]}`}>{matchLevelLabel[level]}</span>
+                        <ScoreExplainer variant="recruiter" className="whitespace-nowrap" />
                       </>
                     ) : (
                       <>

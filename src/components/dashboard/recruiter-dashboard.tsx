@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ScoreRing } from '@/components/match/score-ring'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 import { EmptyApplicationsIllustration } from '@/components/illustrations/empty-states'
 import type { Profile } from '@/types/database'
 
@@ -146,6 +147,7 @@ export default async function RecruiterDashboard({ profile }: { profile: Profile
               <div className="mb-5">
                 <h2 id="latest-apps" className="text-base font-semibold">Senaste ansökningar</h2>
                 <p className="text-sm text-muted-foreground">De som sökt senast, över alla dina annonser</p>
+                <ScoreExplainer variant="recruiter" className="mt-1.5" />
               </div>
               {!latestApps || latestApps.length === 0 ? (
                 <p className="py-4 text-center text-sm text-muted-foreground">Inga ansökningar ännu. De dyker upp här så fort någon söker.</p>

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, Scale, AlertTriangle, CheckCircle2, Info, EyeOff, Users, Lock } from 'lucide-react'
 import { EmptyGapsIllustration } from '@/components/illustrations/empty-states'
+import { ScoreExplainer } from '@/components/match/score-explainer'
 
 interface GroupResult {
   name: string
@@ -185,7 +186,8 @@ function OverviewSection({ overview }: { overview: FairnessOverview }) {
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="panel p-6">
           <h3 className="text-base font-semibold">Poängfördelning</h3>
-          <p className="mb-5 text-sm text-muted-foreground">Hur AI-poängen sprider sig över alla matchade kandidater</p>
+          <p className="text-sm text-muted-foreground">Hur AI-poängen sprider sig över alla matchade kandidater</p>
+          <ScoreExplainer variant="recruiter" className="mt-1.5 mb-5" />
           {overview.scored === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">Inga kandidater är AI-matchade ännu.</p>
           ) : (
