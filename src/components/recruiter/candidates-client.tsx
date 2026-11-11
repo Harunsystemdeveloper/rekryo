@@ -2,14 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Progress } from '@/components/ui/progress'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription
@@ -320,42 +317,45 @@ export function CandidatesClient({
         </Select>
       </div>
 
-      {/* Suggested profiles — seekers who haven't applied but match */}
+      {/* Föreslagna profiler: har inte sökt, men har valt att synas i talangpoolen */}
       {suggestedProfiles.length > 0 && (
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
-          <div className="flex items-center gap-2">
-            <Brain className="h-4 w-4 text-primary" />
-            <p className="text-sm font-medium">Föreslagna profiler — har inte sökt ännu</p>
-            <span className="text-xs text-muted-foreground">({suggestedProfiles.length} matchande)</span>
+        <section className="panel p-5" aria-labelledby="suggested-profiles">
+          <div className="mb-4">
+            <h2 id="suggested-profiles" className="flex items-center gap-2 text-base font-semibold">
+              <Sparkles className="h-4 w-4 text-primary" aria-hidden />
+              Föreslagna profiler
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              {suggestedProfiles.length} {suggestedProfiles.length === 1 ? 'person' : 'personer'} i talangpoolen har kompetenser som annonsen kräver men har inte sökt ännu
+            </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {suggestedProfiles.map(p => {
               const initials = p.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) ?? '?'
-              const total = job.skills_required?.length ?? 1
-              const pct = Math.round((p.overlap / total) * 100)
+              const total = job.skills_required?.length || 1
               return (
-                <div key={p.id} className="bg-background rounded-lg border p-3 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8 flex-shrink-0">
-                      <AvatarImage src={p.avatar_url ?? ''} />
-                      <AvatarFallback className="gradient-primary text-white text-xs">{initials}</AvatarFallback>
+                <div key={p.id} className="flex flex-col gap-3 rounded-xl border border-border bg-background/50 p-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-9 w-9 flex-shrink-0">
+                      <AvatarImage src={p.avatar_url ?? ''} alt="" />
+                      <AvatarFallback className="gradient-primary text-xs text-white">{initials}</AvatarFallback>
                     </Avatar>
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{p.full_name ?? 'Anonym'}</p>
-                      {p.headline && <p className="text-xs text-muted-foreground truncate">{p.headline}</p>}
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{p.full_name ?? 'Anonym'}</p>
+                      {p.headline && <p className="truncate text-xs text-muted-foreground">{p.headline}</p>}
                     </div>
-                    <span className="ml-auto text-sm font-bold text-primary flex-shrink-0">{pct}%</span>
                   </div>
-                  <Progress value={pct} className="h-1" />
+                  <p className="text-xs text-muted-foreground">
+                    Har <span className="font-semibold text-foreground">{p.overlap} av {total}</span> krävda kompetenser
+                  </p>
                   <div className="flex flex-wrap gap-1">
                     {p.cv?.skills?.slice(0, 4).map(s => (
-                      <Badge
+                      <span
                         key={s}
-                        variant={job.skills_required?.includes(s) ? 'default' : 'secondary'}
-                        className="text-xs"
+                        className={`rounded-full px-2 py-0.5 text-xs ${required.has(s.toLowerCase()) ? 'bg-mint/15 font-medium text-mint-foreground' : 'bg-muted text-muted-foreground'}`}
                       >
                         {s}
-                      </Badge>
+                      </span>
                     ))}
                   </div>
                   <InviteCandidateDialog
@@ -363,8 +363,8 @@ export function CandidatesClient({
                     seekerName={p.full_name ?? 'Kandidat'}
                     jobs={[{ id: job.id, title: job.title }]}
                     trigger={
-                      <Button size="sm" variant="outline" className="w-full h-7 text-xs">
-                        <MessageSquare className="mr-1 h-3 w-3" />Bjud in att söka
+                      <Button size="sm" variant="outline" className="mt-auto w-full">
+                        <MessageSquare className="mr-1.5 h-3.5 w-3.5" aria-hidden />Bjud in att söka
                       </Button>
                     }
                   />
@@ -372,73 +372,69 @@ export function CandidatesClient({
               )
             })}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Kanban view */}
+      {/* Tavla per status */}
       {viewMode === 'kanban' && (
-        <div className="overflow-x-auto pb-4">
-          <div className="flex gap-4 min-w-max">
+        <div className="-mx-4 overflow-x-auto px-4 pb-4">
+          <div className="flex min-w-max gap-4">
             {statusOptions.map(col => {
               const colApps = filtered.filter(a => a.status === col.value)
               return (
-                <div key={col.value} className="w-64 flex-shrink-0">
-                  <div className="flex items-center justify-between mb-3 px-1">
-                    <span className="text-sm font-medium">{col.label}</span>
-                    <span className="text-xs bg-muted text-muted-foreground rounded-full px-2 py-0.5">{colApps.length}</span>
+                <section key={col.value} className="w-72 flex-shrink-0 rounded-xl bg-muted/40 p-3" aria-label={col.label}>
+                  <div className="mb-3 flex items-center justify-between px-1">
+                    <span className="text-sm font-semibold">{col.label}</span>
+                    <span className="rounded-full bg-background px-2 py-0.5 text-xs tabular-nums text-muted-foreground">{colApps.length}</span>
                   </div>
                   <div className="space-y-2">
                     {colApps.length === 0 && (
-                      <div className="rounded-lg border border-dashed p-4 text-center text-xs text-muted-foreground">
+                      <div className="rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
                         Inga kandidater
                       </div>
                     )}
                     {colApps.map(app => {
                       const seeker = app.seeker
-                      const initials = seeker?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) ?? '?'
+                      const name = seeker?.full_name ?? 'Anonym'
+                      const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
                       return (
-                        <Card key={app.id} className="cursor-default hover:shadow-md transition-shadow">
-                          <CardContent className="p-3 space-y-2">
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-8 w-8 flex-shrink-0">
-                                <AvatarImage src={seeker?.avatar_url ?? ''} />
-                                <AvatarFallback className="gradient-primary text-white text-xs">{initials}</AvatarFallback>
-                              </Avatar>
-                              <div className="min-w-0">
-                                <p className="text-sm font-medium truncate">{seeker?.full_name ?? 'Anonym'}</p>
-                                {seeker?.headline && <p className="text-xs text-muted-foreground truncate">{seeker.headline}</p>}
-                              </div>
+                        <div key={app.id} className={`panel space-y-3 p-3 ${app.is_shortlisted ? 'ring-1 ring-mint/50' : ''}`}>
+                          <div className="flex items-center gap-2.5">
+                            <Avatar className="h-8 w-8 flex-shrink-0">
+                              <AvatarImage src={seeker?.avatar_url ?? ''} alt="" />
+                              <AvatarFallback className="gradient-primary text-xs text-white">{initials}</AvatarFallback>
+                            </Avatar>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-medium">{name}</p>
+                              {seeker?.headline && <p className="truncate text-xs text-muted-foreground">{seeker.headline}</p>}
                             </div>
-                            {app.match_score != null && (
-                              <div className="flex items-center gap-2">
-                                <Progress value={app.match_score} className="h-1.5 flex-1" />
-                                <span className="text-xs font-medium text-primary">{app.match_score}%</span>
-                              </div>
-                            )}
-                            <div className="flex gap-1.5">
-                              <Select items={STATUS_ITEMS} value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
-                                <SelectTrigger className="h-6 text-xs flex-1">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {statusOptions.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
-                                </SelectContent>
-                              </Select>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-6 w-6 p-0"
-                                onClick={() => toggleShortlist(app.id, app.is_shortlisted)}
-                              >
-                                {app.is_shortlisted ? <Star className="h-3.5 w-3.5 fill-primary text-primary" /> : <Star className="h-3.5 w-3.5" />}
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
+                            {app.match_score != null && <ScoreRing score={app.match_score} size="sm" />}
+                          </div>
+                          <div className="flex gap-1.5">
+                            <Select items={STATUS_ITEMS} value={app.status} onValueChange={v => v && updateStatus(app.id, v)}>
+                              <SelectTrigger className="h-7 flex-1 text-xs" aria-label={`Status för ${name}`}>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {statusOptions.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
+                              </SelectContent>
+                            </Select>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-7 w-7 p-0"
+                              onClick={() => toggleShortlist(app.id, app.is_shortlisted)}
+                              aria-pressed={app.is_shortlisted}
+                              aria-label={app.is_shortlisted ? `Ta bort ${name} från shortlist` : `Shortlista ${name}`}
+                            >
+                              <Star className={`h-3.5 w-3.5 ${app.is_shortlisted ? 'fill-mint text-mint' : ''}`} aria-hidden />
+                            </Button>
+                          </div>
+                        </div>
                       )
                     })}
                   </div>
-                </div>
+                </section>
               )
             })}
           </div>
