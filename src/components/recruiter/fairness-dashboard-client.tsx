@@ -1,10 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Loader2, Scale, AlertTriangle, CheckCircle2, Info } from 'lucide-react'
 import { toast } from 'sonner'
@@ -37,63 +34,107 @@ interface AnalysisResult {
 
 const DIMENSION_LABELS = { gender: 'Kön', age_bucket: 'Åldersgrupp' }
 
-function DimensionCard({ result }: { result: DimensionResult }) {
+// Svenskt decimaltecken, så att 0,92 och gränsen 0,80 skrivs likadant
+const sv = (n: number) => n.toFixed(2).replace('.', ',')
+
+function DimensionCard({ result, minGroupSize }: { result: DimensionResult; minGroupSize: number }) {
+  const included = result.groups.filter(g => g.included)
+  const maxRate = Math.max(0, ...included.map(g => g.selection_rate ?? 0))
+  // 4/5-regeln: en grupp vars urvalsfrekvens är under 80 % av den högsta flaggas
+  const threshold = maxRate * 0.8
+  const ratio = result.adverse_impact.ratio
+
   return (
-    <Card className={result.human_review_required ? 'border-amber-400/60' : undefined}>
-      <CardHeader>
-        <CardTitle className="text-base flex items-center justify-between">
-          <span>{DIMENSION_LABELS[result.dimension]}</span>
-          {result.human_review_required ? (
-            <Badge className="bg-amber-500 text-white gap-1"><AlertTriangle className="h-3 w-3" />Mänsklig granskning krävs</Badge>
-          ) : (
-            <Badge variant="outline" className="gap-1 text-green-700 border-green-200"><CheckCircle2 className="h-3 w-3" />Ingen flagga</Badge>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {result.groups.filter(g => g.included).length === 0 ? (
-          <p className="text-sm text-muted-foreground">För få datapunkter per grupp (minst 5 krävs) för att visa statistik.</p>
-        ) : (
-          <div className="space-y-3">
-            {result.groups.filter(g => g.included).map(g => (
-              <div key={g.name}>
-                <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="font-medium">{g.name} <span className="text-muted-foreground font-normal">({g.n} st)</span></span>
-                  <span className="text-muted-foreground">
-                    {g.selection_rate !== null ? `${Math.round(g.selection_rate * 100)}% gick vidare` : '–'}
-                    {g.avg_match_score !== null ? ` · snitt ${g.avg_match_score}%` : ''}
-                  </span>
-                </div>
-                <Progress value={(g.selection_rate ?? 0) * 100} className="h-1.5" />
-              </div>
-            ))}
-          </div>
-        )}
+    <div className={`panel p-6 ${result.human_review_required ? 'ring-1 ring-amber-500/50' : ''}`}>
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-base font-semibold">{DIMENSION_LABELS[result.dimension]}</h3>
+        {result.human_review_required ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-400">
+            <AlertTriangle className="h-3 w-3" aria-hidden />Bör granskas av en människa
+          </span>
+        ) : included.length > 0 ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint-foreground">
+            <CheckCircle2 className="h-3 w-3" aria-hidden />Ingen flagga
+          </span>
+        ) : null}
+      </div>
 
-        {result.adverse_impact.ratio !== null && (
-          <div className="rounded-lg bg-muted/40 border p-2.5 text-xs space-y-1">
-            <p>
-              <strong>Adverse impact ratio:</strong> {result.adverse_impact.ratio.toFixed(2)}
-              {' '}({result.adverse_impact.lowest_group} vs {result.adverse_impact.reference_group})
-              {result.adverse_impact.flagged && <span className="text-amber-600 font-medium"> — under 0.8, flaggat enligt 4/5-regeln</span>}
-            </p>
-            {result.significance && (
-              <p>
-                <strong>Signifikanstest:</strong> z = {result.significance.z_score}
-                {result.significance.significant ? ' — statistiskt signifikant skillnad (p < 0.05)' : ' — ingen signifikant skillnad'}
-              </p>
-            )}
-          </div>
-        )}
-
-        {result.excluded_small_groups.length > 0 && (
-          <p className="text-xs text-muted-foreground flex items-start gap-1.5">
-            <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
-            Exkluderat från statistik (för få datapunkter): {result.excluded_small_groups.join(', ')}
+      {included.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          Ingen grupp har ännu minst {minGroupSize} kandidater med frivilliga uppgifter, så statistiken visas inte. Gränsen finns för att ingen enskild kandidat ska kunna pekas ut.
+        </p>
+      ) : (
+        <>
+          <p className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span>Andel som gick vidare (shortlistad eller accepterad)</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-3 border-l-2 border-dashed border-foreground/60" aria-hidden />4/5-gränsen
+            </span>
           </p>
-        )}
-      </CardContent>
-    </Card>
+          <ul className="space-y-4">
+            {included.map(g => {
+              const rate = g.selection_rate ?? 0
+              const below = maxRate > 0 && rate < threshold
+              return (
+                <li key={g.name}>
+                  <div className="mb-1.5 flex items-baseline justify-between gap-3 text-sm">
+                    <span className="font-medium">{g.name}</span>
+                    <span className="font-semibold tabular-nums">{Math.round(rate * 100)} %</span>
+                  </div>
+                  <div className="relative h-3 rounded-full bg-muted" role="img" aria-label={`${g.name}: ${Math.round(rate * 100)} procent gick vidare${below ? ', under 4/5-gränsen' : ''}`}>
+                    <div className={`h-full rounded-full ${below ? 'bg-amber-500' : 'bg-mint'}`} style={{ width: `${rate * 100}%` }} />
+                    {maxRate > 0 && (
+                      <span className="absolute -top-1 -bottom-1 border-l-2 border-dashed border-foreground/60" style={{ left: `${threshold * 100}%` }} aria-hidden />
+                    )}
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {g.n} kandidater{g.avg_match_score !== null && <> · snittpoäng {g.avg_match_score}</>}
+                  </p>
+                </li>
+              )
+            })}
+          </ul>
+
+          {ratio !== null && (
+            <div className="mt-6 rounded-xl border border-border bg-muted/30 p-4">
+              <div className="mb-2 flex items-baseline justify-between gap-3 text-sm">
+                <span className="font-medium">Kvot mellan lägsta och högsta grupp</span>
+                <span className={`font-semibold tabular-nums ${result.adverse_impact.flagged ? 'text-amber-700 dark:text-amber-400' : 'text-mint-foreground'}`}>{sv(ratio)}</span>
+              </div>
+              <div className="relative h-2 rounded-full bg-gradient-to-r from-amber-500/40 via-amber-500/20 to-mint/40" role="img" aria-label={`Kvot ${sv(ratio)}, gränsen är 0,80`}>
+                <span className="absolute -top-1 -bottom-1 border-l-2 border-dashed border-foreground/60" style={{ left: '80%' }} aria-hidden />
+                <span
+                  className={`absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background ${result.adverse_impact.flagged ? 'bg-amber-500' : 'bg-mint'}`}
+                  style={{ left: `${Math.min(1, ratio) * 100}%` }}
+                  aria-hidden
+                />
+              </div>
+              <div className="relative mt-1.5 h-4 text-[11px] text-muted-foreground" aria-hidden>
+                <span className="absolute left-0">0</span>
+                <span className="absolute -translate-x-1/2" style={{ left: '80%' }}>0,80</span>
+                <span className="absolute right-0">1</span>
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">
+                {result.adverse_impact.lowest_group} jämfört med {result.adverse_impact.reference_group}.
+                {' '}{result.adverse_impact.flagged ? 'Under 0,80 flaggas enligt 4/5-regeln.' : 'Över 0,80, inom 4/5-regeln.'}
+                {result.significance && (
+                  <> {result.significance.significant
+                    ? `Skillnaden är statistiskt signifikant (z = ${sv(result.significance.z_score)}, p < 0,05).`
+                    : `Skillnaden är inte statistiskt signifikant (z = ${sv(result.significance.z_score)}).`}</>
+                )}
+              </p>
+            </div>
+          )}
+        </>
+      )}
+
+      {result.excluded_small_groups.length > 0 && (
+        <p className="mt-4 flex items-start gap-1.5 text-xs text-muted-foreground">
+          <Info className="mt-0.5 h-3 w-3 flex-shrink-0" aria-hidden />
+          Visas inte, för få kandidater: {result.excluded_small_groups.join(', ')}
+        </p>
+      )}
+    </div>
   )
 }
 
@@ -245,19 +286,26 @@ export function FairnessDashboardClient({ jobs, overview }: { jobs: { id: string
         {result && (
           <>
             {result.human_review_required && (
-              <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-800 px-4 py-3 text-sm text-amber-800 dark:text-amber-300 flex items-start gap-2">
-                <AlertTriangle className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                <span><strong>Human Review Required.</strong> Analysen upptäckte en möjlig systematisk skillnad mellan grupper. Detta betyder inte nödvändigtvis att bias föreligger, men en människa bör granska matchningsresultaten manuellt innan beslut fattas.</span>
+              <div className="panel flex items-start gap-3 border-amber-500/40 bg-amber-500/5 p-4" role="alert">
+                <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-700 dark:text-amber-400">
+                  <AlertTriangle className="h-4 w-4" aria-hidden />
+                </span>
+                <div className="text-sm">
+                  <p className="font-medium">En människa bör granska urvalet</p>
+                  <p className="mt-0.5 text-muted-foreground">
+                    Analysen hittade en möjlig systematisk skillnad mellan grupper. Det betyder inte att urvalet är orättvist, men matchningarna och besluten bör granskas manuellt innan du går vidare.
+                  </p>
+                </div>
               </div>
             )}
 
             <p className="text-xs text-muted-foreground">
-              {result.total_applications} ansökningar totalt, {result.total_candidates_with_demographics} kandidater har lämnat frivilliga uppgifter. Minsta gruppstorlek för att visas: {result.min_group_size}.
+              {result.total_applications} ansökningar, varav {result.total_candidates_with_demographics} kandidater har lämnat frivilliga uppgifter. Grupper med färre än {result.min_group_size} kandidater visas inte.
             </p>
 
-            <div className="grid gap-4">
-              <DimensionCard result={result.gender} />
-              <DimensionCard result={result.age_bucket} />
+            <div className="grid gap-4 lg:grid-cols-2">
+              <DimensionCard result={result.gender} minGroupSize={result.min_group_size} />
+              <DimensionCard result={result.age_bucket} minGroupSize={result.min_group_size} />
             </div>
           </>
         )}
