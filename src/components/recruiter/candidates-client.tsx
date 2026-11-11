@@ -201,6 +201,7 @@ export function CandidatesClient({
     toast.success('Status uppdaterad')
   }
 
+  const scoredCount = apps.filter(a => a.match_score != null).length
   const required = new Set((job.skills_required ?? []).map(s => s.toLowerCase()))
 
   const filtered = apps.filter(app => {
@@ -222,64 +223,85 @@ export function CandidatesClient({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div className="flex items-center gap-3 flex-1">
-          <Link href="/recruiter/jobs" className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" />
+      {/* Rubrik */}
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0">
+          <Link href="/recruiter/jobs" className="mb-2 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="h-4 w-4" aria-hidden />Alla annonser
           </Link>
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold">{job.title}</h1>
-            <p className="text-muted-foreground text-sm">{apps.length} kandidater</p>
-          </div>
+          <h1 className="text-3xl font-semibold tracking-tight">{job.title}</h1>
+          <p className="mt-1.5 text-muted-foreground">
+            {apps.length} {apps.length === 1 ? 'kandidat' : 'kandidater'}
+            {scoredCount > 0 && <> · {scoredCount} AI-matchade</>}
+          </p>
+          {(job.skills_required?.length ?? 0) > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+              <span className="text-xs text-muted-foreground">Annonsens krav:</span>
+              {job.skills_required!.map(s => (
+                <span key={s} className="rounded-full border border-border px-2.5 py-0.5 text-xs">{s}</span>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex rounded-md border">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex rounded-lg border border-border p-0.5" role="group" aria-label="Visningsläge">
             <Button
               variant={viewMode === 'list' ? 'secondary' : 'ghost'}
               size="sm"
-              className="rounded-r-none border-r"
+              className="h-7"
               onClick={() => setViewMode('list')}
+              aria-pressed={viewMode === 'list'}
+              aria-label="Lista"
             >
-              <LayoutList className="h-4 w-4" />
+              <LayoutList className="h-4 w-4" aria-hidden />
             </Button>
             <Button
               variant={viewMode === 'kanban' ? 'secondary' : 'ghost'}
               size="sm"
-              className="rounded-l-none"
+              className="h-7"
               onClick={() => setViewMode('kanban')}
+              aria-pressed={viewMode === 'kanban'}
+              aria-label="Tavla per status"
             >
-              <Columns className="h-4 w-4" />
+              <Columns className="h-4 w-4" aria-hidden />
             </Button>
           </div>
           {filtered.length > 0 && (
             <Button variant="outline" size="sm" onClick={exportCsv} className="hidden sm:flex">
-              <Download className="mr-2 h-4 w-4" />
-              CSV
+              <Download className="mr-2 h-4 w-4" aria-hidden />
+              Exportera CSV
             </Button>
           )}
-          <Button onClick={runAiMatch} disabled={matching} size="sm">
-            {matching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Brain className="mr-2 h-4 w-4" />}
-            {matching ? 'Matchar...' : 'AI-matcha'}
+          <Button onClick={runAiMatch} disabled={matching || apps.length === 0}>
+            {matching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden /> : <Sparkles className="mr-2 h-4 w-4" aria-hidden />}
+            {matching ? 'Matchar…' : scoredCount > 0 ? 'Matcha om' : 'AI-matcha'}
           </Button>
         </div>
       </div>
 
-      {/* AI-förklaring */}
-      {apps.length > 0 && apps.every(a => a.match_score === null) && (
-        <div className="rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-4 py-3 text-sm text-amber-800 dark:text-amber-300 flex items-start gap-2">
-          <span className="shrink-0 mt-0.5">💡</span>
-          <span>Kandidaterna har inget matchningspoäng ännu. Klicka <strong>AI-matcha</strong> för att låta Claude jämföra deras kompetenser mot jobbets krav och ge varje kandidat ett poäng 0–100.</span>
+      {/* Förklaring innan första matchningen */}
+      {apps.length > 0 && scoredCount === 0 && (
+        <div className="panel flex items-start gap-3 border-primary/25 bg-primary/5 p-4">
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <Brain className="h-4 w-4" aria-hidden />
+          </span>
+          <div className="text-sm">
+            <p className="font-medium">Kandidaterna är inte matchade ännu</p>
+            <p className="mt-0.5 text-muted-foreground">
+              Klicka på <strong className="text-foreground">AI-matcha</strong> så jämförs varje kandidats kompetenser och erfarenhet med annonsens krav. Alla får en poäng 0–100 med motivering. Kandidatens namn skickas inte med i bedömningen.
+            </p>
+          </div>
         </div>
       )}
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row flex-wrap gap-3">
-        <div className="relative flex-1 min-w-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Sök namn, kompetens, plats..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
+      {/* Filter */}
+      <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="relative min-w-0 flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+          <Input placeholder="Sök på namn, kompetens eller plats" value={search} onChange={e => setSearch(e.target.value)} className="pl-9" aria-label="Sök kandidater" />
         </div>
         <Select items={EXPERIENCE_ITEMS} value={filterExp} onValueChange={(v) => setFilterExp(v ?? 'all')}>
-          <SelectTrigger className="w-full sm:w-40"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-44" aria-label="Filtrera på erfarenhet"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All erfarenhet</SelectItem>
             <SelectItem value="0">Ingen erfarenhet</SelectItem>
@@ -290,7 +312,7 @@ export function CandidatesClient({
           </SelectContent>
         </Select>
         <Select items={STATUS_FILTER_ITEMS} value={filterStatus} onValueChange={(v) => setFilterStatus(v ?? 'all')}>
-          <SelectTrigger className="w-full sm:w-40"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-full sm:w-44" aria-label="Filtrera på status"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Alla statusar</SelectItem>
             {statusOptions.map(s => <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>)}
