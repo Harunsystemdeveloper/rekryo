@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
 import { Send, Loader2, Sparkles, RotateCcw, Search, Copy, Check, FileText, Target, PenLine, MessagesSquare } from 'lucide-react'
 import { toast } from 'sonner'
 import ReactMarkdown from 'react-markdown'
@@ -270,6 +269,16 @@ export function CoachClient({ profile }: { profile: Profile }) {
     }
   }
 
+  // Textfältet växer med innehållet upp till en gräns, som i moderna chattar
+  function autoResize(el: HTMLTextAreaElement) {
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, 200)}px`
+  }
+
+  useEffect(() => {
+    if (!input && textareaRef.current) textareaRef.current.style.height = 'auto'
+  }, [input])
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -320,30 +329,38 @@ export function CoachClient({ profile }: { profile: Profile }) {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
-      <div className="flex gap-2 pt-4 border-t flex-shrink-0">
-        <Textarea
-          ref={textareaRef}
-          placeholder="Skriv din fråga... (Enter för att skicka, Shift+Enter för ny rad)"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          rows={2}
-          className="resize-none flex-1 text-sm"
-          disabled={loading || streaming}
-        />
-        <Button
-          onClick={() => sendMessage()}
-          disabled={!input.trim() || loading || streaming}
-          size="icon"
-          className="h-full px-4 flex-shrink-0"
-        >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-        </Button>
+      {/* Inmatning: kort med textfält som växer och skickknappen inuti */}
+      <div className="flex-shrink-0 pb-1 pt-2">
+        <div className="rounded-2xl border border-border bg-card shadow-[0_8px_24px_-12px_rgb(11_17_32/25%)] transition-colors focus-within:border-primary/50 dark:shadow-[0_8px_24px_-12px_rgb(0_0_0/60%)]">
+          <label htmlFor="coach-input" className="sr-only">Skriv din fråga till karriärcoachen</label>
+          <textarea
+            id="coach-input"
+            ref={textareaRef}
+            placeholder="Fråga om ditt CV, jobb eller intervjuer"
+            value={input}
+            onChange={e => { setInput(e.target.value); autoResize(e.target) }}
+            onKeyDown={handleKeyDown}
+            rows={1}
+            disabled={loading || streaming}
+            className="block max-h-[200px] w-full resize-none bg-transparent px-4 pb-2 pt-3.5 text-[15px] leading-relaxed outline-none placeholder:text-muted-foreground disabled:opacity-60"
+          />
+          <div className="flex items-center justify-between gap-3 px-3 pb-3">
+            <span className="pl-1 text-[11px] text-muted-foreground">Enter skickar · Shift+Enter ny rad</span>
+            <Button
+              onClick={() => sendMessage()}
+              disabled={!input.trim() || loading || streaming}
+              size="icon"
+              className="h-9 w-9 rounded-xl"
+              aria-label="Skicka"
+            >
+              {loading || streaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+        <p className="pt-2 text-center text-xs text-muted-foreground">
+          AI kan göra misstag. Kontrollera viktiga uppgifter innan du använder dem.
+        </p>
       </div>
-      <p className="text-xs text-muted-foreground text-center pt-2">
-        AI kan göra misstag. Verifiera viktiga beslut.
-      </p>
     </div>
   )
 }
