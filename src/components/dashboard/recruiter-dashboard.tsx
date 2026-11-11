@@ -5,6 +5,8 @@ import {
   BriefcaseIcon, FileTextIcon, PlusIcon, UsersIcon, Brain, MessageSquare, Clock, Scale,
   ArrowRight, Building2, MapPin,
 } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { ScoreRing } from '@/components/match/score-ring'
 import { EmptyApplicationsIllustration } from '@/components/illustrations/empty-states'
 import type { Profile } from '@/types/database'
 
@@ -16,17 +18,30 @@ const jobStatus: Record<string, { label: string; className: string }> = {
   closed: { label: 'Stängd', className: 'bg-muted text-muted-foreground' },
 }
 
+const applicationStatus: Record<string, { label: string; className: string }> = {
+  pending: { label: 'Ny', className: 'bg-primary/10 text-primary' },
+  reviewed: { label: 'Granskad', className: 'bg-muted text-muted-foreground' },
+  shortlisted: { label: 'Shortlistad', className: 'bg-mint/15 text-mint-foreground' },
+  accepted: { label: 'Accepterad', className: 'bg-mint/20 text-mint-foreground' },
+  rejected: { label: 'Avvisad', className: 'bg-destructive/10 text-destructive' },
+}
+
 export default async function RecruiterDashboard({ profile }: { profile: Profile }) {
   const supabase = await createClient()
 
   // Antalen räknas separat: listan nedan är begränsad till de fem senaste annonserna
   // och gav därför fel siffror så fort rekryteraren hade fler än fem.
-  const [{ data: jobs }, { count: jobCount }, { count: activeJobs }, { count: appCount }, { count: pendingCount }] = await Promise.all([
+  const [{ data: jobs }, { count: jobCount }, { count: activeJobs }, { count: appCount }, { count: pendingCount }, { data: latestApps }] = await Promise.all([
     supabase.from('jobs').select('*, applications(count)').eq('recruiter_id', profile.id).order('created_at', { ascending: false }).limit(5),
     supabase.from('jobs').select('id', { count: 'exact', head: true }).eq('recruiter_id', profile.id),
     supabase.from('jobs').select('id', { count: 'exact', head: true }).eq('recruiter_id', profile.id).eq('status', 'active'),
     supabase.from('applications').select('*, jobs!inner(recruiter_id)', { count: 'exact', head: true }).eq('jobs.recruiter_id', profile.id),
     supabase.from('applications').select('*, jobs!inner(recruiter_id)', { count: 'exact', head: true }).eq('jobs.recruiter_id', profile.id).eq('status', 'pending'),
+    supabase.from('applications')
+      .select('id, job_id, status, match_score, created_at, seeker:profiles(full_name, avatar_url), jobs!inner(title, recruiter_id)')
+      .eq('jobs.recruiter_id', profile.id)
+      .order('created_at', { ascending: false })
+      .limit(5),
   ])
 
   const firstName = profile.full_name?.split(' ')[0] ?? 'där'
@@ -125,6 +140,49 @@ export default async function RecruiterDashboard({ profile }: { profile: Profile
                   )
                 })}
               </ul>
+            </section>
+
+            <section className="panel p-6" aria-labelledby="latest-apps">
+              <div className="mb-5">
+                <h2 id="latest-apps" className="text-base font-semibold">Senaste ansökningar</h2>
+                <p className="text-sm text-muted-foreground">De som sökt senast, över alla dina annonser</p>
+              </div>
+              {!latestApps || latestApps.length === 0 ? (
+                <p className="py-4 text-center text-sm text-muted-foreground">Inga ansökningar ännu. De dyker upp här så fort någon söker.</p>
+              ) : (
+                <ul className="divide-y divide-border">
+                  {latestApps.map(app => {
+                    const seeker = Array.isArray(app.seeker) ? app.seeker[0] : app.seeker
+                    const job = Array.isArray(app.jobs) ? app.jobs[0] : app.jobs
+                    const name: string = seeker?.full_name ?? 'Kandidat'
+                    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+                    const status = applicationStatus[app.status] ?? applicationStatus.pending
+                    return (
+                      <li key={app.id}>
+                        <Link
+                          href={`/recruiter/jobs/${app.job_id}/candidates`}
+                          className="-mx-2 flex items-center gap-3 rounded-lg px-2 py-3 transition-colors hover:bg-muted/50"
+                        >
+                          <Avatar className="h-9 w-9 flex-shrink-0">
+                            <AvatarImage src={seeker?.avatar_url ?? ''} alt="" />
+                            <AvatarFallback className="gradient-primary text-xs text-white">{initials}</AvatarFallback>
+                          </Avatar>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-sm font-medium">{name}</span>
+                            <span className="block truncate text-xs text-muted-foreground">
+                              {job?.title ?? 'Annons'} · {new Date(app.created_at).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })}
+                            </span>
+                          </span>
+                          <span className={`hidden rounded-full px-2.5 py-0.5 text-xs font-medium sm:inline ${status.className}`}>{status.label}</span>
+                          {app.match_score != null
+                            ? <ScoreRing score={app.match_score} size="sm" />
+                            : <span className="w-12 text-center text-[11px] leading-tight text-muted-foreground">Ej matchad</span>}
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
             </section>
           </div>
 
