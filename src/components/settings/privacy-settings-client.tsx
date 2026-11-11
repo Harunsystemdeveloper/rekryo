@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
   DialogFooter, DialogDescription
@@ -53,20 +52,33 @@ export function PrivacySettingsClient() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <Shield className="h-6 w-6 text-primary" />
-          Integritet & GDPR
+        <h1 className="flex items-center gap-2 text-3xl font-semibold tracking-tight">
+          <Shield className="h-6 w-6 text-primary" aria-hidden />
+          Integritet och GDPR
         </h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Hantera din data i enlighet med GDPR (dataskyddsförordningen)
+        <p className="mt-1.5 text-muted-foreground">
+          Du bestämmer över din data. Här ser du dina rättigheter och kan använda dem direkt.
         </p>
+        <nav aria-label="Avsnitt på sidan" className="mt-5 flex flex-wrap gap-2">
+          {[
+            { href: '#rights-heading', label: 'Rättigheter' },
+            { href: '#talangpool', label: 'Talangpoolen' },
+            { href: '#rattvisa', label: 'Rättvis rekrytering' },
+            { href: '#export', label: 'Exportera' },
+            { href: '#radera', label: 'Radera konto' },
+          ].map(l => (
+            <a key={l.href} href={l.href} className="rounded-full border border-border px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary">
+              {l.label}
+            </a>
+          ))}
+        </nav>
       </div>
 
       {/* Dina rättigheter: varje rättighet med status och en genväg till funktionen */}
       <section aria-labelledby="rights-heading">
-        <h2 id="rights-heading" className="mb-4 flex items-center gap-2 text-lg font-semibold">
+        <h2 id="rights-heading" className="mb-4 flex scroll-mt-24 items-center gap-2 text-lg font-semibold">
           <Eye className="h-4 w-4 text-primary" aria-hidden />
           Dina rättigheter
         </h2>
@@ -92,13 +104,13 @@ export function PrivacySettingsClient() {
         </div>
       </section>
 
-      <Separator />
+      <div id="talangpool" className="scroll-mt-24">
+        <TalentPoolConsentCard />
+      </div>
 
-      <TalentPoolConsentCard />
-
-      <DemographicsConsentCard />
-
-      <Separator />
+      <div id="rattvisa" className="scroll-mt-24">
+        <DemographicsConsentCard />
+      </div>
 
       {/* Exportera data */}
       <Card id="export" className="scroll-mt-24">
@@ -134,8 +146,6 @@ export function PrivacySettingsClient() {
           </Button>
         </CardContent>
       </Card>
-
-      <Separator />
 
       {/* Radera konto */}
       <Card id="radera" className="scroll-mt-24 border-destructive/30">
