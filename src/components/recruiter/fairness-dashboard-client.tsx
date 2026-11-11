@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Loader2, Scale, AlertTriangle, CheckCircle2, Info } from 'lucide-react'
-import { toast } from 'sonner'
+import { Loader2, Scale, AlertTriangle, CheckCircle2, Info, EyeOff, Users, Lock } from 'lucide-react'
+import { EmptyGapsIllustration } from '@/components/illustrations/empty-states'
 
 interface GroupResult {
   name: string
@@ -231,10 +231,40 @@ function OverviewSection({ overview }: { overview: FairnessOverview }) {
   )
 }
 
+const PRINCIPLES = [
+  { icon: EyeOff, title: 'Namnet döljs för AI:n', text: 'Kandidatens namn skickas inte med när AI:n poängsätter, eftersom namn kan avslöja kön eller ursprung.' },
+  { icon: Users, title: 'Små grupper visas inte', text: 'En grupp måste ha minst fem kandidater innan statistiken visas, så att ingen enskild person kan pekas ut.' },
+  { icon: Lock, title: 'Frivilliga uppgifter', text: 'Kön och födelseår lämnas bara om kandidaten själv vill, sparas separat och visas aldrig för dig per person.' },
+  { icon: Scale, title: 'Människan har sista ordet', text: 'Du kan justera varje AI-poäng. Justeringen kräver en motivering och sparas i AI-loggen, liksom varje analys här.' },
+]
+
+function PrinciplesSection() {
+  return (
+    <section aria-labelledby="principles" className="space-y-4">
+      <div>
+        <h2 id="principles" className="text-lg font-semibold">Så skyddas kandidaterna</h2>
+        <p className="text-sm text-muted-foreground">Inbyggt i hur matchningen och analysen fungerar</p>
+      </div>
+      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {PRINCIPLES.map(p => (
+          <li key={p.title} className="panel p-5">
+            <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <p.icon className="h-4 w-4" aria-hidden />
+            </span>
+            <p className="text-sm font-medium">{p.title}</p>
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{p.text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
 export function FairnessDashboardClient({ jobs, overview }: { jobs: { id: string; title: string }[]; overview: FairnessOverview }) {
   const [jobId, setJobId] = useState<string>('all')
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<AnalysisResult | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const jobItems = { all: 'Alla mina jobbannonser', ...Object.fromEntries(jobs.map(j => [j.id, j.title])) }
 
   async function analyze() {
@@ -244,9 +274,16 @@ export function FairnessDashboardClient({ jobs, overview }: { jobs: { id: string
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(jobId === 'all' ? {} : { job_id: jobId }),
     })
-    const data = await res.json()
-    if (!res.ok) { toast.error(typeof data.error === 'string' ? data.error : 'Analys misslyckades'); setLoading(false); return }
-    setResult(data)
+    const data = await res.json().catch(() => ({}))
+    // Fel visas i sidan i stället för som toast: "Inga ansökningar att analysera" är
+    // ett normalt läge för en ny rekryterare, inte ett tekniskt fel.
+    if (!res.ok) {
+      setResult(null)
+      setError(typeof data.error === 'string' ? data.error : 'Analysen kunde inte köras. Försök igen om en stund.')
+    } else {
+      setResult(data)
+      setError(null)
+    }
     setLoading(false)
   }
 
@@ -261,6 +298,8 @@ export function FairnessDashboardClient({ jobs, overview }: { jobs: { id: string
       </div>
 
       <OverviewSection overview={overview} />
+
+      <PrinciplesSection />
 
       <section aria-labelledby="groups" className="space-y-4">
         <div>
@@ -278,10 +317,29 @@ export function FairnessDashboardClient({ jobs, overview }: { jobs: { id: string
             </SelectContent>
           </Select>
           <Button onClick={analyze} disabled={loading}>
-            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Scale className="mr-2 h-4 w-4" />}
-            Analysera
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden /> : <Scale className="mr-2 h-4 w-4" aria-hidden />}
+            {result ? 'Kör om analysen' : 'Analysera'}
           </Button>
         </div>
+
+        {!result && (
+          <div className="panel flex flex-col items-center px-6 py-12 text-center">
+            <EmptyGapsIllustration className="mb-4 h-20 w-auto" />
+            {error ? (
+              <>
+                <p className="font-medium">{error}</p>
+                <p className="mt-1 max-w-md text-sm text-muted-foreground">Analysen behöver ansökningar att jämföra. Kom tillbaka när kandidaterna har börjat söka.</p>
+              </>
+            ) : (
+              <>
+                <p className="font-medium">Kör analysen när du vill kontrollera urvalet</p>
+                <p className="mt-1 max-w-md text-sm text-muted-foreground">
+                  Analysen jämför hur stor andel i varje grupp som shortlistats eller accepterats. Varje körning sparas i AI-loggen.
+                </p>
+              </>
+            )}
+          </div>
+        )}
 
         {result && (
           <>
