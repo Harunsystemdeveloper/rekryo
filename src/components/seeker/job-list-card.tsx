@@ -155,7 +155,7 @@ export function JobListCard({
             </details>
           )}
 
-          <div className="mt-5 flex items-center justify-between gap-3">
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
             <span className="text-xs text-muted-foreground">Publicerad {new Date(job.created_at).toLocaleDateString('sv-SE')}</span>
             <div className="flex items-center gap-2">
               <Button
