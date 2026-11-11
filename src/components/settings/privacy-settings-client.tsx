@@ -4,14 +4,13 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Badge } from '@/components/ui/badge'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
   DialogFooter, DialogDescription
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
-import { Loader2, Download, Trash2, Shield, FileJson, AlertTriangle, Eye, Lock } from 'lucide-react'
+import { Loader2, Download, Trash2, Shield, FileJson, AlertTriangle, Eye } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { DemographicsConsentCard } from '@/components/settings/demographics-consent-card'
 import { TalentPoolConsentCard } from '@/components/settings/talent-pool-consent'
@@ -65,50 +64,33 @@ export function PrivacySettingsClient() {
         </p>
       </div>
 
-      {/* Dina rättigheter */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Eye className="h-4 w-4 text-primary" />
-            Dina rättigheter
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+      {/* Dina rättigheter: varje rättighet med status och en genväg till funktionen */}
+      <section aria-labelledby="rights-heading">
+        <h2 id="rights-heading" className="mb-4 flex items-center gap-2 text-lg font-semibold">
+          <Eye className="h-4 w-4 text-primary" aria-hidden />
+          Dina rättigheter
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2">
           {[
-            {
-              right: 'Rätt till tillgång',
-              desc: 'Du har rätt att få en kopia av all data vi lagrar om dig.',
-              badge: 'Tillgänglig',
-            },
-            {
-              right: 'Rätt till radering',
-              desc: 'Du kan begära att vi raderar ditt konto och all associerad data.',
-              badge: 'Tillgänglig',
-            },
-            {
-              right: 'Rätt till portabilitet',
-              desc: 'Ladda ner din data i ett maskinläsbart format (JSON).',
-              badge: 'Tillgänglig',
-            },
-            {
-              right: 'Rätt till rättelse',
-              desc: 'Redigera din profil och CV-data när som helst via inställningar.',
-              badge: 'Tillgänglig',
-            },
+            { right: 'Rätt till tillgång', article: 'Art. 15', desc: 'Få en kopia av all data vi lagrar om dig.', href: '#export', action: 'Exportera' },
+            { right: 'Rätt till rättelse', article: 'Art. 16', desc: 'Ändra din profil och CV-data när som helst.', href: '/settings', action: 'Inställningar' },
+            { right: 'Rätt till radering', article: 'Art. 17', desc: 'Radera ditt konto och all data som hör till det.', href: '#radera', action: 'Radera konto' },
+            { right: 'Rätt till portabilitet', article: 'Art. 20', desc: 'Ladda ner din data i ett maskinläsbart format (JSON).', href: '#export', action: 'Ladda ner' },
           ].map(item => (
-            <div key={item.right} className="flex items-start gap-3">
-              <Lock className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium">{item.right}</p>
-                  <Badge variant="outline" className="text-xs text-green-600 border-green-200">{item.badge}</Badge>
-                </div>
-                <p className="text-xs text-muted-foreground mt-0.5">{item.desc}</p>
+            <div key={item.right} className="panel flex flex-col p-5">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <span className="rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint-foreground">Tillgänglig</span>
+                <span className="text-xs text-muted-foreground">GDPR {item.article}</span>
               </div>
+              <h3 className="text-sm font-semibold">{item.right}</h3>
+              <p className="mb-3 mt-1 flex-1 text-sm text-muted-foreground">{item.desc}</p>
+              <a href={item.href} className="w-fit rounded text-sm font-medium text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                {item.action} →
+              </a>
             </div>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </section>
 
       <Separator />
 
@@ -119,7 +101,7 @@ export function PrivacySettingsClient() {
       <Separator />
 
       {/* Exportera data */}
-      <Card>
+      <Card id="export" className="scroll-mt-24">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <FileJson className="h-4 w-4 text-primary" />
@@ -156,7 +138,7 @@ export function PrivacySettingsClient() {
       <Separator />
 
       {/* Radera konto */}
-      <Card className="border-destructive/30">
+      <Card id="radera" className="scroll-mt-24 border-destructive/30">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2 text-destructive">
             <Trash2 className="h-4 w-4" />
