@@ -17,6 +17,18 @@ import type { Profile } from '@/types/database'
 import { TalentPoolConsentCheckbox } from '@/components/settings/talent-pool-consent'
 
 const seekerSchema = z.object({ experience_years: z.string().optional() })
+
+// Base UI:s Select visar det valda värdet ("5") om den inte får etiketterna ("4–5 år")
+const EXPERIENCE_ITEMS = {
+  '0': 'Nyexaminerad / ingen erfarenhet',
+  '1': '1 år',
+  '2': '2 år',
+  '3': '3 år',
+  '5': '4–5 år',
+  '8': '6–10 år',
+  '15': 'Mer än 10 år',
+}
+const INDUSTRIES = ['IT & Tech', 'Finans', 'Hälsovård', 'Utbildning', 'Handel', 'Tillverkning', 'Konsult', 'Media', 'Offentlig sektor', 'Annat']
 const recruiterSchema = z.object({
   company_name: z.string().min(1, 'Ange företagsnamn'),
   industry: z.string().optional(),
@@ -99,10 +111,10 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
               </div>
               <div className="space-y-2">
                 <Label>Bransch</Label>
-                <Select onValueChange={(v) => setValue('industry', v as string)}>
+                <Select items={Object.fromEntries(INDUSTRIES.map(b => [b, b]))} onValueChange={(v) => setValue('industry', v as string)}>
                   <SelectTrigger className="h-11"><SelectValue placeholder="Välj bransch" /></SelectTrigger>
                   <SelectContent>
-                    {['IT & Tech', 'Finans', 'Hälsovård', 'Utbildning', 'Handel', 'Tillverkning', 'Konsult', 'Media', 'Offentlig sektor', 'Annat'].map((b) => (
+                    {INDUSTRIES.map((b) => (
                       <SelectItem key={b} value={b}>{b}</SelectItem>
                     ))}
                   </SelectContent>
@@ -140,16 +152,12 @@ export function StepRoleDetails({ profile, onNext, onBack }: { profile: Profile;
               </div>
               <div className="space-y-2">
                 <Label>Antal års erfarenhet</Label>
-                <Select onValueChange={(v) => setValue('experience_years', v as string)}>
+                <Select items={EXPERIENCE_ITEMS} onValueChange={(v) => setValue('experience_years', v as string)}>
                   <SelectTrigger className="h-11"><SelectValue placeholder="Välj erfarenhetsnivå" /></SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="0">Nyexaminerad / Ingen erfarenhet</SelectItem>
-                    <SelectItem value="1">1 år</SelectItem>
-                    <SelectItem value="2">2 år</SelectItem>
-                    <SelectItem value="3">3 år</SelectItem>
-                    <SelectItem value="5">4–5 år</SelectItem>
-                    <SelectItem value="8">6–10 år</SelectItem>
-                    <SelectItem value="15">10+ år</SelectItem>
+                    {Object.entries(EXPERIENCE_ITEMS).map(([value, label]) => (
+                      <SelectItem key={value} value={value}>{label}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
