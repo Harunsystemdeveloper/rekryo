@@ -1,4 +1,4 @@
-import { Check, AlertTriangle, Search, BarChart3, MapPin, Sparkles, Star, SlidersHorizontal, EyeOff, UserCheck, ChevronDown } from 'lucide-react'
+import { Check, AlertTriangle, Lock, Search, BarChart3, MapPin, Sparkles, Star, SlidersHorizontal, EyeOff, UserCheck, ChevronDown } from 'lucide-react'
 import { ScoreRing } from '@/components/match/score-ring'
 
 // Samma matchning sedd från båda håll, byggd med appens egna komponenter och färger så
@@ -16,10 +16,13 @@ const categories = [
 function WindowChrome({ url }: { url: string }) {
   return (
     <div className="flex items-center gap-1.5 border-b border-border bg-muted/40 px-4 py-2.5">
-      <span className="h-2 w-2 rounded-full bg-foreground/15" />
-      <span className="h-2 w-2 rounded-full bg-foreground/15" />
-      <span className="h-2 w-2 rounded-full bg-foreground/15" />
-      <span className="ml-3 truncate text-[11px] text-muted-foreground">{url}</span>
+      <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#FF5F57]/70" />
+      <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#FEBC2E]/70" />
+      <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#28C840]/70" />
+      <span className="mx-auto flex min-w-0 items-center gap-1.5 rounded-md bg-background/70 px-3 py-1 text-[11px] text-muted-foreground ring-1 ring-border">
+        <Lock className="h-2.5 w-2.5 flex-shrink-0" /><span className="truncate">{url}</span>
+      </span>
+      <span className="w-6 flex-shrink-0" />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { Check, AlertTriangle, ShieldCheck, UserCheck, EyeOff, MapPin, Bell, ArrowRight } from 'lucide-react'
+import { Check, AlertTriangle, MapPin, Bell, ArrowRight, Lock, Star, CalendarPlus, SlidersHorizontal, EyeOff } from 'lucide-react'
 
 // Statisk produktmockup för heron. Den ligger alltid på det mörka hero-bandet, så färgerna
 // är satta direkt i stället för via temat. Innehållet speglar den riktiga matchningen:
@@ -26,12 +26,23 @@ export function MatchCardMockup() {
   return (
     <div className="relative mx-auto w-full max-w-[36rem]">
       {/* Huvudkortet */}
-      <div className="relative rounded-2xl border border-white/10 bg-[#141B2D]/90 shadow-[0_30px_80px_-30px_rgb(0_0_0/80%)] backdrop-blur-xl">
-        <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-4 py-2.5">
-          <span className="h-2 w-2 rounded-full bg-white/15" />
-          <span className="h-2 w-2 rounded-full bg-white/15" />
-          <span className="h-2 w-2 rounded-full bg-white/15" />
-          <span className="ml-3 truncate text-[11px] text-white/40">rekryo.com/rekryterare/kandidater</span>
+      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#141B2D]/90 shadow-[0_30px_80px_-30px_rgb(0_0_0/80%),inset_0_1px_0_rgb(255_255_255/6%)] backdrop-blur-xl">
+        {/* Ljuskant upptill, som på ett riktigt glasfönster */}
+        <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#A99DFB]/50 to-transparent" />
+        <div className="flex items-center gap-1.5 border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]/70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]/70" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]/70" />
+          <span className="mx-auto flex items-center gap-1.5 rounded-md bg-white/[0.05] px-3 py-1 text-[11px] text-white/45">
+            <Lock className="h-2.5 w-2.5" aria-hidden />rekryo.com/rekryterare/kandidater
+          </span>
+          <span className="w-10" />
+        </div>
+        <div className="flex items-center gap-5 border-b border-white/[0.06] px-5 text-xs sm:px-6">
+          <span className="-mb-px border-b-2 border-[#8B7CF6] py-2.5 font-medium text-white">Kandidater <span className="ml-1 rounded bg-white/10 px-1.5 py-px text-[10px] tabular-nums text-white/70">24</span></span>
+          <span className="py-2.5 text-white/45">Pipeline</span>
+          <span className="py-2.5 text-white/45">AI-logg</span>
+          <span className="ml-auto hidden items-center gap-1 py-2.5 text-[11px] text-white/40 sm:flex"><EyeOff className="h-3 w-3" aria-hidden />Namn dolda för AI:n</span>
         </div>
 
         <div className="space-y-5 p-5 sm:p-6">
@@ -78,15 +89,18 @@ export function MatchCardMockup() {
                   <span className="text-white/60">{c.label}</span>
                   <span className="font-medium tabular-nums text-white">{c.value}</span>
                 </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
-                  <div className="h-full rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#8B7CF6]" style={{ width: `${c.value}%` }} />
+                <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.07] shadow-[inset_0_1px_1px_rgb(0_0_0/30%)]">
+                  <div className="h-full rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#8B7CF6] shadow-[0_0_10px_rgb(139_124_246/45%)]" style={{ width: `${c.value}%` }} />
                 </div>
               </div>
             ))}
           </div>
 
           <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] p-4">
-            <p className="mb-3 text-xs font-semibold text-white/80">Varför denna matchning</p>
+            <p className="mb-3 flex items-center justify-between text-xs font-semibold text-white/80">
+              Varför denna matchning
+              <span className="font-normal text-white/35">Källa: CV och annons</span>
+            </p>
             <ul className="space-y-2.5 text-[13px] leading-snug">
               <li className="flex gap-2.5 text-white/75">
                 <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#2DD4AE]" aria-hidden />
@@ -103,17 +117,17 @@ export function MatchCardMockup() {
             </ul>
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            {[
-              { icon: ShieldCheck, label: 'Förklarbar bedömning' },
-              { icon: UserCheck, label: 'Människa fattar beslutet' },
-              { icon: EyeOff, label: 'Namn skickas inte till AI:n' },
-            ].map(({ icon: Icon, label }) => (
-              <span key={label} className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.08] bg-white/[0.03] px-2 py-1 text-[11px] text-white/55">
-                <Icon className="h-3 w-3" aria-hidden />
-                {label}
-              </span>
-            ))}
+          {/* Åtgärder som i kandidatlistan: AI:n föreslår, rekryteraren agerar */}
+          <div className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-4">
+            <span className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#6C5CE7] px-3 text-xs font-medium text-white shadow-[0_4px_14px_-4px_rgb(108_92_231/70%)]">
+              <Star className="h-3.5 w-3.5" aria-hidden />Shortlista
+            </span>
+            <span className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs text-white/80">
+              <CalendarPlus className="h-3.5 w-3.5" aria-hidden />Boka intervju
+            </span>
+            <span className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-xs text-white/55">
+              <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden />Justera poäng
+            </span>
           </div>
         </div>
       </div>
