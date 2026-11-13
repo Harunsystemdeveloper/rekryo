@@ -32,6 +32,7 @@ const sizes = {
   sm: { box: 48, stroke: 5, text: 'text-sm', sub: false },
   md: { box: 64, stroke: 6, text: 'text-lg', sub: false },
   lg: { box: 88, stroke: 7, text: 'text-2xl', sub: true },
+  xl: { box: 152, stroke: 10, text: 'text-5xl', sub: true },
 }
 
 export function ScoreRing({

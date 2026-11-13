@@ -285,8 +285,9 @@ export default function HomePage() {
       </section>
 
       {/* ── Live Demo ── */}
-      <section id="demo" className="section-alt scroll-mt-20 border-t border-border bg-muted/30 px-6 py-20 lg:py-24">
-        <div className="mx-auto max-w-2xl">
+      <section id="demo" className="section-alt relative scroll-mt-20 overflow-hidden border-t border-border bg-muted/30 px-6 py-20 lg:py-24">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-0 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgb(108_92_231/14%),transparent)]" aria-hidden />
+        <div className="relative mx-auto max-w-6xl">
           <ScrollReveal>
             <SectionHeader
               eyebrow="Prova direkt"
