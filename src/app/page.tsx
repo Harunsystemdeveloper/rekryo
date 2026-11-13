@@ -17,7 +17,7 @@ import {
   Target, Users, TrendingUp, Shield,
   ArrowRight, CheckCircle, Zap, Sparkles,
   FileText, BarChart3, MessageSquare,
-  Building2, TrendingDown, Search, UserPlus
+  Building2, TrendingDown, Search, UserPlus, Upload, Briefcase
 } from 'lucide-react'
 
 // Två märkesfärger, inte en regnbåge: lila och mint växlar i ett medvetet mönster.
@@ -339,12 +339,13 @@ export default function HomePage() {
           <SectionHeader
             eyebrow="För båda sidor"
             title="En plattform, två perspektiv"
-            description="Jobbsökare ser hur de matchar och vad som saknas. Rekryterare får en rangordnad lista med motivering till varje poäng."
+            description="Samma förklarade matchning, men olika frågor. Som jobbsökare vill du veta om du passar. Som rekryterare vill du veta vem som passar bäst."
           />
 
           <div className="grid gap-6 lg:grid-cols-2">
-            {/* Jobbsökare */}
-            <div className="panel flex flex-col overflow-hidden">
+            {/* Jobbsökare: lila genomgående */}
+            <div className="panel panel-hover flex flex-col overflow-hidden">
+              <div className="h-1 bg-gradient-to-r from-primary via-primary/70 to-primary/10" aria-hidden />
               <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
                 <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Dina bästa matchningar</p>
@@ -375,29 +376,34 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex flex-1 flex-col p-7 sm:p-8">
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20">
                     <Search className="h-5 w-5" aria-hidden />
                   </div>
-                  <h3 className="text-xl font-semibold">För jobbsökare</h3>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-primary">Jobbsökare</p>
+                    <h3 className="text-xl font-semibold">För dig som söker jobb</h3>
+                  </div>
                 </div>
-                <p className="mb-6 text-muted-foreground">Ladda upp ditt CV och se direkt hur väl du matchar varje jobb, och exakt vad du kan förbättra.</p>
+                <p className="mb-6 text-muted-foreground">Se varför du passar innan du söker. Ladda upp ditt CV en gång, så får varje jobb en poäng, en motivering och en lista över vad du kan förbättra.</p>
                 <ul className="mb-8 flex-1 space-y-3">
-                  {['AI analyserar ditt CV automatiskt', 'Matchningspoäng med motivering per jobb', 'Tydliga kompetensgap att jobba med', 'Intervjufrågor anpassade efter jobbet'].map(item => (
+                  {['CV:t analyseras automatiskt på ungefär 30 sekunder', 'Poäng och motivering för varje jobb', 'Kompetensgap med konkreta förslag', 'Intervjufrågor för just den rollen'].map(item => (
                     <li key={item} className="flex items-center gap-2.5 text-sm">
-                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-mint-foreground" aria-hidden />
+                      <CheckCircle className="h-4 w-4 flex-shrink-0 text-primary" aria-hidden />
                       {item}
                     </li>
                   ))}
                 </ul>
-                <Button asChild className="w-full">
-                  <Link href="/register?roll=jobbsokare">Hitta ditt nästa jobb <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Button asChild size="lg" className="h-11 w-full shadow-lg shadow-primary/25">
+                  <Link href="/register?roll=jobbsokare"><Upload className="mr-2 h-4 w-4" aria-hidden />Ladda upp ditt CV</Link>
                 </Button>
+                <p className="mt-2.5 text-center text-xs text-muted-foreground">Gratis för jobbsökare, inget kort behövs</p>
               </div>
             </div>
 
-            {/* Rekryterare */}
-            <div className="panel flex flex-col overflow-hidden">
+            {/* Rekryterare: mint genomgående */}
+            <div className="panel panel-hover flex flex-col overflow-hidden">
+              <div className="h-1 bg-gradient-to-r from-mint via-mint/70 to-mint/10" aria-hidden />
               <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
                 <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Sökande · Undersköterska, akutmottagning</p>
@@ -421,24 +427,28 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex flex-1 flex-col p-7 sm:p-8">
-                <div className="mb-3 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mint/10 text-mint-foreground">
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-mint/10 text-mint-foreground ring-1 ring-mint/25">
                     <BarChart3 className="h-5 w-5" aria-hidden />
                   </div>
-                  <h3 className="text-xl font-semibold">För rekryterare</h3>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-mint-foreground">Rekryterare</p>
+                    <h3 className="text-xl font-semibold">För dig som rekryterar</h3>
+                  </div>
                 </div>
-                <p className="mb-6 text-muted-foreground">Sluta gissa. Få alla sökande rangordnade med poäng, kompetensgap och en sammanfattning, och fatta beslutet själv.</p>
+                <p className="mb-6 text-muted-foreground">Gå från en hög ansökningar till en rangordnad lista. Varje kandidat får poäng, sammanfattning och kompetensgap, och du fattar beslutet.</p>
                 <ul className="mb-8 flex-1 space-y-3">
-                  {['Publicera jobbannonser på minuter', 'AI rangordnar alla sökande 0–100', 'Sammanfattning och gap per kandidat', 'Inbyggd chatt och intervjubokning'].map(item => (
+                  {['Publicera en annons på några minuter', 'Alla sökande rangordnade 0–100 med motivering', 'Namnet döljs för AI:n vid bedömningen', 'Chatt, intervjubokning och rättviseuppföljning'].map(item => (
                     <li key={item} className="flex items-center gap-2.5 text-sm">
                       <CheckCircle className="h-4 w-4 flex-shrink-0 text-mint-foreground" aria-hidden />
                       {item}
                     </li>
                   ))}
                 </ul>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/register?roll=rekryterare">Rekrytera smartare <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Button asChild size="lg" className="h-11 w-full bg-mint text-[#0B1120] shadow-lg shadow-mint/25 hover:bg-mint/90">
+                  <Link href="/register?roll=rekryterare"><Briefcase className="mr-2 h-4 w-4" aria-hidden />Publicera en annons</Link>
                 </Button>
+                <p className="mt-2.5 text-center text-xs text-muted-foreground">Gratis att publicera och matcha</p>
               </div>
             </div>
           </div>
