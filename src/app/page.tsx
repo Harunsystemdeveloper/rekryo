@@ -77,7 +77,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── Hero: budskap och två ingångar till vänster, produkten själv till höger ── */}
-      <section className="relative overflow-hidden hero-dark px-6 pt-24 pb-20 lg:pt-28 lg:pb-24">
+      <section className="relative overflow-hidden hero-dark px-6 pt-20 pb-16 lg:pt-24 lg:pb-20">
         <div className="absolute inset-0 -z-10 dot-grid-light opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
@@ -253,7 +253,7 @@ export default function HomePage() {
                   <h3 className="mb-2 text-lg font-semibold">{s.title}</h3>
                   <p className="mb-7 flex-1 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
 
-                  <div className="rounded-lg border border-border bg-muted/50 p-3" aria-hidden>
+                  <div className="inset-surface rounded-lg border border-border bg-muted/50 p-3" aria-hidden>
                     {i === 0 && (
                       <div className="grid grid-cols-2 gap-2 text-xs font-medium">
                         <span className="rounded-md border border-primary/40 bg-primary/10 px-2 py-2 text-center text-primary">Jobbsökare</span>

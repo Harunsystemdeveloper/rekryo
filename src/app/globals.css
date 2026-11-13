@@ -76,7 +76,7 @@
   --secondary: #EEF0F6;
   --secondary-foreground: #141B2D;
   --muted: #EEF0F6;
-  --muted-foreground: #5A6378;
+  --muted-foreground: #4F586C;
   --accent: #EFEDFD;
   --accent-foreground: #3B2FA8;
   --destructive: #DC2626;
@@ -292,6 +292,16 @@
   :root:not(.dark) .panel {
     border-color: #DDE1EA;
     box-shadow: 0 1px 2px rgb(11 17 32 / 5%), 0 10px 28px -14px rgb(11 17 32 / 14%);
+  }
+  /* Menyn och kortens inre ytor i ljust läge: en egen ton och kant, annars flyter de
+     ihop med det vita kortet de ligger i */
+  :root:not(.dark) .site-header {
+    background-color: rgb(255 255 255 / 94%);
+    box-shadow: 0 1px 0 #DDE1EA, 0 8px 24px -18px rgb(11 17 32 / 22%);
+  }
+  :root:not(.dark) .inset-surface {
+    background-color: #F1F3F8;
+    border-color: #DDE1EA;
   }
   :root:not(.dark) .panel-hover:hover {
     box-shadow: 0 2px 4px rgb(11 17 32 / 5%), 0 20px 40px -18px rgb(108 92 231 / 32%);
