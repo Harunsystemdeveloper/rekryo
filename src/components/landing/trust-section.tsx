@@ -1,6 +1,8 @@
 import { ShieldCheck, UserCheck, ScrollText, EyeOff, Scale, Download } from 'lucide-react'
 import { SectionHeader } from '@/components/landing/section-header'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { AuditLogMockup } from '@/components/landing/audit-log-mockup'
+import { TrustBadges } from '@/components/landing/trust-badges'
 
 // Varje punkt motsvarar något som faktiskt finns i koden, inte en ambition:
 // delpoäng och motivering (match_breakdown), loggad överstyrning (override-score),
@@ -54,6 +56,12 @@ export function TrustSection() {
           title="Byggd för EU:s AI-förordning och GDPR"
           description="AI i rekrytering räknas som hög risk enligt AI-förordningen. Därför är transparens, mänsklig kontroll och spårbarhet inbyggda från början, inte tillagda i efterhand."
         />
+
+        <TrustBadges className="-mt-4 mb-10 justify-center" />
+
+        <ScrollReveal className="mb-6">
+          <AuditLogMockup />
+        </ScrollReveal>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {pillars.map((p, i) => (
