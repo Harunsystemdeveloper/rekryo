@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Send, Loader2, Sparkles, RotateCcw, Search, Copy, Check, FileText, Target, PenLine, MessagesSquare, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import type { Profile } from '@/types/database'
 
 interface Message {
@@ -88,6 +89,7 @@ function CoachAvatar() {
 // Coachens svar visas som ren text i full bredd (som i moderna AI-chattar), dina egna
 // frågor som en diskret bubbla till höger.
 function MessageBubble({ msg }: { msg: Message }) {
+  if (msg.role === 'assistant' && !msg.content) return null
   if (msg.role === 'user') {
     return (
       <div className="flex justify-end">
@@ -105,7 +107,7 @@ function MessageBubble({ msg }: { msg: Message }) {
       <div className="min-w-0 flex-1">
         <p className="mb-1 text-xs font-medium text-muted-foreground">Karriärcoach</p>
         <div className="prose-coach text-[15px] leading-relaxed">
-          <ReactMarkdown>{msg.content}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
         </div>
         {msg.content && <div className="mt-2"><CopyButton text={msg.content} /></div>}
       </div>
@@ -153,7 +155,12 @@ export function CoachClient({ profile }: { profile: Profile }) {
   const [loading, setLoading] = useState(false)
   const [streaming, setStreaming] = useState(false)
   const [activeTools, setActiveTools] = useState<string[]>([])
-  const bottomRef = useRef<HTMLDivElement>(null)
+  // Sant mellan att verktygen är klara och att nästa text kommer, när modellen läser resultatet
+  const [working, setWorking] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  // Följ med nedåt bara om användaren redan är längst ner, så att det går att scrolla upp
+  // och läsa medan svaret strömmar
+  const stickToBottom = useRef(true)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   // Restore a saved conversation once, on mount — keeps the chat alive across page refreshes
@@ -183,9 +190,17 @@ export function CoachClient({ profile }: { profile: Profile }) {
     }
   }, [messages, restored, storageKey])
 
+  // Scrolla bara meddelandelistan. scrollIntoView scrollade även hela fönstret, så sidan
+  // hoppade ner förbi chatten vid varje nytt ord.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading, activeTools])
+    const el = scrollRef.current
+    if (el && stickToBottom.current) el.scrollTop = el.scrollHeight
+  }, [messages, loading, activeTools, working])
+
+  function handleScroll() {
+    const el = scrollRef.current
+    if (el) stickToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80
+  }
 
   async function sendMessage(text?: string) {
     const content = (text ?? input).trim()
@@ -197,9 +212,12 @@ export function CoachClient({ profile }: { profile: Profile }) {
     setMessages(newMessages)
     setLoading(true)
     setActiveTools([])
+    stickToBottom.current = true
 
+    // Tomma svar (från ett avbrutet anrop) skulle få API:t att avvisa hela historiken
     const apiMessages = newMessages
       .slice(1)
+      .filter(m => m.content.trim())
       .map(m => ({ role: m.role, content: m.content }))
 
     try {
@@ -244,6 +262,7 @@ export function CoachClient({ profile }: { profile: Profile }) {
             }
 
             if (evt.type === 'text' && evt.delta) {
+              setWorking(false)
               setMessages(prev => {
                 const updated = [...prev]
                 const last = updated[updated.length - 1]
@@ -256,20 +275,30 @@ export function CoachClient({ profile }: { profile: Profile }) {
               setActiveTools(prev => [...prev, evt.label!])
             } else if (evt.type === 'tool_end') {
               setActiveTools(prev => prev.slice(0, -1))
+              setWorking(true)
             } else if (evt.type === 'error') {
               toast.error(evt.message ?? 'Något gick fel')
             }
           }
         }
       }
-      setActiveTools([])
-      setStreaming(false)
+      finishStream()
     } catch {
       toast.error('Kunde inte nå karriärcoachen. Kontrollera din anslutning.')
       setLoading(false)
-      setStreaming(false)
-      setActiveTools([])
+      finishStream()
     }
+  }
+
+  // Ett svar som avbröts innan någon text kom ska inte ligga kvar som en tom bubbla
+  function finishStream() {
+    setStreaming(false)
+    setActiveTools([])
+    setWorking(false)
+    setMessages(prev => {
+      const last = prev[prev.length - 1]
+      return last?.role === 'assistant' && !last.content.trim() ? prev.slice(0, -1) : prev
+    })
   }
 
   // Textfältet växer med innehållet upp till en gräns, som i moderna chattar
@@ -299,10 +328,10 @@ export function CoachClient({ profile }: { profile: Profile }) {
     }
   }
 
-  const isTyping = loading || (streaming && activeTools.length === 0 && messages[messages.length - 1]?.content === '')
+  const isTyping = loading || (streaming && activeTools.length === 0 && (working || messages[messages.length - 1]?.content === ''))
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-8rem)] max-w-3xl flex-col">
+    <div className="mx-auto flex h-[calc(100dvh-8rem)] max-w-3xl flex-col">
 
       {/* Rubrik: vad coachen har tillgång till och en tydlig knapp för ny konversation */}
       <div className="flex flex-shrink-0 items-center justify-between gap-4 border-b border-border pb-4">
@@ -325,7 +354,7 @@ export function CoachClient({ profile }: { profile: Profile }) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 space-y-7 overflow-y-auto py-8">
+      <div ref={scrollRef} onScroll={handleScroll} className="flex-1 space-y-7 overflow-y-auto overscroll-contain py-8">
         {messages.length <= 1 ? (
           <WelcomeView firstName={firstName} disabled={loading || streaming} onPick={sendMessage} />
         ) : messages.map((msg, i) => (
@@ -333,7 +362,6 @@ export function CoachClient({ profile }: { profile: Profile }) {
         ))}
         {streaming && <ToolStatus labels={activeTools} />}
         {isTyping && <TypingIndicator />}
-        <div ref={bottomRef} />
       </div>
 
       {/* Inmatning: kort med textfält som växer och skickknappen inuti */}

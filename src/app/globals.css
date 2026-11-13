@@ -401,6 +401,22 @@
     color: var(--muted-foreground);
   }
   .prose-coach hr { border-color: var(--border); margin: 1em 0; }
+  /* Tabeller från coachen: egen horisontell scroll så att de inte spräcker chatten på mobil */
+  .prose-coach table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 0.75em 0;
+    font-size: 0.9em;
+  }
+  .prose-coach th, .prose-coach td {
+    border: 1px solid var(--border);
+    padding: 0.45em 0.7em;
+    text-align: left;
+    vertical-align: top;
+  }
+  .prose-coach th { background: var(--muted); font-weight: 600; white-space: nowrap; }
 
   /* Shimmer on cards */
   .shimmer {
