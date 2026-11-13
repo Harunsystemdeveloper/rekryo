@@ -1,4 +1,4 @@
-import { Check, AlertTriangle, ShieldCheck, UserCheck, EyeOff, MapPin } from 'lucide-react'
+import { Check, AlertTriangle, ShieldCheck, UserCheck, EyeOff, MapPin, Bell, ArrowRight } from 'lucide-react'
 
 // Statisk produktmockup för heron. Den ligger alltid på det mörka hero-bandet, så färgerna
 // är satta direkt i stället för via temat. Innehållet speglar den riktiga matchningen:
@@ -24,7 +24,7 @@ const ranked = [
 
 export function MatchCardMockup() {
   return (
-    <div className="relative mx-auto w-full max-w-[34rem]">
+    <div className="relative mx-auto w-full max-w-[36rem]">
       {/* Huvudkortet */}
       <div className="relative rounded-2xl border border-white/10 bg-[#141B2D]/90 shadow-[0_30px_80px_-30px_rgb(0_0_0/80%)] backdrop-blur-xl">
         <div className="flex items-center gap-1.5 border-b border-white/[0.06] px-4 py-2.5">
@@ -118,17 +118,34 @@ export function MatchCardMockup() {
         </div>
       </div>
 
-      {/* Rangordnad lista: överlappar bara kortets nedre kant, aldrig innehållet */}
-      <div className="relative z-10 -mt-4 ml-auto mr-0 hidden w-60 rounded-xl border border-white/10 bg-[#0F1626]/95 p-3 shadow-2xl backdrop-blur-xl sm:-mr-6 sm:block">
-        <p className="mb-2 text-[11px] font-medium text-white/50">Rangordnade sökande</p>
-        <div className="space-y-1.5">
-          {ranked.map((r, i) => (
-            <div key={r.id} className={`flex items-center gap-2 rounded-lg px-2 py-1.5 ${i === 0 ? 'bg-[#6C5CE7]/15' : ''}`}>
-              <span className="w-4 text-[11px] tabular-nums text-white/40">{i + 1}</span>
-              <span className="flex-1 text-xs text-white/80">Kandidat {r.id}</span>
-              <span className={`text-xs font-semibold tabular-nums ${i === 0 ? 'text-[#A99DFB]' : 'text-white/55'}`}>{r.score}</span>
+      {/* Båda sidor av samma matchning: jobbsökarens notis till vänster, rekryterarens
+          rangordnade lista till höger. De överlappar bara kortets nedre kant. */}
+      <div className="relative z-10 -mt-4 hidden items-start justify-between gap-4 sm:-mx-6 sm:flex">
+        <div className="w-64 rounded-xl border border-white/10 bg-[#0F1626]/95 p-3 shadow-2xl backdrop-blur-xl">
+          <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-white/50">
+            <Bell className="h-3 w-3 text-[#5EEAD4]" aria-hidden />
+            Jobbsökaren · ny matchning
+          </p>
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-[#2DD4AE] text-sm font-semibold tabular-nums text-white">{SCORE}</span>
+            <div className="min-w-0">
+              <p className="truncate text-xs font-medium text-white/85">Undersköterska · Nordvik Vård</p>
+              <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[#A99DFB]">Se varför du matchar <ArrowRight className="h-3 w-3" aria-hidden /></p>
             </div>
-          ))}
+          </div>
+        </div>
+
+        <div className="w-60 rounded-xl border border-white/10 bg-[#0F1626]/95 p-3 shadow-2xl backdrop-blur-xl">
+          <p className="mb-2 text-[11px] font-medium text-white/50">Rekryteraren · rangordnade sökande</p>
+          <div className="space-y-1.5">
+            {ranked.map((r, i) => (
+              <div key={r.id} className={`flex items-center gap-2 rounded-lg px-2 py-1.5 ${i === 0 ? 'bg-[#6C5CE7]/15' : ''}`}>
+                <span className="w-4 text-[11px] tabular-nums text-white/40">{i + 1}</span>
+                <span className="flex-1 text-xs text-white/80">Kandidat {r.id}</span>
+                <span className={`text-xs font-semibold tabular-nums ${i === 0 ? 'text-[#A99DFB]' : 'text-white/55'}`}>{r.score}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

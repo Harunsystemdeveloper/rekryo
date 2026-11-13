@@ -81,14 +81,14 @@ export default function HomePage() {
         <div className="absolute inset-0 -z-10 dot-grid-light opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-        <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-[1fr_1.05fr] lg:gap-12">
+        <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-[1fr_1.15fr] lg:gap-12">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <Badge variant="secondary" className="mb-7 gap-1.5 border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm">
               <Sparkles className="h-3 w-3 text-[#A99DFB]" />
               AI-matchning för den svenska arbetsmarknaden
             </Badge>
 
-            <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[3.4rem] xl:text-[3.75rem]">
+            <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[3.1rem] xl:text-[3.5rem]">
               Kompetensen finns.{' '}
               <span className="gradient-text-light">Matchningen</span>
               {' '}är trasig.
