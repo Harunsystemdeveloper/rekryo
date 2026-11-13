@@ -202,6 +202,9 @@ Regler:
   const readable = new ReadableStream<Uint8Array>({
     async start(controller) {
       try {
+        // Text från olika rundor hamnar i samma svarsbubbla. Utan en radbrytning emellan
+        // klistrades meningarna ihop ("…matchningen!Nu ser jag…").
+        let streamedText = false
         for (let round = 0; round < 6; round++) {
           const stream = anthropic.messages.stream({
             model: 'claude-sonnet-4-6',
@@ -211,7 +214,11 @@ Regler:
             messages,
           })
 
+          let roundStarted = false
           stream.on('text', (delta) => {
+            if (!roundStarted && streamedText) controller.enqueue(sseEncode({ type: 'text', delta: '\n\n' }))
+            roundStarted = true
+            streamedText = true
             controller.enqueue(sseEncode({ type: 'text', delta }))
           })
 
