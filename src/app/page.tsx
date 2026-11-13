@@ -77,7 +77,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── Hero: budskap och två ingångar till vänster, produkten själv till höger ── */}
-      <section className="relative overflow-hidden hero-dark px-6 pt-28 pb-24 lg:pt-36 lg:pb-32">
+      <section className="relative overflow-hidden hero-dark px-6 pt-24 pb-20 lg:pt-28 lg:pb-24">
         <div className="absolute inset-0 -z-10 dot-grid-light opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
@@ -114,21 +114,21 @@ export default function HomePage() {
               </Button>
             </div>
 
-            <Link href="#demo" className="mb-12 inline-flex items-center gap-1.5 rounded text-sm font-medium text-[#5EEAD4] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5EEAD4]">
+            <Link href="#demo" className="mb-10 inline-flex items-center gap-1.5 rounded text-sm font-medium text-[#5EEAD4] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5EEAD4]">
               <Zap className="h-3.5 w-3.5" />
               Testa matchningen utan konto
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
 
             {/* Paradoxen i två stora siffror, med källa */}
-            <dl className="grid max-w-lg grid-cols-2 gap-6 border-t border-white/10 pt-8">
-              <div>
+            <dl className="grid max-w-lg grid-cols-2 gap-3">
+              <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm">
                 <dt className="sr-only">Arbetsgivare med kompetensbrist</dt>
                 <dd className="text-4xl font-semibold tabular-nums tracking-tight text-white">76%</dd>
                 <dd className="mt-2 text-sm leading-snug text-white/60">av svenska arbetsgivare hittar inte rätt kompetens</dd>
                 <dd className="mt-1 text-xs text-white/35">ManpowerGroup</dd>
               </div>
-              <div>
+              <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm">
                 <dt className="sr-only">Nyexaminerade under studiemedelsnivån</dt>
                 <dd className="text-4xl font-semibold tabular-nums tracking-tight text-white">1 av 4</dd>
                 <dd className="mt-2 text-sm leading-snug text-white/60">nyexaminerade akademiker tjänar under studiemedelsnivån</dd>
@@ -139,7 +139,7 @@ export default function HomePage() {
 
           <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200 lg:pl-4">
             <MatchCardMockup />
-            <div className="mt-16 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/45 sm:mt-14 lg:justify-end">
+            <div className="mt-14 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/45 lg:mt-12 lg:justify-end">
               <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-[#5EEAD4]" />GDPR, data lagras inom EU</span>
               <span className="flex items-center gap-1.5"><UserCheck className="h-3.5 w-3.5 text-[#5EEAD4]" />AI föreslår, människa beslutar</span>
             </div>
