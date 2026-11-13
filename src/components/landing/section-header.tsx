@@ -15,7 +15,7 @@ export function SectionHeader({
 }) {
   const centered = align === 'center'
   return (
-    <div className={`mb-14 ${centered ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'}`}>
+    <div className={`mb-10 lg:mb-12 ${centered ? 'mx-auto max-w-2xl text-center' : 'max-w-2xl'}`}>
       <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-primary">{eyebrow}</p>
       <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">{title}</h2>
       {description && (

@@ -148,7 +148,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Paradoxen: samma problem sett från två håll ── */}
-      <section id="problemet" className="scroll-mt-20 border-t border-border px-6 py-28">
+      <section id="problemet" className="scroll-mt-20 border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="Kompetensparadoxen"
@@ -220,7 +220,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Övergång från problem till lösning, med illustration i stället för stockfoto ── */}
-      <section className="border-t border-border hero-mesh px-6 py-28">
+      <section className="border-t border-border hero-mesh px-6 py-20 lg:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
           <ScrollReveal>
             <SectionHeader
@@ -239,7 +239,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Så fungerar det: tre steg, vart och ett med ett litet utsnitt av produkten ── */}
-      <section className="border-t border-border px-6 py-28">
+      <section className="border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader eyebrow="Så fungerar det" title="Från CV till förklarad matchning i tre steg" />
 
@@ -288,7 +288,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Live Demo ── */}
-      <section id="demo" className="section-alt scroll-mt-20 border-t border-border bg-muted/30 px-6 py-28">
+      <section id="demo" className="section-alt scroll-mt-20 border-t border-border bg-muted/30 px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-2xl">
           <ScrollReveal>
             <SectionHeader
@@ -313,7 +313,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Features ── */}
-      <section className="border-t border-border px-6 py-28">
+      <section className="border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="Funktioner"
@@ -337,7 +337,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Två perspektiv: samma designspråk, var sin produktvy ── */}
-      <section className="section-alt border-t border-border px-6 py-28">
+      <section className="section-alt border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="För båda sidor"
@@ -451,7 +451,7 @@ export default function HomePage() {
       <TrustSection />
 
       {/* ── FAQ ── */}
-      <section className="section-alt border-t border-border bg-muted/30 px-6 py-28">
+      <section className="section-alt border-t border-border bg-muted/30 px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-2xl">
           <SectionHeader eyebrow="Vanliga frågor" title="Allt du behöver veta" />
           <Accordion className="space-y-3">
@@ -505,7 +505,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Slut-CTA: samma mörka band och samma två ingångar som heron ── */}
-      <section className="px-6 py-28">
+      <section className="px-6 py-20 lg:py-24">
         <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-white/10 hero-dark px-8 py-16 text-center sm:px-16 sm:py-20">
           <div className="absolute inset-0 dot-grid-light opacity-40 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
           <div className="relative">
