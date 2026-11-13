@@ -11,6 +11,14 @@ const STATUS_NOTIFICATION_LABELS: Record<string, string> = {
   rejected: 'Uppdatering på din ansökan',
 }
 
+// Brödtexten säger vad som faktiskt hänt, inte bara att ansökan "uppdaterats"
+const STATUS_NOTIFICATION_BODIES: Record<string, (title: string) => string> = {
+  reviewed: title => `Rekryteraren har läst din ansökan till "${title}".`,
+  shortlisted: title => `Du är bland favoritkandidaterna till "${title}". Rekryteraren kan höra av sig snart.`,
+  accepted: title => `Du har gått vidare med din ansökan till "${title}".`,
+  rejected: title => `Rekryteraren går vidare med andra kandidater till "${title}". Fortsätt söka, rätt jobb väntar.`,
+}
+
 export async function POST(req: Request) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -77,7 +85,7 @@ export async function POST(req: Request) {
           user_id: application.seeker_id,
           type: 'status_change',
           title: notifTitle,
-          body: `Din ansökan till "${job.title}" har uppdaterats.`,
+          body: STATUS_NOTIFICATION_BODIES[status]?.(job.title) ?? `Din ansökan till "${job.title}" har uppdaterats.`,
           href: '/seeker/applications',
         })
       }
