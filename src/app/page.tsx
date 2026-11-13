@@ -10,13 +10,14 @@ import { MatchCardMockup } from '@/components/landing/match-card-mockup'
 import { SectionHeader } from '@/components/landing/section-header'
 import { DualViewMockup } from '@/components/landing/dual-view-mockup'
 import { TrustSection } from '@/components/landing/trust-section'
+import { TrustBadges } from '@/components/landing/trust-badges'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Target, Users, TrendingUp, Shield,
   ArrowRight, CheckCircle, Zap, Sparkles,
   FileText, BarChart3, MessageSquare,
-  Building2, TrendingDown, Search, ShieldCheck, UserCheck, UserPlus
+  Building2, TrendingDown, Search, UserPlus
 } from 'lucide-react'
 
 // Två märkesfärger, inte en regnbåge: lila och mint växlar i ett medvetet mönster.
@@ -139,12 +140,10 @@ export default function HomePage() {
 
           <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200 lg:pl-4">
             <MatchCardMockup />
-            <div className="mt-14 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/45 lg:mt-12 lg:justify-end">
-              <span className="flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5 text-[#5EEAD4]" />GDPR, data lagras inom EU</span>
-              <span className="flex items-center gap-1.5"><UserCheck className="h-3.5 w-3.5 text-[#5EEAD4]" />AI föreslår, människa beslutar</span>
-            </div>
           </div>
         </div>
+
+        <TrustBadges variant="onDark" className="mx-auto mt-14 max-w-6xl justify-center lg:mt-16" />
       </section>
 
       {/* ── Paradoxen: samma problem sett från två håll ── */}
@@ -531,6 +530,7 @@ export default function HomePage() {
               Har du redan ett konto?{' '}
               <Link href="/login" className="font-medium text-white/80 underline-offset-4 hover:underline">Logga in</Link>
             </p>
+            <TrustBadges variant="onDark" className="mt-8 justify-center" />
           </div>
         </div>
       </section>
