@@ -58,7 +58,7 @@ export function TrustSection() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {pillars.map((p, i) => (
             <ScrollReveal key={p.title} delay={i * 60}>
-              <div className="panel h-full p-7">
+              <div className="panel panel-hover h-full p-7">
                 <div className="mb-5 flex items-center justify-between gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mint/10 text-mint-foreground">
                     <p.icon className="h-5 w-5" aria-hidden />

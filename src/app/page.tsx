@@ -231,7 +231,7 @@ export default function HomePage() {
             />
           </ScrollReveal>
           <ScrollReveal delay={120}>
-            <div className="panel p-6 sm:p-8">
+            <div className="panel mockup-stage p-6 sm:p-8">
               <MatchNetworkIllustration className="h-auto w-full" />
             </div>
           </ScrollReveal>
@@ -246,7 +246,7 @@ export default function HomePage() {
           <ol className="grid gap-6 md:grid-cols-3">
             {steps.map((s, i) => (
               <ScrollReveal key={s.step} delay={i * 100}>
-                <li className="panel flex h-full flex-col p-7">
+                <li className="panel panel-hover flex h-full flex-col p-7">
                   <div className="mb-6 flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                       <s.icon className="h-5 w-5" aria-hidden />
@@ -348,8 +348,8 @@ export default function HomePage() {
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Jobbsökare */}
             <div className="panel flex flex-col overflow-hidden">
-              <div className="border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
-                <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+              <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
+                <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Dina bästa matchningar</p>
                   <div className="space-y-3.5">
                     {[
@@ -401,8 +401,8 @@ export default function HomePage() {
 
             {/* Rekryterare */}
             <div className="panel flex flex-col overflow-hidden">
-              <div className="border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
-                <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+              <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
+                <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Sökande · Undersköterska, akutmottagning</p>
                   <div className="space-y-2">
                     {[
@@ -490,7 +490,7 @@ export default function HomePage() {
               <AccordionItem
                 key={faq.id}
                 value={faq.id}
-                className="rounded-xl border border-border bg-card px-6 transition-colors data-[state=open]:border-primary/40"
+                className="rounded-xl border border-border bg-card px-6 transition-colors hover:border-primary/30 data-[state=open]:border-primary/40"
               >
                 <AccordionTrigger className="py-5 text-left text-base font-medium hover:no-underline">
                   {faq.q}
