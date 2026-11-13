@@ -8,7 +8,7 @@ import { DemoMatcher } from '@/components/demo-matcher'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { MatchCardMockup } from '@/components/landing/match-card-mockup'
 import { SectionHeader } from '@/components/landing/section-header'
-import { MatchNetworkIllustration } from '@/components/illustrations/match-network'
+import { DualViewMockup } from '@/components/landing/dual-view-mockup'
 import { TrustSection } from '@/components/landing/trust-section'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -219,21 +219,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Övergång från problem till lösning, med illustration i stället för stockfoto ── */}
+      {/* ── Övergång från problem till lösning: samma matchning sedd från båda håll ── */}
       <section className="border-t border-border hero-mesh px-6 py-20 lg:py-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2">
+        <div className="mx-auto max-w-6xl">
           <ScrollReveal>
             <SectionHeader
-              align="left"
               eyebrow="Rätt kompetens finns redan"
               title={<>Sverige har kompetensen. Vi ser till att den <span className="gradient-text">hittar rätt.</span></>}
-              description="Bakom varje otillsatt tjänst finns en person med rätt bakgrund som aldrig syntes. Rekryo jämför kompetenser, erfarenhet och krav, och visar varför en matchning håller."
+              description="Samma matchning, förklarad för båda sidor. Jobbsökaren ser varför jobbet passar och vad som saknas. Rekryteraren ser samma poäng uppdelad, utan kandidatens namn, och fattar beslutet."
             />
           </ScrollReveal>
           <ScrollReveal delay={120}>
-            <div className="panel mockup-stage p-6 sm:p-8">
-              <MatchNetworkIllustration className="h-auto w-full" />
-            </div>
+            <DualViewMockup />
           </ScrollReveal>
         </div>
       </section>
