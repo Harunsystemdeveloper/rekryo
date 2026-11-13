@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -198,6 +198,51 @@ export function CandidatesClient({
     setApps(apps.map(a => a.id === appId ? { ...a, status } : a))
     toast.success('Status uppdaterad')
   }
+
+  // En väntande ansökan räknas som granskad när kortet varit i bild i två sekunder, som
+  // "ansökan visad" på andra plattformar. Kandidaten får samma notis som vid ett manuellt
+  // statusbyte. Bara listvyn räknas, eftersom kanban-korten inte visar själva ansökan.
+  const listRef = useRef<HTMLUListElement>(null)
+  const markedReviewed = useRef(new Set<string>())
+  const pendingIds = apps.filter(a => a.status === 'pending').map(a => a.id).join(',')
+
+  async function markReviewed(appId: string) {
+    if (markedReviewed.current.has(appId)) return
+    markedReviewed.current.add(appId)
+    const res = await fetch('/api/applications/update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ application_id: appId, status: 'reviewed' }),
+    })
+    if (res.ok) {
+      setApps(prev => prev.map(a => a.id === appId && a.status === 'pending' ? { ...a, status: 'reviewed' } : a))
+    } else {
+      markedReviewed.current.delete(appId)
+    }
+  }
+
+  useEffect(() => {
+    const list = listRef.current
+    if (viewMode !== 'list' || !list || !pendingIds) return
+    const timers = new Map<string, ReturnType<typeof setTimeout>>()
+    const observer = new IntersectionObserver(entries => {
+      for (const entry of entries) {
+        const id = (entry.target as HTMLElement).dataset.reviewId
+        if (!id || markedReviewed.current.has(id)) continue
+        if (entry.isIntersecting) {
+          if (!timers.has(id)) timers.set(id, setTimeout(() => markReviewed(id), 2000))
+        } else {
+          clearTimeout(timers.get(id))
+          timers.delete(id)
+        }
+      }
+    }, { threshold: 0.6 })
+    list.querySelectorAll<HTMLElement>('[data-review-id]').forEach(el => observer.observe(el))
+    return () => {
+      observer.disconnect()
+      timers.forEach(clearTimeout)
+    }
+  }, [viewMode, pendingIds, filterStatus, filterExp, search])
 
   const scoredCount = apps.filter(a => a.match_score != null).length
   const required = new Set((job.skills_required ?? []).map(s => s.toLowerCase()))
@@ -458,7 +503,7 @@ export function CandidatesClient({
           </p>
         </div>
       ) : viewMode === 'list' && (
-        <ul className="grid gap-4">
+        <ul ref={listRef} className="grid gap-4">
           {filtered.map(app => {
             const seeker = app.seeker
             const name = seeker?.full_name ?? 'Anonym kandidat'
@@ -469,7 +514,11 @@ export function CandidatesClient({
             const other = skills.filter(s => !required.has(s.toLowerCase()))
             const open = expandedBreakdown.has(app.id)
             return (
-              <li key={app.id} className={`panel overflow-hidden ${app.is_shortlisted ? 'ring-1 ring-mint/50' : ''}`}>
+              <li
+                key={app.id}
+                data-review-id={app.status === 'pending' ? app.id : undefined}
+                className={`panel overflow-hidden ${app.is_shortlisted ? 'ring-1 ring-mint/50' : ''}`}
+              >
                 <div className="flex flex-col gap-5 p-5 sm:flex-row sm:p-6">
                   {/* Poäng */}
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-1 sm:w-32 sm:flex-col sm:flex-nowrap sm:gap-2 sm:text-center">
