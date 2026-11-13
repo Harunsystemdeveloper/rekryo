@@ -65,7 +65,7 @@
   --navy: #0B1120;
   --navy-elevated: #141B2D;
 
-  --background: #F7F8FB;
+  --background: #F4F6F9;
   --foreground: #0B1120;
   --card: #FFFFFF;
   --card-foreground: #0B1120;
@@ -231,6 +231,13 @@
     background-image:
       radial-gradient(at 15% 20%, rgb(108 92 231 / 14%) 0px, transparent 55%),
       radial-gradient(at 85% 10%, rgb(0 184 148 / 7%) 0px, transparent 55%);
+  }
+
+  /* Varannan sektion i ljust läge får en djupare grå ton, så att sidan får rytm i
+     stället för en enda vit yta. Mörkt läge behåller sin bakgrund. */
+  :root:not(.dark) .section-alt {
+    background-color: #EBEEF4;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 70%);
   }
 
   /* Prickrutnät */

@@ -288,7 +288,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Live Demo ── */}
-      <section id="demo" className="scroll-mt-20 border-t border-border bg-muted/30 px-6 py-28">
+      <section id="demo" className="section-alt scroll-mt-20 border-t border-border bg-muted/30 px-6 py-28">
         <div className="mx-auto max-w-2xl">
           <ScrollReveal>
             <SectionHeader
@@ -337,7 +337,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Två perspektiv: samma designspråk, var sin produktvy ── */}
-      <section className="border-t border-border px-6 py-28">
+      <section className="section-alt border-t border-border px-6 py-28">
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="För båda sidor"
@@ -451,7 +451,7 @@ export default function HomePage() {
       <TrustSection />
 
       {/* ── FAQ ── */}
-      <section className="border-t border-border bg-muted/30 px-6 py-28">
+      <section className="section-alt border-t border-border bg-muted/30 px-6 py-28">
         <div className="mx-auto max-w-2xl">
           <SectionHeader eyebrow="Vanliga frågor" title="Allt du behöver veta" />
           <Accordion className="space-y-3">
