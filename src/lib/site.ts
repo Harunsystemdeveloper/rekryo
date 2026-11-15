@@ -10,3 +10,8 @@ export const EMAIL_DOMAIN = process.env.EMAIL_DOMAIN ?? new URL(SITE_URL).hostna
 export const EMAIL_FROM = `Rekryo <noreply@${EMAIL_DOMAIN}>`
 
 export const PRIVACY_EMAIL = `privacy@${EMAIL_DOMAIN}`
+
+// Rekryo drivs som privat hobbyprojekt, så personuppgiftsansvarig är en privatperson.
+// GDPR art. 13 kräver att den personen anges i integritetspolicyn. Namnet sätts som
+// miljövariabel i Vercel i stället för att ligga i koden.
+export const OPERATOR_NAME = process.env.OPERATOR_NAME ?? 'Rekryos grundare'

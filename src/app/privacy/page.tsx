@@ -1,10 +1,12 @@
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import type { Metadata } from 'next'
-import { PRIVACY_EMAIL } from '@/lib/site'
+import { OPERATOR_NAME, PRIVACY_EMAIL } from '@/lib/site'
 
 export const metadata: Metadata = { title: 'Integritetspolicy' }
 
+// Texten ska spegla vad koden faktiskt gör. Ändras vilka uppgifter som sparas, vilka
+// leverantörer som används eller hur AI:n används, ska policyn ändras samtidigt.
 export default function PrivacyPage() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -12,159 +14,219 @@ export default function PrivacyPage() {
       <main className="flex-1 mx-auto max-w-3xl px-4 py-16">
         <h1 className="text-3xl font-bold mb-6">Integritetspolicy</h1>
         <div className="prose prose-sm dark:prose-invert max-w-none space-y-4">
-          <p className="text-muted-foreground">Senast uppdaterad: 2026-10-13</p>
+          <p className="text-muted-foreground">Senast uppdaterad: 2026-11-16</p>
 
-          <h2 className="text-xl font-semibold mt-8">1. Vilka vi är</h2>
+          <h2 className="text-xl font-semibold mt-8">1. Vem som ansvarar för dina uppgifter</h2>
           <p>
-            Rekryo är en AI-driven jobbmatchningsplattform som hjälper jobbsökare
-            och rekryterare att hitta varandra. Den här policyn förklarar dels hur vi
-            hanterar dina personuppgifter enligt GDPR, dels hur vi lever upp till
-            EU:s förordning om artificiell intelligens (AI-förordningen, &quot;AI Act&quot;)
-            eftersom kärnan i tjänsten — AI som bedömer och rangordnar personer i en
-            rekryteringsprocess — är precis det AI-förordningen är skriven för att
-            reglera.
+            Rekryo är ett privat hobbyprojekt som är under utveckling och testas i en
+            begränsad betaversion. Det finns inget bolag bakom tjänsten.
+            Personuppgiftsansvarig är <strong>{OPERATOR_NAME}</strong>, privatperson i Sverige.
+          </p>
+          <p>
+            Frågor om dina personuppgifter, eller om hur AI används för att bedöma dig,
+            skickar du till <strong>{PRIVACY_EMAIL}</strong>. Vi svarar inom en månad,
+            som GDPR kräver.
+          </p>
+          <p>
+            Policyn förklarar hur vi hanterar personuppgifter enligt dataskyddsförordningen
+            (GDPR) och hur vi förhåller oss till EU:s förordning om artificiell intelligens
+            (AI-förordningen), eftersom tjänsten använder AI för att bedöma och rangordna
+            personer i en rekryteringsprocess.
           </p>
 
-          <h2 className="text-xl font-semibold mt-8">2. Vilka uppgifter vi samlar in</h2>
+          <h2 className="text-xl font-semibold mt-8">2. Vilka uppgifter vi behandlar</h2>
           <ul className="list-disc pl-6 space-y-2">
-            <li>Kontouppgifter: e-post, namn, profilbild</li>
-            <li>CV-data: kompetenser, erfarenhet, utbildning (frivilligt uppladdad)</li>
-            <li>Jobbannonser och ansökningsstatus</li>
-            <li>Meddelanden mellan användare</li>
+            <li><strong>Konto:</strong> e-postadress, lösenord (lagras krypterat), namn och vilken roll du har.</li>
+            <li><strong>Profil:</strong> profilbild, rubrik, ort, kort presentation och webbplats, om du fyller i dem.</li>
             <li>
-              Demografiska uppgifter (kön, födelseår) — <strong>helt frivilligt</strong> och
-              separat samtycke krävs. Används aldrig för att matcha eller bedöma dig,
-              bara för den anonymiserade rättvise-analysen i punkt 6 nedan. Du kan
-              radera dessa uppgifter när som helst utan att det påverkar ditt konto.
+              <strong>CV (jobbsökare):</strong> den uppladdade filen, texten som läses ut ur den och det
+              AI:n tar fram ur texten: kompetenser, antal års erfarenhet, utbildning, språk och en
+              sammanfattning. Allt som står i ditt CV, till exempel namn och kontaktuppgifter,
+              följer med i texten. Skriv därför inte in personnummer eller hälsouppgifter i CV:t.
+            </li>
+            <li>
+              <strong>Ansökningar:</strong> vilket jobb du sökt, telefonnummer, personligt brev,
+              tillgänglighet och löneanspråk, ansökans status, matchningspoäng, AI:ns motivering och
+              kompetensgap.
+            </li>
+            <li><strong>Rekryterarens arbete:</strong> anteckningar, intervjubokningar och intervjubedömningar som en rekryterare gör om dig som kandidat.</li>
+            <li><strong>Rekryterare:</strong> företagsprofil (namn, logotyp, beskrivning) och publicerade jobbannonser.</li>
+            <li><strong>Meddelanden</strong> mellan jobbsökare och rekryterare, och notiser i tjänsten.</li>
+            <li>
+              <strong>Demografiska uppgifter (kön, födelseår):</strong> helt frivilliga och kräver ett eget
+              samtycke. De används aldrig för att matcha eller bedöma dig, bara i den statistiska
+              rättviseanalysen i punkt 8. Du kan ta bort dem när som helst.
+            </li>
+            <li><strong>AI-beslutsloggen:</strong> en logg över varje AI-bedömning som rör dig, se punkt 8.</li>
+          </ul>
+          <p>
+            Samtal med AI-karriärcoachen sparas bara i din egen webbläsare, inte hos oss. Det du skriver
+            skickas till AI-leverantören för att coachen ska kunna svara.
+          </p>
+
+          <h2 className="text-xl font-semibold mt-8">3. Varför vi behandlar uppgifterna och med vilken rätt</h2>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>För att leverera tjänsten du registrerat dig för</strong> (avtal, GDPR art. 6.1 b):
+              ditt konto, CV-analysen, matchning mot jobb, ansökningar, meddelanden och mejl om ditt konto
+              och dina ansökningar.
+            </li>
+            <li>
+              <strong>Ditt samtycke</strong> (art. 6.1 a): att synas i talangpoolen och att lämna
+              demografiska uppgifter. Du kan återkalla samtycket när som helst utan att det påverkar
+              resten av tjänsten.
+            </li>
+            <li>
+              <strong>Berättigat intresse</strong> (art. 6.1 f): att skydda tjänsten mot missbruk,
+              begränsa antalet anrop och föra AI-beslutsloggen så att varje bedömning kan granskas i
+              efterhand.
+            </li>
+          </ul>
+          <p>
+            Inga beslut som får rättsliga följder för dig fattas enbart automatiskt (art. 22). AI:n
+            föreslår, och det är alltid en människa som beslutar.
+          </p>
+
+          <h2 className="text-xl font-semibold mt-8">4. Vem som får se dina uppgifter</h2>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Rekryterare du söker jobb hos</strong> ser din profil, dina CV-uppgifter, din
+              CV-fil, din ansökan och AI:ns bedömning. Rekryteraren blir då själv ansvarig för hur
+              uppgifterna används i sin rekrytering.
+            </li>
+            <li>
+              <strong>Alla inloggade rekryterare</strong> om du har valt att synas i talangpoolen, se
+              punkt 5.
+            </li>
+            <li><strong>Den du har en konversation med</strong> ser dina meddelanden.</li>
+            <li><strong>Våra leverantörer</strong> i punkt 6, som bara får behandla uppgifterna för vår räkning.</li>
+          </ul>
+          <p>Vi säljer aldrig dina uppgifter och använder dem inte för reklam.</p>
+          <p>
+            Rekryterarkonton kontrolleras inte i betaversionen. Om en rekryterare beter sig konstigt,
+            till exempel ber om pengar, kontouppgifter eller känsliga uppgifter, kontakta oss på
+            adressen i punkt 1.
+          </p>
+
+          <h2 className="text-xl font-semibold mt-8">5. Talangpoolen</h2>
+          <p>
+            Talangpoolen låter rekryterare hitta jobbsökare som inte själva har sökt deras jobb. Du
+            syns där bara om du aktivt har slagit på det. Valet är avstängt från början och ändras
+            under Inställningar → Integritet &amp; GDPR. Stänger du av det försvinner du ur
+            talangpoolen direkt.
+          </p>
+          <p>
+            Talangpoolen visas för alla inloggade rekryterare, oavsett bransch. De ser namn, rubrik,
+            ort, presentation, webbplats, kompetenser, erfarenhet, utbildning, språk och AI:ns
+            sammanfattning av ditt CV. Själva CV-filen, ditt telefonnummer och din e-postadress visas
+            aldrig där. Rekryterare kan skicka ett första meddelande till dig, och det kan vara skrivet
+            med hjälp av AI.
+          </p>
+
+          <h2 className="text-xl font-semibold mt-8">6. Leverantörer och var uppgifterna lagras</h2>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Supabase</strong> lagrar databasen, inloggningen och uppladdade filer på servrar i
+              Irland (EU).
+            </li>
+            <li>
+              <strong>Anthropic</strong> (USA) tillhandahåller AI-modellen Claude som analyserar CV:n,
+              beräknar matchningar, tar fram kompetensgap och intervjufrågor och driver karriärcoachen.
+              Anthropic använder inte uppgifterna för att träna sina modeller och raderar dem normalt
+              inom 30 dagar.
+            </li>
+            <li><strong>Vercel</strong> (USA) driftar webbplatsen och hanterar därför tekniska uppgifter som IP-adress i sina loggar.</li>
+            <li><strong>Resend</strong> (USA) skickar mejl från tjänsten, till exempel bekräftelsemejl och notiser.</li>
+          </ul>
+          <p>
+            När uppgifter förs över till USA sker det med stöd av EU-kommissionens
+            standardavtalsklausuler i leverantörernas personuppgiftsbiträdesavtal, eller av
+            EU–USA-ramverket för dataskydd när leverantören är ansluten till det.
+          </p>
+
+          <h2 className="text-xl font-semibold mt-8">7. Hur länge vi sparar uppgifterna</h2>
+          <p>
+            Uppgifterna sparas så länge du har ett konto. Raderar du kontot tas allt bort direkt: kontot,
+            profilen, CV-filen och CV-uppgifterna, ansökningar, meddelanden, notiser och
+            AI-beslutsloggen. Raderar en rekryterare sitt konto försvinner också rekryterarens annonser
+            och de ansökningar som kommit in till dem. Kopior kan finnas kvar en kort tid i
+            leverantörernas säkerhetskopior och loggar innan de skrivs över.
+          </p>
+          <p>
+            Tar du bort ditt CV raderas filen och allt som AI:n tagit fram ur det, men ansökningar du
+            redan skickat ligger kvar hos rekryteraren tills du eller rekryteraren tar bort dem.
+          </p>
+
+          <h2 className="text-xl font-semibold mt-8">8. AI i tjänsten och AI-förordningen</h2>
+          <p>
+            AI-system som används för att rekrytera eller bedöma personer i en anställningsprocess
+            räknas som högrisk enligt AI-förordningen (bilaga III). Det gäller matchningspoängen,
+            kompetensgapen och kandidatsammanfattningarna i Rekryo. Rekryo är ett projekt under
+            utveckling och har inte genomgått den bedömning av överensstämmelse som förordningen
+            kräver för högrisksystem. Tjänsten är byggd efter förordningens principer, som beskrivs
+            nedan.
+          </p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Mänsklig kontroll (art. 14):</strong> poängen är alltid ett förslag. En
+              rekryterare kan ändra den men måste då ange en motivering, och både AI:ns poäng och
+              ändringen sparas.
+            </li>
+            <li>
+              <strong>Loggning (art. 12):</strong> varje CV-analys, matchning, kompetensgapsanalys,
+              kandidatsammanfattning och rättviseanalys loggas med vilken modell som användes, vilka
+              kompetenser som gick in och kom ut och en läsbar sammanfattning. Loggen innehåller inte
+              hela ditt CV.
+            </li>
+            <li>
+              <strong>Transparens (art. 13 och 50):</strong> det framgår alltid när AI har bedömt dig
+              eller när du pratar med AI. Varje poäng går att få förklarad, och kompetensgapen visar
+              vilka krav som räknades som uppfyllda och vilka som saknades.
+            </li>
+            <li>
+              <strong>Ditt namn skickas inte till AI:n</strong> när du matchas mot ett jobb, så att
+              namnet inte kan påverka poängen.
+            </li>
+            <li>
+              <strong>Rättviseanalys:</strong> rekryterare kan se om poängen skiljer sig systematiskt
+              mellan grupper, baserat på de frivilliga demografiska uppgifterna. Analysen visas bara på
+              gruppnivå och bara när gruppen är tillräckligt stor för att ingen enskild person ska gå
+              att peka ut.
             </li>
           </ul>
 
-          <h2 className="text-xl font-semibold mt-8">3. Talangpoolen</h2>
-          <p>
-            Talangpoolen låter rekryterare hitta jobbsökare som inte själva sökt deras jobb.
-            Du syns där <strong>bara om du aktivt har godkänt det</strong> (samtycke enligt
-            GDPR art. 6.1 a). Valet är avstängt som standard och kan när som helst ändras
-            under Inställningar → Integritet &amp; GDPR. Återkallar du samtycket försvinner du
-            ur talangpoolen direkt.
-          </p>
+          <h2 className="text-xl font-semibold mt-8">9. Dina rättigheter</h2>
+          <p>Du har rätt att:</p>
           <ul className="list-disc pl-6 space-y-2">
-            <li>
-              Inloggade rekryterare ser då namn, rubrik, ort, bio, webbplats, kompetenser,
-              erfarenhet, utbildning, språk och en AI-genererad sammanfattning av ditt CV.
-            </li>
-            <li>
-              Hur väl dina kompetenser överlappar en rekryterares jobb räknas fram
-              automatiskt och visas som en procentsats — den är rådgivande och aldrig ett beslut.
-            </li>
-            <li>
-              Rekryterare kan skicka ett första meddelande till dig, och det meddelandet kan
-              vara skrivet med hjälp av AI.
-            </li>
-            <li>Själva CV-filen och dina kontaktuppgifter visas aldrig i talangpoolen.</li>
-            <li>
-              Säger du nej syns din profil bara för rekryterare vars jobb du själv söker,
-              eller som du redan har en konversation med.
-            </li>
+            <li>få veta vilka uppgifter vi har om dig och få en kopia (art. 15), inklusive din AI-beslutslogg</li>
+            <li>få felaktiga uppgifter rättade (art. 16)</li>
+            <li>få dina uppgifter raderade (art. 17)</li>
+            <li>begära att behandlingen begränsas (art. 18)</li>
+            <li>få ut dina uppgifter i ett maskinläsbart format (art. 20)</li>
+            <li>invända mot behandling som bygger på berättigat intresse (art. 21)</li>
+            <li>återkalla ett samtycke när som helst, utan att det påverkar behandlingen innan dess</li>
+            <li>få en förklaring av hur en AI-bedömning av dig gjorts och begära att en människa granskar den</li>
           </ul>
-
-          <h2 className="text-xl font-semibold mt-8">4. Datalagring</h2>
           <p>
-            All data lagras inom EU (Irland) via Supabase och behandlas i enlighet med GDPR.
-            Supabase är certifierat enligt SOC 2 Type II och uppfyller EU:s krav på databehandling.
+            Export och radering gör du själv direkt under Inställningar → Integritet &amp; GDPR. För
+            övrigt kontaktar du oss på {PRIVACY_EMAIL}.
+          </p>
+          <p>
+            Tycker du att vi hanterar dina uppgifter fel har du rätt att klaga hos
+            Integritetsskyddsmyndigheten (IMY), imy.se.
           </p>
 
-          <h2 className="text-xl font-semibold mt-8">5. Hur vi använder AI</h2>
+          <h2 className="text-xl font-semibold mt-8">10. Cookies</h2>
           <p>
-            Vi använder Claude AI (Anthropic) för att analysera CV:n, beräkna matchningspoäng,
-            identifiera kompetensgap, generera intervjufrågor och sammanfatta kandidater.
-            Ditt CV och dina uppgifter skickas till Anthropics API enbart för att utföra
-            dessa tjänster — Anthropic lagrar inte din data och använder den inte för att
-            träna AI-modeller. Detta framgår av{' '}
-            <a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noopener noreferrer" className="text-primary underline">
-              Anthropics integritetspolicy
-            </a>.
+            Vi använder bara de cookies som behövs för inloggningen. Inställningar som tema, ditt
+            cookieval och karriärcoachens samtal sparas lokalt i din webbläsare. Vi använder ingen
+            spårning eller reklam. Läs mer i cookiepolicyn.
           </p>
 
-          <h2 className="text-xl font-semibold mt-8">6. EU:s AI-förordning (AI Act)</h2>
+          <h2 className="text-xl font-semibold mt-8">11. Ändringar</h2>
           <p>
-            AI-system som används för att rekrytera eller utvärdera personer i en
-            anställningsprocess klassas som <strong>högrisk-AI</strong> enligt AI-förordningens
-            bilaga III — det gäller matchningspoängen, kompetensgap-analysen och
-            kandidatsammanfattningarna i Rekryo. Så här hanterar vi det konkret,
-            inte bara som en policy-formulering:
-          </p>
-
-          <h3 className="text-base font-semibold mt-6">Mänsklig kontroll (Artikel 14)</h3>
-          <p>
-            AI:ns matchningspoäng är alltid rådgivande, aldrig ett automatiskt beslut.
-            En rekryterare kan när som helst manuellt skriva över ett AI-genererat
-            poäng och måste då ange en motivering — den motiveringen sparas tillsammans
-            med det ursprungliga AI-poänget, inte istället för det, så att båda alltid
-            går att se i efterhand.
-          </p>
-
-          <h3 className="text-base font-semibold mt-6">Loggning och spårbarhet (Artikel 12)</h3>
-          <p>
-            Varje AI-beslut som rör dig — CV-analys, matchningspoäng, kompetensgap,
-            intervjufrågor, kandidatsammanfattning — loggas i en granskningsbar
-            beslutslogg. Loggen innehåller vilken modell som användes, vilka
-            kompetenser som gick in och ut ur analysen, en läsbar sammanfattning av
-            beslutet, samt om och när en människa granskat eller skrivit över det.
-            Loggen innehåller <strong>aldrig</strong> ditt fullständiga CV i klartext —
-            bara de extraherade kompetenserna, inte den råa texten.
-          </p>
-
-          <h3 className="text-base font-semibold mt-6">Transparens (Artikel 13 &amp; 50)</h3>
-          <p>
-            Vi döljer aldrig att du interagerar med AI. Karriärcoachen är tydligt
-            märkt som AI-assistent, varje matchningspoäng visar &quot;AI-match&quot; och kan
-            expanderas med &quot;Varför denna poäng?&quot; för en förklaring i klartext, och
-            kompetensgap-analysen visar exakt vilka kompetenser som räknades som
-            matchande respektive saknade — aldrig bara en siffra utan motivering.
-          </p>
-
-          <h3 className="text-base font-semibold mt-6">Rättvisa och bias-övervakning</h3>
-          <p>
-            Rekryterare har tillgång till en fairness-dashboard som statistiskt
-            testar om matchningspoäng skiljer sig systematiskt mellan grupper
-            (t.ex. kön eller åldersintervall), baserat på de frivilliga demografiska
-            uppgifter som beskrivs i punkt 2. Analysen görs alltid på gruppnivå med
-            ett minimikrav på gruppstorlek — är en grupp för liten för att ge ett
-            statistiskt meningsfullt resultat visas ingen siffra alls, för att undvika
-            att peka ut enskilda individer i en liten grupp.
-          </p>
-
-          <h3 className="text-base font-semibold mt-6">Dina rättigheter enligt AI-förordningen</h3>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Rätt att få veta att ett AI-system använts för att bedöma dig</li>
-            <li>Rätt till en begriplig förklaring av hur ett matchningspoäng räknats fram</li>
-            <li>Rätt att begära mänsklig granskning av ett AI-genererat beslut</li>
-            <li>Rätt att få ut din egen AI-beslutslogg (ingår i dataexporten under punkt 7)</li>
-          </ul>
-
-          <h2 className="text-xl font-semibold mt-8">7. GDPR</h2>
-          <p>
-            Vi följer EU:s dataskyddsförordning (GDPR). Du har rätt att:
-          </p>
-          <ul className="list-disc pl-6 space-y-2">
-            <li>Få tillgång till dina uppgifter, inklusive din AI-beslutslogg</li>
-            <li>
-              Radera ditt konto och all data (art. 17) — gäller både jobbsökare och
-              rekryterare. Raderingen sker direkt under Inställningar → Integritet &amp; GDPR
-              och omfattar inloggningskontot, profilen, CV-filen, ansökningar, jobbannonser,
-              meddelanden och AI-beslutsloggen. Raderar en rekryterare sitt konto tas även
-              rekryterarens jobbannonser och de ansökningar som kommit in till dem bort.
-            </li>
-            <li>Exportera dina uppgifter i ett maskinläsbart format</li>
-            <li>Invända mot viss databehandling</li>
-            <li>Återkalla samtycke till demografiska uppgifter utan att det påverkar kontot</li>
-            <li>Återkalla samtycket till att synas i talangpoolen när som helst</li>
-          </ul>
-
-          <h2 className="text-xl font-semibold mt-8">8. Kontakt</h2>
-          <p>
-            Vid frågor om din integritet eller hur AI används för att bedöma dig,
-            kontakta oss på {PRIVACY_EMAIL}.
+            Policyn kan ändras när tjänsten utvecklas. Större ändringar meddelas i tjänsten eller via
+            mejl innan de börjar gälla.
           </p>
         </div>
       </main>
