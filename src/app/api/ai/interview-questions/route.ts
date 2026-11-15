@@ -1,6 +1,7 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { generateInterviewQuestions } from '@/lib/ai/claude'
-import { NextResponse } from 'next/server'
+import { logAiDecision } from '@/lib/ai/audit-log'
+import { NextResponse, after } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 
@@ -37,10 +38,22 @@ export async function POST(request: Request) {
     )
 
     // Spara frågorna på egen ansökan (service role sedan 0017, begränsat till user.id nedan)
-    await createAdminClient().from('applications')
+    const { data: application } = await createAdminClient().from('applications')
       .update({ interview_questions: result.questions.map((q: { question: string }) => q.question) })
       .eq('job_id', parsed.data.job_id)
       .eq('seeker_id', user.id)
+      .select('id')
+      .maybeSingle()
+
+    after(() => logAiDecision({
+      subjectUserId: user.id,
+      triggeredByUserId: user.id,
+      decisionType: 'interview_questions',
+      jobId: parsed.data.job_id,
+      applicationId: application?.id,
+      decisionSummary: `${result.questions.length} intervjufrågor togs fram`,
+      inputSkills: cvProfile?.skills ?? [],
+    }))
 
     return NextResponse.json(result)
   } catch (error) {

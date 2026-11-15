@@ -1,6 +1,7 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { matchCandidates } from '@/lib/ai/claude'
-import { NextResponse } from 'next/server'
+import { logAiDecision } from '@/lib/ai/audit-log'
+import { NextResponse, after } from 'next/server'
 import { rateLimit } from '@/lib/rate-limit'
 
 /**
@@ -81,6 +82,18 @@ export async function POST() {
       .from('cv_profiles')
       .update({ top_matches: scored } as Record<string, unknown>)
       .eq('seeker_id', user.id)
+
+    // AI-förordningen art. 12: varje AI-bedömning av en person loggas, även förslagen
+    // som visas för jobbsökaren själv
+    after(() => Promise.all(scored.map(s => logAiDecision({
+      subjectUserId: user.id,
+      triggeredByUserId: user.id,
+      decisionType: 'auto_match',
+      jobId: s.job_id,
+      score: s.score,
+      decisionSummary: s.summary,
+      inputSkills: cv.skills ?? [],
+    }))))
 
     return NextResponse.json({ ok: true, matched: scored.length, top: scored })
   } catch (err) {
