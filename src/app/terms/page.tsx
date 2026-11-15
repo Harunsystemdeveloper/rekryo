@@ -17,9 +17,8 @@ export default function TermsPage() {
 
           <h2 className="text-xl font-semibold mt-8">1. Om Rekryo och de här villkoren</h2>
           <p>
-            Rekryo är en tjänst för AI-stödd jobbmatchning mellan jobbsökare och rekryterare. Tjänsten
-            är ett privat hobbyprojekt som tillhandahålls av <strong>{OPERATOR_NAME}</strong>,
-            privatperson i Sverige. Det finns inget bolag bakom tjänsten. Kontakt: {PRIVACY_EMAIL}.
+            Rekryo är en tjänst för AI-stödd jobbmatchning mellan jobbsökare och rekryterare och
+            tillhandahålls av <strong>{OPERATOR_NAME}</strong>. Kontakt: {PRIVACY_EMAIL}.
           </p>
           <p>
             Villkoren gäller när du skapar ett konto eller använder tjänsten. Hur vi hanterar

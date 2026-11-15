@@ -18,14 +18,14 @@ export default function PrivacyPage() {
 
           <h2 className="text-xl font-semibold mt-8">1. Vem som ansvarar för dina uppgifter</h2>
           <p>
-            Rekryo är ett privat hobbyprojekt som är under utveckling och testas i en
-            begränsad betaversion. Det finns inget bolag bakom tjänsten.
-            Personuppgiftsansvarig är <strong>{OPERATOR_NAME}</strong>, privatperson i Sverige.
+            Rekryo drivs av <strong>{OPERATOR_NAME}</strong>, som är personuppgiftsansvarig för
+            behandlingen av dina personuppgifter i tjänsten. Rekryo är för närvarande i en
+            betaversion.
           </p>
           <p>
-            Frågor om dina personuppgifter, eller om hur AI används för att bedöma dig,
-            skickar du till <strong>{PRIVACY_EMAIL}</strong>. Vi svarar inom en månad,
-            som GDPR kräver.
+            Har du frågor om dina personuppgifter eller om hur AI används i tjänsten når du oss
+            på <strong>{PRIVACY_EMAIL}</strong>. Vi besvarar förfrågningar så snart som möjligt
+            och senast inom en månad.
           </p>
           <p>
             Policyn förklarar hur vi hanterar personuppgifter enligt dataskyddsförordningen
