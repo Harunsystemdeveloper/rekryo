@@ -10,6 +10,7 @@ import { ApplicationTimeline } from '@/components/seeker/application-timeline'
 import { MIN_APPLICANTS_FOR_RANKING, percentileBucketLabel, computePercentile } from '@/lib/applications/ranking'
 import { ScoreExplainer } from '@/components/match/score-explainer'
 import type { Metadata } from 'next'
+import { safeHttpUrl } from '@/lib/safe-url'
 
 export const metadata: Metadata = { title: 'Mina ansökningar' }
 
@@ -157,7 +158,7 @@ export default async function ApplicationsPage() {
                         )}
                         {company?.website && (
                           <a
-                            href={company.website}
+                            href={safeHttpUrl(company.website)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-1 text-xs text-primary hover:underline"

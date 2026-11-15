@@ -18,6 +18,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { daysUntil } from '@/lib/utils'
 import { toast } from 'sonner'
+import { safeHttpUrl } from '@/lib/safe-url'
 
 // Ingen typografi-plugin är installerad, så vi styr markdown-elementen manuellt istället
 // för att lita på "prose"-klasser som annars inte gör något.
@@ -232,7 +233,7 @@ export function JobDetailClient({ job, application: initialApplication, isSaved:
             )
           })()}
           {job.company_profile?.website && (
-            <a href={job.company_profile.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
+            <a href={safeHttpUrl(job.company_profile.website)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-primary hover:underline">
               <Globe className="h-4 w-4" aria-hidden />Webbplats
             </a>
           )}

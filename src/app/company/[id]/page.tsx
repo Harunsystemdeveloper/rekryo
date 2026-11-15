@@ -11,6 +11,7 @@ import {
   Building2, ExternalLink, Quote
 } from 'lucide-react'
 import type { Metadata } from 'next'
+import { safeHttpUrl } from '@/lib/safe-url'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -93,7 +94,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
                 )}
                 {company.website && (
                   <a
-                    href={company.website}
+                    href={safeHttpUrl(company.website)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 hover:text-foreground transition-colors"
@@ -240,7 +241,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
 
           {company.website && (
             <Button variant="outline" className="w-full" asChild>
-              <a href={company.website} target="_blank" rel="noopener noreferrer">
+              <a href={safeHttpUrl(company.website)} target="_blank" rel="noopener noreferrer">
                 <Globe className="mr-2 h-4 w-4" />
                 Besök hemsida
                 <ExternalLink className="ml-2 h-3.5 w-3.5" />

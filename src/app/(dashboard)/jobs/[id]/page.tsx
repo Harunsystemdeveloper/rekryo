@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { MapPin, Globe, Calendar, Briefcase, AlertCircle, ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
 import { daysUntil } from '@/lib/utils'
+import { safeHttpUrl } from '@/lib/safe-url'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
@@ -104,7 +105,7 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
                   </span>
                 )}
                 {companyProfile?.website && (
-                  <a href={companyProfile.website} target="_blank" rel="noopener noreferrer"
+                  <a href={safeHttpUrl(companyProfile.website)} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1.5 text-sm text-primary hover:underline">
                     <Globe className="h-3.5 w-3.5" /> Webbplats
                   </a>
