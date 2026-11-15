@@ -1,4 +1,4 @@
-import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 import { analyzeSkillGaps } from '@/lib/ai/claude'
 import { logAiDecision } from '@/lib/ai/audit-log'
 import { NextResponse, after } from 'next/server'
@@ -41,11 +41,13 @@ export async function POST(request: Request) {
     // jobbsökaren kör själv analysen, och poänget rekryteraren ser ska bara komma från
     // rekryterarens matchning eller en loggad manuell överstyrning. Service role krävs
     // sedan 0017; .eq('seeker_id', user.id) begränsar skrivningen till egen ansökan.
-    const { data: application } = await createAdminClient().from('applications')
-      .update({ skill_gaps: result.missing_skills })
+    // Analysen är jobbsökarens förhandsvisning och sparas inte i ansökan. skill_gaps där
+    // fylls av rekryterarens matchning, och gränssnittet lovar att förhandsvisningen inte
+    // påverkar det rekryteraren ser. Ansökan slås bara upp för att koppla loggposten.
+    const { data: application } = await supabase.from('applications')
+      .select('id')
       .eq('job_id', parsed.data.job_id)
       .eq('seeker_id', user.id)
-      .select('id')
       .maybeSingle()
 
     after(() => logAiDecision({
