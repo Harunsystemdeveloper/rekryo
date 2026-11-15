@@ -53,6 +53,19 @@ export async function POST(req: Request) {
       // Bekräftade konton får inget mejl. Svaret är detsamma i båda fallen.
       const { data: existing } = await supabaseAdmin.auth.admin.generateLink({ type: 'magiclink', email })
       if (existing?.user && !existing.user.email_confirmed_at) {
+        // Lösenordet och rollen kommer annars från den första registreringen. Då kunde vem
+        // som helst registrera någon annans adress i förväg med ett eget lösenord, vänta tills
+        // ägaren bekräftat via länken och sedan logga in på kontot. Ingen har kunnat logga in
+        // på ett obekräftat konto, så det är ofarligt att skriva över uppgifterna här.
+        const { error: resetError } = await supabaseAdmin.auth.admin.updateUserById(existing.user.id, {
+          password,
+          user_metadata: { user_type, full_name },
+        })
+        if (resetError) {
+          console.error('[register] reset of unconfirmed account failed:', resetError.message)
+          return NextResponse.json(SENT)
+        }
+        await supabaseAdmin.from('profiles').update({ user_type, full_name: full_name ?? null }).eq('id', existing.user.id)
         await sendVerificationEmail({
           email,
           link: `${BASE_URL}/api/auth/confirm?token_hash=${existing.properties.hashed_token}&type=magiclink`,
