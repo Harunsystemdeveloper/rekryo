@@ -29,6 +29,32 @@ function sanitizeMatches(matches: unknown, candidateIds: string[]): Match[] {
     .map(m => ({ ...m, score: Math.min(100, Math.max(0, Math.round(m.score))) }))
 }
 
+// CV-analysens svar sparas i cv_profiles och visas för rekryterare. Behåll bara kända fält
+// med rätt typ och rimlig längd, så att ett CV som lyckats styra modellen inte kan lägga
+// in långa texter, fel datatyper eller orimliga värden.
+function sanitizeCvAnalysis(raw: unknown) {
+  const a = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
+  const text = (v: unknown, max: number) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, max) : null)
+  const list = (v: unknown, maxItems: number, maxLen: number) =>
+    Array.isArray(v)
+      ? v.filter((x): x is string => typeof x === 'string' && x.trim().length > 0).map(x => x.trim().slice(0, maxLen)).slice(0, maxItems)
+      : []
+  const years = Number(a.experience_years)
+  const level = typeof a.experience_level === 'string' && ['junior', 'mid', 'senior', 'lead'].includes(a.experience_level) ? a.experience_level : null
+  return {
+    skills: list(a.skills, 20, 80),
+    tools_and_methods: list(a.tools_and_methods, 20, 80),
+    experience_years: Number.isFinite(years) ? Math.min(60, Math.max(0, Math.round(years))) : null,
+    experience_level: level,
+    current_role: text(a.current_role, 120),
+    education: text(a.education, 300),
+    languages: list(a.languages, 10, 40),
+    summary: text(a.summary, 600),
+    strengths: list(a.strengths, 5, 120),
+    industries: list(a.industries, 5, 60),
+  }
+}
+
 export async function analyzeCv(cvText: string) {
   const message = await anthropic.messages.create({
     model: 'claude-sonnet-4-6',
@@ -61,7 +87,7 @@ ${UNTRUSTED_INPUT_RULE}`,
   })
 
   const text = message.content[0].type === 'text' ? message.content[0].text : ''
-  const analysis = JSON.parse(text.replace(/```json\n?|\n?```/g, '').trim())
+  const analysis = sanitizeCvAnalysis(JSON.parse(text.replace(/```json\n?|\n?```/g, '').trim()))
   return { analysis, usage: message.usage }
 }
 
@@ -216,10 +242,11 @@ Returnera giltig JSON:
   "gap_summary": "1-2 meningar om gapet på svenska"
 }
 
-Svara ENDAST med JSON.`,
+Svara ENDAST med JSON.
+${UNTRUSTED_INPUT_RULE}`,
     messages: [{
       role: 'user',
-      content: `Jobb: ${job.title}\nEfterfrågade kompetenser: ${job.skills_required?.join(', ') || '(inga specificerade)'}\nJobbeskrivning: ${job.description}\n\nKandidatens kompetenser: ${candidateSkills.join(', ')}\nErfarenhet: ${experienceYears} år`,
+      content: `${untrusted('job', `Jobb: ${job.title}\nEfterfrågade kompetenser: ${job.skills_required?.join(', ') || '(inga specificerade)'}\nJobbeskrivning: ${job.description}`)}\n\n${untrusted('cv', `Kandidatens kompetenser: ${candidateSkills.join(', ')}\nErfarenhet: ${experienceYears} år`)}`,
     }],
   })
 
@@ -255,10 +282,11 @@ Regler:
 - motivation: varför kandidaten vill ha jobbet och passar rollen
 
 Skapa 6-8 frågor. Blanda kategorier. Anpassa frågorna till kandidatens bakgrund OCH jobbets specifika krav.
-Svara ENDAST med JSON.`,
+Svara ENDAST med JSON.
+${UNTRUSTED_INPUT_RULE}`,
     messages: [{
       role: 'user',
-      content: `Jobb: ${job.title}\nKrav: ${job.skills_required?.join(', ')}\nBeskrivning: ${job.description}\n\nKandidatprofil:\nKompetenser: ${candidateProfile.skills.join(', ')}\nErfarenhet: ${candidateProfile.experience_years} år\nSammanfattning: ${candidateProfile.summary}`,
+      content: `${untrusted('job', `Jobb: ${job.title}\nKrav: ${job.skills_required?.join(', ')}\nBeskrivning: ${job.description}`)}\n\n${untrusted('cv', `Kompetenser: ${candidateProfile.skills.join(', ')}\nErfarenhet: ${candidateProfile.experience_years} år\nSammanfattning: ${candidateProfile.summary}`)}`,
     }],
   })
 
@@ -371,10 +399,13 @@ Regler:
 - Avsluta med en tydlig, lågtröskel fråga (t.ex. om de är öppna för att höra mer)
 - Hitta aldrig på uppgifter om kandidaten som inte finns i underlaget
 
-Returnera ENDAST JSON: { "message": "meddelandetext" }`,
+- Lägg aldrig in länkar, telefonnummer eller e-postadresser i meddelandet, och be aldrig om pengar eller personuppgifter
+
+Returnera ENDAST JSON: { "message": "meddelandetext" }
+${UNTRUSTED_INPUT_RULE}`,
     messages: [{
       role: 'user',
-      content: `Avsändare (du): ${recruiterName}\nFöretag: ${companyName}\nJobb: ${job.title}\nBeskrivning: ${job.description}\n\nKandidat: ${candidate.name}\nKompetenser: ${candidate.skills.join(', ')}\nErfarenhet: ${candidate.experience_years ?? 'okänt'} år\n\nMatchande kompetenser mot jobbet: ${matchingSkills.join(', ') || '(inga specifika, generell relevans)'}`,
+      content: `Avsändare (du): ${recruiterName}\nFöretag: ${companyName}\n${untrusted('job', `Jobb: ${job.title}\nBeskrivning: ${job.description}`)}\n\n${untrusted('cv', `Kandidat: ${candidate.name}\nKompetenser: ${candidate.skills.join(', ')}\nErfarenhet: ${candidate.experience_years ?? 'okänt'} år`)}\n\nMatchande kompetenser mot jobbet: ${matchingSkills.join(', ') || '(inga specifika, generell relevans)'}`,
     }],
   })
 

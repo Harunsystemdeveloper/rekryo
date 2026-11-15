@@ -70,7 +70,7 @@ export async function POST(request: Request) {
       subjectUserId: user.id,
       triggeredByUserId: user.id,
       decisionType: 'cv_analysis',
-      decisionSummary: analysis.summary,
+      decisionSummary: analysis.summary ?? undefined,
       outputSkillsMatched: normalizedSkills,
       usage,
     }))
