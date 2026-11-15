@@ -1,5 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
+import { PRIVACY_EMAIL } from '@/lib/site'
 
 // GDPR art. 17 — rätten att bli raderad. Gäller både jobbsökare och rekryterare.
 //
@@ -42,7 +43,7 @@ export async function POST() {
 
   const { error } = await admin.auth.admin.deleteUser(user.id)
   if (error) {
-    return NextResponse.json({ error: 'Kunde inte radera kontot. Försök igen eller kontakta privacy@rekryo.com.' }, { status: 500 })
+    return NextResponse.json({ error: `Kunde inte radera kontot. Försök igen eller kontakta ${PRIVACY_EMAIL}.` }, { status: 500 })
   }
 
   // Sessionen är redan ogiltig, men cookies ska rensas i webbläsaren.

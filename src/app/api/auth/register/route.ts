@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { rateLimit } from '@/lib/rate-limit'
 import { sendVerificationEmail } from '@/lib/email'
+import { SITE_URL } from '@/lib/site'
 
 const schema = z.object({
   email: z.string().email('Ogiltig e-postadress'),
@@ -11,7 +12,7 @@ const schema = z.object({
   full_name: z.string().max(200).optional(),
 })
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://rekryo.com'
+const BASE_URL = SITE_URL
 
 // Samma svar oavsett om adressen redan har ett konto, så att routen inte kan användas
 // för att ta reda på vilka e-postadresser som är registrerade.

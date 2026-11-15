@@ -1,6 +1,7 @@
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import type { Metadata } from 'next'
+import { PRIVACY_EMAIL } from '@/lib/site'
 
 export const metadata: Metadata = { title: 'Integritetspolicy' }
 
@@ -163,7 +164,7 @@ export default function PrivacyPage() {
           <h2 className="text-xl font-semibold mt-8">8. Kontakt</h2>
           <p>
             Vid frågor om din integritet eller hur AI används för att bedöma dig,
-            kontakta oss på privacy@rekryo.com.
+            kontakta oss på {PRIVACY_EMAIL}.
           </p>
         </div>
       </main>

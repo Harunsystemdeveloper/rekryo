@@ -1,11 +1,12 @@
 import { Resend } from 'resend'
+import { EMAIL_FROM, SITE_URL } from '@/lib/site'
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null
 
-const FROM = 'Rekryo <noreply@rekryo.com>'
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://rekryo.com'
+const FROM = EMAIL_FROM
+const BASE_URL = SITE_URL
 
 // Namn och jobbtitlar skrivs av användare och får aldrig tolkas som HTML i ett mejl som
 // skickas från vår domän — annars kan t.ex. ett namn som <a href="…">Verifiera kontot</a>

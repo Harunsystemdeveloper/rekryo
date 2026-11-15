@@ -2,12 +2,13 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
+import { SITE_URL } from '@/lib/site'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin', 'latin-ext'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin', 'latin-ext'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://rekryo.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Rekryo – AI-driven jobbmatchning',
     template: '%s | Rekryo',
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
     description: 'Hitta rätt jobb eller rätt kandidat med hjälp av AI.',
     locale: 'sv_SE',
     type: 'website',
-    url: 'https://rekryo.com',
+    url: SITE_URL,
     siteName: 'Rekryo',
   },
   twitter: {
