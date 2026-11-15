@@ -44,6 +44,14 @@ export async function POST(req: Request) {
   const parsed = createSchema.safeParse(body)
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
 
+  // Anteckningar är personuppgifter om kandidaten och får bara föras om någon rekryteraren
+  // har en faktisk koppling till: sökt ett av rekryterarens jobb, en konversation eller
+  // synlig i talangpoolen. Samma regel som styr vilka profiler rekryteraren får se (0016).
+  const { data: profile } = await supabase.from('profiles').select('user_type').eq('id', user.id).single()
+  if (profile?.user_type !== 'recruiter') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { data: canView } = await supabase.rpc('recruiter_can_view_seeker', { seeker: parsed.data.seeker_id })
+  if (canView !== true) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
   const { data, error } = await supabase
     .from('candidate_notes')
     .insert({ ...parsed.data, recruiter_id: user.id })
