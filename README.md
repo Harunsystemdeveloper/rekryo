@@ -150,7 +150,7 @@ npm i -g vercel && vercel login && vercel --prod
 
 Lägg till miljövariablerna i Vercel Dashboard och uppdatera Supabase Redirect URLs:
 - Site URL: `https://din-app.vercel.app`
-- Redirect URL: `https://din-app.vercel.app/api/auth/callback`
+- Redirect URL: `https://din-app.vercel.app/**`
 
 ---
 
