@@ -282,6 +282,9 @@ export function SeekerProfileClient({ profile, cvProfile: initialCv }: { profile
                   · {new Date(cvProfile.last_analyzed_at).toLocaleDateString('sv-SE')}
                 </span>
               )}
+              <a href="/api/cv/file" target="_blank" rel="noopener noreferrer" className="ml-auto text-xs font-medium text-primary hover:underline">
+                Visa CV
+              </a>
             </div>
           )}
           {cvProfile?.ai_summary && (

@@ -14,7 +14,7 @@ import {
 import {
   Loader2, Star, StarOff, MessageSquare, Search,
   Brain, ArrowLeft, Users, MapPin, LayoutList, Columns, Download, StickyNote, Pencil, ClipboardCheck,
-  ChevronDown, ChevronUp, Sparkles, Check, MoreHorizontal
+  ChevronDown, ChevronUp, Sparkles, Check, MoreHorizontal, FileText
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
@@ -38,7 +38,7 @@ interface Candidate {
   interview_questions: string[] | null
   is_shortlisted: boolean
   seeker: { id: string; full_name: string | null; avatar_url: string | null; headline: string | null; location: string | null } | null
-  cv: { skills: string[] | null; experience_years: number | null; ai_summary: string | null; languages: string[] | null } | null
+  cv: { skills: string[] | null; experience_years: number | null; ai_summary: string | null; languages: string[] | null; cv_url: string | null } | null
 }
 
 const statusOptions = [
@@ -640,6 +640,13 @@ export function CandidatesClient({
                       <MessageSquare className="mr-1 h-3.5 w-3.5" aria-hidden />Chatta
                     </Link>
                   </Button>
+                  {app.cv?.cv_url && seeker?.id && (
+                    <Button size="sm" variant="outline" asChild>
+                      <a href={`/api/cv/file?seeker=${seeker.id}`} target="_blank" rel="noopener noreferrer">
+                        <FileText className="mr-1 h-3.5 w-3.5" aria-hidden />Visa CV
+                      </a>
+                    </Button>
+                  )}
                   <InterviewScheduleButton applicationId={app.id} seekerId={seeker?.id ?? ''} />
                   <DropdownMenu>
                     <DropdownMenuTrigger

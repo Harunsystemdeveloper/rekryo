@@ -42,7 +42,7 @@ export default async function CandidatesPage({ params }: { params: Promise<{ id:
   const { data: cvProfiles } = seekerIds.length > 0
     ? await createAdminClient()
         .from('cv_profiles')
-        .select('seeker_id, skills, experience_years, ai_summary, languages')
+        .select('seeker_id, skills, experience_years, ai_summary, languages, cv_url')
         .in('seeker_id', seekerIds)
     : { data: [] }
   const cvMap = new Map((cvProfiles ?? []).map(cv => [cv.seeker_id, cv]))
