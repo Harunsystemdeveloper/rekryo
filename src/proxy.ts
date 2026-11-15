@@ -65,3 +65,12 @@ export async function proxy(request: NextRequest) {
 
   return supabaseResponse
 }
+
+// Next.js filer (kod, CSS, typsnitt) och bilder ska aldrig gå via proxyn. Utan matchern
+// omdirigerades även dem till /onboarding för inloggade som inte är klara med onboardingen,
+// så webbläsaren fick HTML i stället för JavaScript och CSS och sidan gick sönder.
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)',
+  ],
+}
