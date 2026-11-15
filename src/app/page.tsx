@@ -78,24 +78,24 @@ export default function HomePage() {
       <Navbar />
 
       {/* ── Hero: budskap och två ingångar till vänster, produkten själv till höger ── */}
-      <section className="relative overflow-hidden hero-dark px-6 pt-20 pb-16 lg:pt-24 lg:pb-20">
-        <div className="absolute inset-0 -z-10 dot-grid-light opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <section className="relative overflow-hidden hero-band px-6 pt-20 pb-16 lg:pt-24 lg:pb-20">
+        <div className="absolute inset-0 -z-10 hero-dots opacity-50 [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent dark:via-white/20" />
 
         <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-[1fr_1.15fr] lg:gap-12">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <Badge variant="secondary" className="mb-7 gap-1.5 border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-xs font-medium text-white/80 backdrop-blur-sm">
-              <Sparkles className="h-3 w-3 text-[#A99DFB]" />
+            <Badge variant="secondary" className="mb-7 gap-1.5 border border-primary/20 bg-primary/[0.06] px-3.5 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-sm dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80">
+              <Sparkles className="h-3 w-3 text-primary dark:text-[#A99DFB]" />
               AI-matchning för den svenska arbetsmarknaden
             </Badge>
 
-            <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-[3.1rem] xl:text-[3.5rem]">
+            <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-[3.1rem] xl:text-[3.5rem] dark:text-white">
               Kompetensen finns.{' '}
-              <span className="gradient-text-light">Matchningen</span>
+              <span className="hero-gradient-text">Matchningen</span>
               {' '}är trasig.
             </h1>
 
-            <p className="mb-9 max-w-xl text-lg leading-relaxed text-white/65">
+            <p className="mb-9 max-w-xl text-lg leading-relaxed text-muted-foreground dark:text-white/65">
               Rekryo matchar CV och jobb med förklarbar AI. Varje matchning får ett poäng 0–100,
               en motivering och en lista över vad som saknas, för jobbsökare och rekryterare i alla branscher.
             </p>
@@ -107,7 +107,7 @@ export default function HomePage() {
                   Jag söker jobb
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="h-12 border-white/20 bg-white/[0.04] px-7 text-base text-white hover:bg-white/10 hover:text-white">
+              <Button size="lg" variant="outline" asChild className="h-12 border-border bg-card px-7 text-base text-foreground hover:bg-muted dark:border-white/20 dark:bg-white/[0.04] dark:text-white dark:hover:bg-white/10 dark:hover:text-white">
                 <Link href="/register?roll=rekryterare">
                   <Users className="mr-2 h-4 w-4" />
                   Jag rekryterar
@@ -115,7 +115,7 @@ export default function HomePage() {
               </Button>
             </div>
 
-            <Link href="#demo" className="mb-10 inline-flex items-center gap-1.5 rounded text-sm font-medium text-[#5EEAD4] hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5EEAD4]">
+            <Link href="#demo" className="mb-10 inline-flex items-center gap-1.5 rounded text-sm font-medium text-mint-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mint dark:text-[#5EEAD4] dark:focus-visible:outline-[#5EEAD4]">
               <Zap className="h-3.5 w-3.5" />
               Testa matchningen utan konto
               <ArrowRight className="h-3.5 w-3.5" />
@@ -123,17 +123,17 @@ export default function HomePage() {
 
             {/* Paradoxen i två stora siffror, med källa */}
             <dl className="grid max-w-lg grid-cols-2 gap-3">
-              <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm">
+              <div className="rounded-xl border border-border bg-card p-4 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none">
                 <dt className="sr-only">Arbetsgivare med kompetensbrist</dt>
-                <dd className="text-4xl font-semibold tabular-nums tracking-tight text-white">76%</dd>
-                <dd className="mt-2 text-sm leading-snug text-white/60">av svenska arbetsgivare hittar inte rätt kompetens</dd>
-                <dd className="mt-1 text-xs text-white/35">ManpowerGroup</dd>
+                <dd className="text-4xl font-semibold tabular-nums tracking-tight text-foreground dark:text-white">76%</dd>
+                <dd className="mt-2 text-sm leading-snug text-muted-foreground dark:text-white/60">av svenska arbetsgivare hittar inte rätt kompetens</dd>
+                <dd className="mt-1 text-xs text-muted-foreground/70 dark:text-white/35">ManpowerGroup</dd>
               </div>
-              <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-sm">
+              <div className="rounded-xl border border-border bg-card p-4 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none">
                 <dt className="sr-only">Nyexaminerade under studiemedelsnivån</dt>
-                <dd className="text-4xl font-semibold tabular-nums tracking-tight text-white">1 av 4</dd>
-                <dd className="mt-2 text-sm leading-snug text-white/60">nyexaminerade akademiker tjänar under studiemedelsnivån</dd>
-                <dd className="mt-1 text-xs text-white/35">Saco</dd>
+                <dd className="text-4xl font-semibold tabular-nums tracking-tight text-foreground dark:text-white">1 av 4</dd>
+                <dd className="mt-2 text-sm leading-snug text-muted-foreground dark:text-white/60">nyexaminerade akademiker tjänar under studiemedelsnivån</dd>
+                <dd className="mt-1 text-xs text-muted-foreground/70 dark:text-white/35">Saco</dd>
               </div>
             </dl>
           </div>
@@ -143,7 +143,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <TrustBadges variant="onDark" className="mx-auto mt-14 max-w-6xl justify-center lg:mt-16" />
+        <TrustBadges variant="adaptive" className="mx-auto mt-14 max-w-6xl justify-center lg:mt-16" />
       </section>
 
       {/* ── Paradoxen: samma problem sett från två håll ── */}

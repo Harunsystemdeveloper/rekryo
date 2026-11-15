@@ -220,6 +220,42 @@
     background-clip: text;
   }
 
+  /* Startsidans hero följer temat: ljus yta med samma lila och mint glöd i ljust läge,
+     samma marinblå band som tidigare i mörkt läge. App-fönstret i heron är mörkt i båda. */
+  .hero-band {
+    background-color: var(--background);
+    background-image:
+      radial-gradient(60% 50% at 18% 12%, rgb(108 92 231 / 14%) 0px, transparent 70%),
+      radial-gradient(45% 40% at 88% 18%, rgb(0 184 148 / 10%) 0px, transparent 70%),
+      radial-gradient(60% 45% at 50% 105%, rgb(108 92 231 / 9%) 0px, transparent 70%);
+  }
+  .dark .hero-band {
+    background-color: #0B1120;
+    background-image:
+      radial-gradient(60% 50% at 18% 12%, rgb(108 92 231 / 32%) 0px, transparent 70%),
+      radial-gradient(45% 40% at 88% 18%, rgb(0 184 148 / 14%) 0px, transparent 70%),
+      radial-gradient(60% 45% at 50% 105%, rgb(108 92 231 / 18%) 0px, transparent 70%);
+  }
+  .hero-dots {
+    background-image: radial-gradient(rgb(108 92 231 / 14%) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .dark .hero-dots {
+    background-image: radial-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px);
+  }
+  .hero-gradient-text {
+    background: linear-gradient(120deg, #6C5CE7, #00A383);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .dark .hero-gradient-text {
+    background: linear-gradient(120deg, #C9C2FF, #5EEAD4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   /* Bakgrund med svag lila och mint ton för större sektioner */
   .hero-mesh {
     background-color: var(--background);

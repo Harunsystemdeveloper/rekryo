@@ -11,12 +11,19 @@ const badges = [
   { icon: ScrollText, label: 'Varje AI-beslut loggas' },
 ]
 
-// "onDark" används på de mörka banden (hero och slut-CTA) som är mörka i båda temana
-export function TrustBadges({ variant = 'default', className = '' }: { variant?: 'default' | 'onDark'; className?: string }) {
-  const item = variant === 'onDark'
-    ? 'border-white/10 bg-white/[0.04] text-white/70'
-    : 'border-border bg-card text-foreground/80'
-  const icon = variant === 'onDark' ? 'text-[#5EEAD4]' : 'text-mint-foreground'
+// "onDark" används på slut-CTA:ns band, som är mörkt i båda temana. "adaptive" används i
+// heron, som följer temat: som default i ljust läge och som onDark i mörkt läge.
+const styles = {
+  default: { item: 'border-border bg-card text-foreground/80', icon: 'text-mint-foreground' },
+  onDark: { item: 'border-white/10 bg-white/[0.04] text-white/70', icon: 'text-[#5EEAD4]' },
+  adaptive: {
+    item: 'border-border bg-card text-foreground/80 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/70',
+    icon: 'text-mint-foreground dark:text-[#5EEAD4]',
+  },
+}
+
+export function TrustBadges({ variant = 'default', className = '' }: { variant?: keyof typeof styles; className?: string }) {
+  const { item, icon } = styles[variant]
   return (
     <ul className={`flex flex-wrap gap-2 ${className}`} aria-label="Förtroende och regelefterlevnad">
       {badges.map(({ icon: Icon, label }) => (
