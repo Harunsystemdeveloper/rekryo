@@ -18,6 +18,13 @@ const BASE_URL = SITE_URL
 // för att ta reda på vilka e-postadresser som är registrerade.
 const SENT = { message: 'Om adressen inte redan är registrerad har vi skickat en bekräftelselänk.' }
 
+// Innan avsändardomänen är verifierad i Resend kan bekräftelsemejlet inte skickas.
+// SKIP_EMAIL_VERIFICATION=true skapar då kontot redan bekräftat så att man kan logga in
+// direkt. Det gäller även den driftsatta sidan, så att den kan testas före domänköpet.
+// Flaggan måste tas bort när Resend är kopplat: utan verifiering kan vem som helst
+// registrera sig med någon annans adress.
+const SKIP_VERIFICATION = process.env.SKIP_EMAIL_VERIFICATION === 'true'
+
 export async function POST(req: Request) {
   const ip = req.headers.get('x-forwarded-for') ?? req.headers.get('x-real-ip') ?? 'unknown'
   if (!rateLimit(`register:${ip}`, 5, 60 * 60 * 1000)) {
@@ -36,6 +43,20 @@ export async function POST(req: Request) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
+
+  if (SKIP_VERIFICATION) {
+    const { error } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { user_type, full_name },
+    })
+    if (error) {
+      const exists = error.code === 'email_exists' || error.code === 'user_already_exists'
+      return NextResponse.json({ error: exists ? 'Det finns redan ett konto med den adressen.' : 'Kunde inte skapa kontot.' }, { status: exists ? 409 : 500 })
+    }
+    return NextResponse.json({ verificationRequired: false })
+  }
 
   // Kontot skapas overifierat. Tidigare bekräftades e-posten direkt, så vem som helst
   // kunde registrera sig med någon annans adress, t.ex. ett företags, och utge sig för att

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -9,6 +10,7 @@ import { Loader2, Briefcase, Search, Mail, Lock, Eye, EyeOff } from 'lucide-reac
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { createClient } from '@/lib/supabase/client'
 import { toast } from 'sonner'
 import type { UserType } from '@/types/database'
 
@@ -23,6 +25,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 export function RegisterForm({ defaultUserType = 'job_seeker' }: { defaultUserType?: UserType }) {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [sentTo, setSentTo] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
@@ -43,6 +46,18 @@ export function RegisterForm({ defaultUserType = 'job_seeker' }: { defaultUserTy
     if (!res.ok) {
       toast.error('Registrering misslyckades', { description: result.error })
       setLoading(false)
+      return
+    }
+    // Utan e-postverifiering (SKIP_EMAIL_VERIFICATION) är kontot redan bekräftat
+    if (result.verificationRequired === false) {
+      const { error: loginError } = await createClient().auth.signInWithPassword({ email: data.email, password: data.password })
+      if (loginError) {
+        toast.error('Inloggning misslyckades', { description: loginError.message })
+        setLoading(false)
+        return
+      }
+      router.push('/onboarding')
+      router.refresh()
       return
     }
     // Kontot måste bekräftas via länken i mejlet innan det går att logga in
