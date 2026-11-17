@@ -356,7 +356,7 @@ export default function HomePage() {
             {/* Jobbsökare: lila genomgående */}
             <div className="panel panel-hover flex flex-col overflow-hidden">
               <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
-                <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
+                <div className="mockup-card -rotate-[0.8deg] rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Dina bästa matchningar</p>
                   <div className="space-y-3.5">
                     {[
@@ -413,7 +413,7 @@ export default function HomePage() {
             {/* Rekryterare: mint genomgående */}
             <div className="panel panel-hover flex flex-col overflow-hidden">
               <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
-                <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
+                <div className="mockup-card rotate-[0.6deg] rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Sökande · Undersköterska, akutmottagning</p>
                   <div className="space-y-2">
                     {[

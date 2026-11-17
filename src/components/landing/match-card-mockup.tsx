@@ -127,8 +127,12 @@ export function MatchCardMockup() {
 
           {/* Åtgärder som i kandidatlistan: AI:n föreslår, rekryteraren agerar */}
           <div className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-4">
-            <span className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#6C5CE7] px-3 text-xs font-medium text-white shadow-[0_4px_14px_-4px_rgb(108_92_231/70%)]">
+            <span className="relative inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#6C5CE7] px-3 text-xs font-medium text-white shadow-[0_4px_14px_-4px_rgb(108_92_231/70%)]">
               <Star className="h-3.5 w-3.5" aria-hidden />Shortlista
+              {/* Muspekaren: någon är på väg att fatta beslutet */}
+              <svg className="absolute -bottom-4 left-[70%] h-5 w-5 drop-shadow-[0_2px_3px_rgb(0_0_0/45%)]" viewBox="0 0 24 24" aria-hidden>
+                <path d="M5 3.2 19 11.4l-6.3 1.5-3.1 5.9z" fill="#fff" stroke="#13121C" strokeWidth="1.4" strokeLinejoin="round" />
+              </svg>
             </span>
             <span className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 text-xs text-white/80">
               <CalendarPlus className="h-3.5 w-3.5" aria-hidden />Boka intervju
@@ -143,7 +147,7 @@ export function MatchCardMockup() {
       {/* Båda sidor av samma matchning: jobbsökarens notis till vänster, rekryterarens
           rangordnade lista till höger. De överlappar bara kortets nedre kant. */}
       <div className="relative z-10 -mt-4 hidden items-start justify-between gap-4 sm:-mx-6 sm:flex">
-        <div className="w-64 rounded-xl border border-white/10 bg-[#171622]/95 p-3 shadow-2xl backdrop-blur-xl">
+        <div className="w-64 -rotate-[1.5deg] rounded-xl border border-white/10 bg-[#171622]/95 p-3 shadow-[0_1px_2px_rgb(0_0_0/30%),0_8px_20px_-6px_rgb(0_0_0/40%),0_28px_56px_-20px_rgb(0_0_0/50%)] backdrop-blur-xl">
           <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-white/50">
             <Bell className="h-3 w-3 text-[#5EEAD4]" aria-hidden />
             Jobbsökaren · ny matchning
@@ -158,7 +162,7 @@ export function MatchCardMockup() {
           </div>
         </div>
 
-        <div className="w-60 rounded-xl border border-white/10 bg-[#171622]/95 p-3 shadow-2xl backdrop-blur-xl">
+        <div className="mt-3 w-60 rotate-[1deg] rounded-xl border border-white/10 bg-[#171622]/95 p-3 shadow-[0_1px_2px_rgb(0_0_0/30%),0_8px_20px_-6px_rgb(0_0_0/40%),0_28px_56px_-20px_rgb(0_0_0/50%)] backdrop-blur-xl">
           <p className="mb-2 text-[11px] font-medium text-white/50">Rekryteraren · rangordnade sökande</p>
           <div className="space-y-1.5">
             {ranked.map((r, i) => (

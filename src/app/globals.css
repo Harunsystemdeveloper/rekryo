@@ -374,7 +374,7 @@
   }
   :root:not(.dark) .mockup-card {
     border-color: #E7E1D7;
-    box-shadow: 0 1px 2px rgb(52 38 26 / 6%), 0 18px 36px -18px rgb(76 62 190 / 30%);
+    box-shadow: 0 1px 1px rgb(52 38 26 / 6%), 0 4px 10px -4px rgb(52 38 26 / 10%), 0 24px 44px -22px rgb(76 62 190 / 26%);
   }
 
   /* Långsamt pulserande röd glöd, för demots resultat vid mycket låg matchning */
