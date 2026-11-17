@@ -52,9 +52,9 @@ export function TrustSection() {
     <section className="border-t border-border px-6 py-20 lg:py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          eyebrow="Förtroende"
-          title="Byggd för EU:s AI-förordning och GDPR"
-          description="AI i rekrytering räknas som hög risk enligt AI-förordningen. Därför är transparens, mänsklig kontroll och spårbarhet inbyggda från början, inte tillagda i efterhand."
+          eyebrow="Därför kan du lita på det"
+          title="AI som du kan granska"
+          description="AI i rekrytering räknas som högrisk enligt EU:s AI-förordning, och det med rätta. Därför har vi byggt in förklaringar, mänsklig kontroll och spårbarhet från första början."
         />
 
         <TrustBadges className="-mt-4 mb-10 justify-center" />

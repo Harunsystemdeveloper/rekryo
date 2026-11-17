@@ -30,47 +30,47 @@ const brandTone = {
 const features = [
   {
     icon: FileText,
-    title: 'AI-driven CV-analys',
-    description: 'Claude AI läser ditt CV och extraherar kompetenser, erfarenhet och utbildning automatiskt.',
+    title: 'Läser ditt CV åt dig',
+    description: 'Ladda upp CV:t en gång. Rekryo plockar ut kompetenser, erfarenhet och utbildning, så slipper du skriva samma sak i varje ansökan.',
     ...brandTone.primary,
   },
   {
     icon: Target,
-    title: 'Precisionsmatchning',
-    description: 'Varje matchning får ett poäng 0–100 med förklaring av varför du passar för jobbet.',
+    title: 'Ärliga matchningar',
+    description: 'Varje jobb får ett poäng från 0 till 100 och en förklaring på vanlig svenska av varför.',
     ...brandTone.mint,
   },
   {
     icon: TrendingUp,
-    title: 'Kompetensgap-analys',
-    description: 'Se exakt vilka kompetenser du saknar för drömjobbet och hur du kan fylla gapen.',
+    title: 'Vad som saknas',
+    description: 'Se vad som skiljer dig från drömjobbet och vad du kan göra för att komma närmare.',
     ...brandTone.primary,
   },
   {
     icon: Users,
-    title: 'Smart rekrytering',
-    description: 'Rekryterare hittar rätt kandidater på minuter, inte månader – med AI-ranking.',
+    title: 'En lista du hinner läsa',
+    description: 'Som rekryterare får du de sökande rangordnade med en kort sammanfattning, i stället för en hög med PDF:er.',
     ...brandTone.mint,
   },
   {
     icon: MessageSquare,
-    title: 'Intervjuförberedelse',
-    description: 'Få AI-genererade intervjufrågor baserade på jobbet och din profil.',
+    title: 'Förberedd till intervjun',
+    description: 'Öva på frågor som är troliga för just den rollen, utifrån annonsen och din bakgrund.',
     ...brandTone.primary,
   },
   {
     icon: Shield,
-    title: 'GDPR-säkert',
-    description: 'Dina data lagras säkert inom EU (Irland) via Supabase och behandlas strikt enligt GDPR.',
+    title: 'Dina uppgifter stannar i EU',
+    description: 'Allt lagras i Irland och hanteras enligt GDPR. Du kan när som helst ladda ner allt eller radera kontot.',
     ...brandTone.mint,
   },
 ]
 
 
 const steps = [
-  { step: '01', icon: UserPlus, title: 'Skapa konto', desc: 'Registrera dig gratis som jobbsökare eller rekryterare på under en minut.' },
-  { step: '02', icon: FileText, title: 'Ladda upp CV eller annons', desc: 'AI läser ditt CV eller din jobbannons och plockar ut kompetenser, erfarenhet och krav.' },
-  { step: '03', icon: Target, title: 'Få en förklarad matchning', desc: 'Se poäng 0–100, varför matchningen håller, vad som saknas och förslag på intervjufrågor.' },
+  { step: '01', icon: UserPlus, title: 'Skapa konto', desc: 'Välj om du söker jobb eller anställer. Det tar under en minut och kostar ingenting.' },
+  { step: '02', icon: FileText, title: 'Ladda upp CV eller annons', desc: 'Rekryo läser igenom det och plockar ut det som spelar roll: kompetenser, erfarenhet och krav.' },
+  { step: '03', icon: Target, title: 'Se hur väl det passar', desc: 'Ett poäng från 0 till 100, med en förklaring av vad som stämmer, vad som saknas och vad du kan göra åt det.' },
 ]
 
 export default function HomePage() {
@@ -87,7 +87,7 @@ export default function HomePage() {
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <Badge variant="secondary" className="mb-7 gap-1.5 border border-primary/20 bg-primary/[0.06] px-3.5 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-sm dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80">
               <Sparkles className="h-3 w-3 text-primary dark:text-[#A99DFB]" />
-              AI-matchning för den svenska arbetsmarknaden
+              Gjord för den svenska arbetsmarknaden
             </Badge>
 
             <h1 className="mb-7 text-balance text-5xl font-semibold leading-[1.06] tracking-[-0.03em] text-foreground sm:text-6xl lg:text-[3.3rem] xl:text-[3.75rem] dark:text-white">
@@ -97,8 +97,9 @@ export default function HomePage() {
             </h1>
 
             <p className="mb-9 max-w-xl text-pretty text-lg leading-[1.7] text-muted-foreground dark:text-white/65">
-              Rekryo matchar CV och jobb med förklarbar AI. Varje matchning får ett poäng 0–100,
-              en motivering och en lista över vad som saknas, för jobbsökare och rekryterare i alla branscher.
+              Rekryo läser ditt CV ungefär som en erfaren rekryterare skulle göra och säger ärligt
+              hur väl du passar ett jobb, och vad som saknas. Den som anställer får samma förklaring
+              och tar själv besluten.
             </p>
 
             <div className="mb-6 flex flex-col gap-3 sm:flex-row">
@@ -118,7 +119,7 @@ export default function HomePage() {
 
             <Link href="#demo" className="mb-10 inline-flex items-center gap-1.5 rounded text-sm font-medium text-mint-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mint dark:text-[#5EEAD4] dark:focus-visible:outline-[#5EEAD4]">
               <Zap className="h-3.5 w-3.5" />
-              Testa matchningen utan konto
+              Prova utan att skapa konto
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
 
@@ -152,8 +153,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="Kompetensparadoxen"
-            title="En paradox som kostar Sverige miljarder"
-            description="Akademiker står utan jobb samtidigt som arbetsgivare inte hittar kompetens. Det är inte ett kompetensproblem, det är ett matchningsproblem."
+            title="Två sidor som letar efter varandra"
+            description="Nyexaminerade skickar ansökan efter ansökan utan att höra något. Samtidigt sitter arbetsgivare med tjänster de inte får tillsatta. Båda gör sitt bästa. Det är kopplingen mellan dem som inte fungerar."
           />
 
           <ScrollReveal className="mb-6">
@@ -166,7 +167,7 @@ export default function HomePage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <TrendingDown className="h-5 w-5" aria-hidden />
                 </div>
-                <h3 className="text-lg font-semibold">Jobbsökarna</h3>
+                <h3 className="text-lg font-semibold">Den som söker jobb</h3>
               </div>
               <dl className="space-y-5">
                 {[
@@ -192,7 +193,7 @@ export default function HomePage() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
                   <Building2 className="h-5 w-5" aria-hidden />
                 </div>
-                <h3 className="text-lg font-semibold">Arbetsgivarna</h3>
+                <h3 className="text-lg font-semibold">Den som anställer</h3>
               </div>
               <dl className="space-y-5">
                 {[
@@ -212,8 +213,8 @@ export default function HomePage() {
 
           <div className="panel gradient-subtle mx-auto max-w-3xl px-8 py-7 text-center">
             <p className="text-lg leading-relaxed">
-              Det finns tillräckligt med kompetens i Sverige. Systemet för att matcha den är trasigt.{' '}
-              <strong className="font-semibold text-foreground">Rekryo löser det med förklarbar AI.</strong>
+              Det finns tillräckligt med kompetens i Sverige. Det som saknas är ett bättre sätt att hitta den.{' '}
+              <strong className="font-semibold text-foreground">Det är det vi bygger.</strong>
             </p>
           </div>
         </div>
@@ -224,9 +225,9 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <ScrollReveal>
             <SectionHeader
-              eyebrow="Rätt kompetens finns redan"
+              eyebrow="Samma matchning, två håll"
               title={<>Sverige har kompetensen. Vi ser till att den <Scribble tone="primary">hittar rätt.</Scribble></>}
-              description="Samma matchning, förklarad för båda sidor. Jobbsökaren ser varför jobbet passar och vad som saknas. Rekryteraren ser samma poäng uppdelad, utan kandidatens namn, och fattar beslutet."
+              description="Jobbsökaren ser varför jobbet passar och vad som saknas. Rekryteraren ser samma bedömning, gjord utan att AI:n känner till kandidatens namn, och bestämmer själv vad som händer sedan."
             />
           </ScrollReveal>
           <ScrollReveal delay={120}>
@@ -238,7 +239,7 @@ export default function HomePage() {
       {/* ── Så fungerar det: tre steg, vart och ett med ett litet utsnitt av produkten ── */}
       <section className="border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
-          <SectionHeader eyebrow="Så fungerar det" title="Från CV till förklarad matchning i tre steg" />
+          <SectionHeader eyebrow="Så går det till" title="Tre steg, och ungefär fem minuter" />
 
           <ol className="grid gap-6 md:grid-cols-3">
             {steps.map((s, i) => (
@@ -290,14 +291,14 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-6xl">
           <ScrollReveal>
             <SectionHeader
-              eyebrow="Prova direkt"
-              title="Se AI-matchningen i realtid"
-              description="Inget konto och inga kortuppgifter. Skriv in ett jobb och några kompetenser och få ett matchningspoäng på några sekunder."
+              eyebrow="Prova själv"
+              title="Testa med ett jobb du är nyfiken på"
+              description="Du behöver inget konto. Skriv in ett jobb och några av dina kompetenser, så ser du på några sekunder hur väl de passar ihop."
             />
             <Tabs defaultValue="seeker" className="items-center">
               <TabsList className="mb-6">
-                <TabsTrigger value="seeker" className="gap-1.5"><Zap className="h-3.5 w-3.5" /> Prova som jobbsökare</TabsTrigger>
-                <TabsTrigger value="recruiter" className="gap-1.5"><BarChart3 className="h-3.5 w-3.5" /> Prova som rekryterare</TabsTrigger>
+                <TabsTrigger value="seeker" className="gap-1.5"><Zap className="h-3.5 w-3.5" /> Jag söker jobb</TabsTrigger>
+                <TabsTrigger value="recruiter" className="gap-1.5"><BarChart3 className="h-3.5 w-3.5" /> Jag rekryterar</TabsTrigger>
               </TabsList>
               <TabsContent value="seeker" className="w-full">
                 <DemoMatcher persona="seeker" />
@@ -314,9 +315,9 @@ export default function HomePage() {
       <section className="border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader
-            eyebrow="Funktioner"
-            title="Allt du behöver för förklarad matchning"
-            description="Från CV-analys till intervjuförberedelse, med samma förklarbara AI genom hela flödet."
+            eyebrow="Vad Rekryo gör"
+            title="Mindre gissande, för båda sidor"
+            description="Från första CV:t till intervjun, med samma tanke hela vägen: du ska alltid kunna se varför."
           />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((f, i) => (
@@ -461,38 +462,38 @@ export default function HomePage() {
       {/* ── FAQ ── */}
       <section className="section-alt border-t border-border bg-muted/30 px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-2xl">
-          <SectionHeader eyebrow="Vanliga frågor" title="Allt du behöver veta" />
+          <SectionHeader eyebrow="Vanliga frågor" title="Det här brukar folk undra" />
           <Accordion className="space-y-3">
             {[
               {
                 id: 'faq-1',
                 q: 'Kostar det något att använda Rekryo?',
-                a: 'Nej — plattformen är helt gratis för både jobbsökare och rekryterare. Inga dolda avgifter, inget kreditkort behövs.',
+                a: 'Nej. Under betan är Rekryo helt gratis för både jobbsökare och rekryterare, och du behöver inget kort för att börja.',
               },
               {
                 id: 'faq-2',
                 q: 'Hur fungerar AI-matchningen?',
-                a: 'Claude AI (Anthropic) analyserar ditt CV och extraherar kompetenser, erfarenhetsnivå, utbildning och styrkor. Varje jobb får ett matchningspoäng 0–100. Du ser exakt vilka kompetenser som matchar, vad du saknar och konkreta rekommendationer — inte bara en siffra utan en fullständig analys.',
+                a: 'Rekryo plockar ut kompetenser, erfarenhet och utbildning ur ditt CV och jämför dem med annonsen. Du får ett poäng från 0 till 100, men viktigare än siffran är förklaringen: vad som matchar, vad som saknas och vad du kan göra åt det. Själva AI-modellen heter Claude och kommer från Anthropic.',
               },
               {
                 id: 'faq-3',
                 q: 'Är mina uppgifter säkra?',
-                a: 'Din profil och dina uppgifter lagras inom EU (Irland) via Supabase och behandlas enligt GDPR. Ditt CV analyseras av Claude AI (Anthropic) enbart för matchningen, och Anthropic använder inte data som skickas via deras API för att träna sina AI-modeller.',
+                a: 'Din profil och dina uppgifter lagras inom EU, i Irland, och hanteras enligt GDPR. CV:t skickas till AI-modellen bara för att göra matchningen, och Anthropic använder inte uppgifterna för att träna sina modeller.',
               },
               {
                 id: 'faq-4',
                 q: 'Kan rekryterare se mitt CV utan att jag sökt jobbet?',
-                a: 'Nej. Rekryterare ser bara kandidater som aktivt sökt deras jobb — eller som finns i talangpoolen och valt att vara synliga.',
+                a: 'Nej. En rekryterare ser dig bara om du har sökt deras jobb, eller om du själv har valt att synas i talangpoolen.',
               },
               {
                 id: 'faq-5',
                 q: 'Hur laddar jag upp mitt CV?',
-                a: 'Du laddar upp ditt CV som PDF eller textfil (TXT) i din profil efter registrering. AI-analysen körs automatiskt och tar ungefär 30 sekunder.',
+                a: 'När du har skapat ett konto laddar du upp CV:t som PDF eller textfil i din profil. Analysen startar av sig själv och tar ungefär en halv minut.',
               },
               {
                 id: 'faq-6',
                 q: 'Fungerar det för alla typer av jobb?',
-                a: 'Ja — plattformen är branschoberoende och fungerar för allt från teknik och ekonomi till vård och kreativa yrken.',
+                a: 'Ja. Rekryo är inte byggt för en viss bransch och fungerar lika bra för vård och handel som för teknik, ekonomi och kreativa yrken.',
               },
             ].map((faq) => (
               <AccordionItem
@@ -521,7 +522,7 @@ export default function HomePage() {
               Redo att matcha på kompetens i stället för kontakter?
             </h2>
             <p className="mx-auto mb-9 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg">
-              Gratis att börja, inget kreditkort. Välj din väg in.
+              Det är gratis under betan. Välj hur du vill börja, så tar vi det därifrån.
             </p>
             <div className="flex flex-col justify-center gap-3 sm:flex-row">
               <Button size="lg" asChild className="h-12 bg-[#6C5CE7] px-7 text-base text-white shadow-lg shadow-[#6C5CE7]/30 hover:bg-[#5B4BD8]">

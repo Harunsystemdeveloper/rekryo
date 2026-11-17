@@ -43,7 +43,7 @@ export function Footer() {
             © {new Date().getFullYear()} Rekryo. Alla rättigheter förbehållna.
           </p>
           <p className="text-xs text-muted-foreground">
-            Byggd med <span className="gradient-text font-medium">AI</span> för den svenska arbetsmarknaden
+            Byggd i Sverige, för den svenska arbetsmarknaden
           </p>
         </div>
       </div>
