@@ -153,6 +153,14 @@
   h1, h2, h3 {
     @apply font-heading tracking-tight;
   }
+  /* Rubriker bryts jämnt och stycken undviker ensamma ord på sista raden, som en
+     sättare hade gjort för hand */
+  h1, h2 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
 
   /* Kort: subtil kant och mjuk skugga. Låg, utspridd skugga i ljust läge, djupare
      i mörkt läge där svaga kanter annars ser platta ut. Element med genomskinlig kant
@@ -246,18 +254,6 @@
   }
   .dark .hero-dots {
     background-image: radial-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px);
-  }
-  .hero-gradient-text {
-    background: linear-gradient(120deg, #6C5CE7, #00A383);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .dark .hero-gradient-text {
-    background: linear-gradient(120deg, #C9C2FF, #5EEAD4);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
   }
 
   /* Bakgrund med svag lila och mint ton för större sektioner */

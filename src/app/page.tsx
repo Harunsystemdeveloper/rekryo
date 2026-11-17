@@ -11,6 +11,7 @@ import { SectionHeader } from '@/components/landing/section-header'
 import { DualViewMockup } from '@/components/landing/dual-view-mockup'
 import { TrustSection } from '@/components/landing/trust-section'
 import { TrustBadges } from '@/components/landing/trust-badges'
+import { Scribble } from '@/components/landing/scribble'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -89,13 +90,13 @@ export default function HomePage() {
               AI-matchning för den svenska arbetsmarknaden
             </Badge>
 
-            <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-tight text-foreground sm:text-6xl lg:text-[3.1rem] xl:text-[3.5rem] dark:text-white">
+            <h1 className="mb-7 text-balance text-5xl font-semibold leading-[1.06] tracking-[-0.03em] text-foreground sm:text-6xl lg:text-[3.3rem] xl:text-[3.75rem] dark:text-white">
               Kompetensen finns.{' '}
-              <span className="hero-gradient-text">Matchningen</span>
+              <Scribble>Matchningen</Scribble>
               {' '}är trasig.
             </h1>
 
-            <p className="mb-9 max-w-xl text-lg leading-relaxed text-muted-foreground dark:text-white/65">
+            <p className="mb-9 max-w-xl text-pretty text-lg leading-[1.7] text-muted-foreground dark:text-white/65">
               Rekryo matchar CV och jobb med förklarbar AI. Varje matchning får ett poäng 0–100,
               en motivering och en lista över vad som saknas, för jobbsökare och rekryterare i alla branscher.
             </p>
@@ -224,7 +225,7 @@ export default function HomePage() {
           <ScrollReveal>
             <SectionHeader
               eyebrow="Rätt kompetens finns redan"
-              title={<>Sverige har kompetensen. Vi ser till att den <span className="gradient-text">hittar rätt.</span></>}
+              title={<>Sverige har kompetensen. Vi ser till att den <Scribble tone="primary">hittar rätt.</Scribble></>}
               description="Samma matchning, förklarad för båda sidor. Jobbsökaren ser varför jobbet passar och vad som saknas. Rekryteraren ser samma poäng uppdelad, utan kandidatens namn, och fattar beslutet."
             />
           </ScrollReveal>
