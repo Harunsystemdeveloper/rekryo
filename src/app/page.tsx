@@ -156,6 +156,22 @@ export default function HomePage() {
             description="Nyexaminerade skickar ansökan efter ansökan utan att höra något. Samtidigt sitter arbetsgivare med tjänster de inte får tillsatta. Båda gör sitt bästa. Det är kopplingen mellan dem som inte fungerar."
           />
 
+          <ScrollReveal className="mx-auto mb-16 grid max-w-5xl gap-10 md:grid-cols-[1.15fr_0.85fr] md:gap-16">
+            <figure>
+              <figcaption className="mb-3 text-sm text-muted-foreground">Ett påhittat exempel, men kanske känner du igen det.</figcaption>
+              <blockquote className="text-pretty text-xl leading-[1.55] text-foreground/90 sm:text-2xl">
+                Sara tog examen i juni. Hon har skickat 46 ansökningar och fått tre svar, alla automatiska.
+                Hon vet inte om det är CV:t, utbildningen eller bara otur.
+              </blockquote>
+            </figure>
+            <figure className="md:mt-20">
+              <blockquote className="text-pretty text-lg leading-[1.6] text-foreground/75">
+                Två mil bort letar Johan efter en junior ekonom. Han har 212 ansökningar i inkorgen och
+                hinner läsa kanske en tredjedel. Sara är inte bland dem.
+              </blockquote>
+            </figure>
+          </ScrollReveal>
+
           <ScrollReveal className="mb-6">
             <ParadoxStats />
           </ScrollReveal>
@@ -211,12 +227,10 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="panel gradient-subtle mx-auto max-w-3xl px-8 py-7 text-center">
-            <p className="text-lg leading-relaxed">
-              Det finns tillräckligt med kompetens i Sverige. Det som saknas är ett bättre sätt att hitta den.{' '}
-              <strong className="font-semibold text-foreground">Det är det vi bygger.</strong>
-            </p>
-          </div>
+          <p className="mx-auto mt-16 max-w-3xl text-balance text-center text-xl leading-[1.55] text-foreground/80 sm:text-2xl">
+            Det finns tillräckligt med kompetens i Sverige. Det som saknas är ett bättre sätt att hitta den.{' '}
+            <strong className="font-semibold text-foreground"><Scribble tone="primary">Det är det vi bygger.</Scribble></strong>
+          </p>
         </div>
       </section>
 
