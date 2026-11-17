@@ -55,33 +55,35 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Rekryo 2026: marinblå bas, lila för handling och AI, mint för positiva signaler
-   (matchning, uppfyllda krav). Kontrasten är kontrollerad mot WCAG AA. Lila text på
-   marinblått klarar inte 4.5:1, så primärfärgen är ljusare i mörkt läge. */
+/* Rekryo 2026: lila för handling och AI, mint för positiva signaler (matchning,
+   uppfyllda krav). Basen är varm i båda temana: off-white som papper i ljust läge och en
+   mörk ton med en aning lila i mörkt läge, i stället för kall grå och marinblå. Kontrasten
+   är kontrollerad mot WCAG AA. Lila text på mörk bas klarar inte 4.5:1, så primärfärgen
+   är ljusare i mörkt läge. */
 :root {
   --brand: #6C5CE7;
   --mint: #00B894;
   --mint-foreground: #00806A;
-  --navy: #0B1120;
-  --navy-elevated: #141B2D;
+  --navy: #13121C;
+  --navy-elevated: #1C1B28;
 
-  --background: #F4F6F9;
-  --foreground: #0B1120;
-  --card: #FFFFFF;
-  --card-foreground: #0B1120;
-  --popover: #FFFFFF;
-  --popover-foreground: #0B1120;
+  --background: #FAF7F2;
+  --foreground: #1C1830;
+  --card: #FFFEFB;
+  --card-foreground: #1C1830;
+  --popover: #FFFEFB;
+  --popover-foreground: #1C1830;
   --primary: #6C5CE7;
   --primary-foreground: #FFFFFF;
-  --secondary: #EEF0F6;
-  --secondary-foreground: #141B2D;
-  --muted: #EEF0F6;
-  --muted-foreground: #4F586C;
-  --accent: #EFEDFD;
+  --secondary: #F2EEE7;
+  --secondary-foreground: #2A2540;
+  --muted: #F2EEE7;
+  --muted-foreground: #5E5868;
+  --accent: #F0ECFB;
   --accent-foreground: #3B2FA8;
   --destructive: #DC2626;
-  --border: #E3E6EE;
-  --input: #DCE0EA;
+  --border: #E7E1D7;
+  --input: #DED7CB;
   --ring: #6C5CE7;
   --chart-1: #6C5CE7;
   --chart-2: #00B894;
@@ -89,49 +91,49 @@
   --chart-4: #3B82F6;
   --chart-5: #EC4899;
   --radius: 0.625rem;
-  --sidebar: #FFFFFF;
-  --sidebar-foreground: #0B1120;
+  --sidebar: #FFFEFB;
+  --sidebar-foreground: #1C1830;
   --sidebar-primary: #6C5CE7;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #EFEDFD;
+  --sidebar-accent: #F0ECFB;
   --sidebar-accent-foreground: #3B2FA8;
-  --sidebar-border: #E3E6EE;
+  --sidebar-border: #E7E1D7;
   --sidebar-ring: #6C5CE7;
 }
 
 .dark {
   --mint-foreground: #2DD4AE;
 
-  --background: #0B1120;
-  --foreground: #E8EBF2;
-  --card: #141B2D;
-  --card-foreground: #E8EBF2;
-  --popover: #141B2D;
-  --popover-foreground: #E8EBF2;
+  --background: #13121C;
+  --foreground: #ECE9F2;
+  --card: #1C1B28;
+  --card-foreground: #ECE9F2;
+  --popover: #1C1B28;
+  --popover-foreground: #ECE9F2;
   --primary: #8B7CF6;
-  --primary-foreground: #0B1120;
-  --secondary: #1A2236;
-  --secondary-foreground: #E8EBF2;
-  --muted: #1A2236;
-  --muted-foreground: #94A3B8;
-  --accent: #1E2742;
-  --accent-foreground: #E8EBF2;
+  --primary-foreground: #13121C;
+  --secondary: #24222F;
+  --secondary-foreground: #ECE9F2;
+  --muted: #24222F;
+  --muted-foreground: #A29EB2;
+  --accent: #2A2740;
+  --accent-foreground: #ECE9F2;
   --destructive: #F87171;
-  --border: rgb(255 255 255 / 8%);
-  --input: rgb(255 255 255 / 12%);
+  --border: rgb(255 244 232 / 8%);
+  --input: rgb(255 244 232 / 12%);
   --ring: #8B7CF6;
   --chart-1: #8B7CF6;
   --chart-2: #2DD4AE;
   --chart-3: #FBBF24;
   --chart-4: #60A5FA;
   --chart-5: #F472B6;
-  --sidebar: #0F1626;
-  --sidebar-foreground: #E8EBF2;
+  --sidebar: #171622;
+  --sidebar-foreground: #ECE9F2;
   --sidebar-primary: #8B7CF6;
-  --sidebar-primary-foreground: #0B1120;
-  --sidebar-accent: #1E2742;
-  --sidebar-accent-foreground: #E8EBF2;
-  --sidebar-border: rgb(255 255 255 / 8%);
+  --sidebar-primary-foreground: #13121C;
+  --sidebar-accent: #2A2740;
+  --sidebar-accent-foreground: #ECE9F2;
+  --sidebar-border: rgb(255 244 232 / 8%);
   --sidebar-ring: #8B7CF6;
 }
 
@@ -157,7 +159,7 @@
      (knappar, badges, flikar, accordion) undantas, annars får de en skugga utan kant. */
   :root .border:not([class*="border-transparent"]),
   :root [class*="rounded"][class*="border"]:not([class*="border-transparent"]) {
-    box-shadow: 0 1px 2px rgb(11 17 32 / 4%), 0 6px 16px -8px rgb(11 17 32 / 8%);
+    box-shadow: 0 1px 2px rgb(52 38 26 / 4%), 0 6px 16px -8px rgb(52 38 26 / 8%);
   }
   .dark [class*="rounded"][class*="border"]:not([class*="border-transparent"]) {
     box-shadow: 0 1px 2px rgb(0 0 0 / 35%), 0 10px 28px -14px rgb(0 0 0 / 55%);
@@ -192,18 +194,18 @@
 
   /* Glas */
   .glass {
-    background: rgb(255 255 255 / 75%);
+    background: rgb(255 254 251 / 75%);
     backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgb(227 230 238 / 80%);
+    border: 1px solid rgb(231 225 215 / 80%);
   }
   .dark .glass {
-    background: rgb(11 17 32 / 72%);
+    background: rgb(19 18 28 / 72%);
     border: 1px solid rgb(255 255 255 / 8%);
   }
 
   /* Hero-band: alltid mörkt marinblått oavsett tema, med en lila och en mint glöd */
   .hero-dark {
-    background-color: #0B1120;
+    background-color: #13121C;
     background-image:
       radial-gradient(60% 50% at 18% 12%, rgb(108 92 231 / 32%) 0px, transparent 70%),
       radial-gradient(45% 40% at 88% 18%, rgb(0 184 148 / 14%) 0px, transparent 70%),
@@ -225,16 +227,18 @@
   .hero-band {
     background-color: var(--background);
     background-image:
-      radial-gradient(60% 50% at 18% 12%, rgb(108 92 231 / 14%) 0px, transparent 70%),
-      radial-gradient(45% 40% at 88% 18%, rgb(0 184 148 / 10%) 0px, transparent 70%),
-      radial-gradient(60% 45% at 50% 105%, rgb(108 92 231 / 9%) 0px, transparent 70%);
+      radial-gradient(60% 55% at 16% 10%, rgb(108 92 231 / 11%) 0px, transparent 72%),
+      radial-gradient(45% 45% at 90% 16%, rgb(0 184 148 / 9%) 0px, transparent 72%),
+      radial-gradient(50% 45% at 78% 100%, rgb(255 179 128 / 12%) 0px, transparent 72%),
+      radial-gradient(60% 45% at 30% 105%, rgb(108 92 231 / 7%) 0px, transparent 72%);
   }
   .dark .hero-band {
-    background-color: #0B1120;
+    background-color: #13121C;
     background-image:
-      radial-gradient(60% 50% at 18% 12%, rgb(108 92 231 / 32%) 0px, transparent 70%),
-      radial-gradient(45% 40% at 88% 18%, rgb(0 184 148 / 14%) 0px, transparent 70%),
-      radial-gradient(60% 45% at 50% 105%, rgb(108 92 231 / 18%) 0px, transparent 70%);
+      radial-gradient(60% 55% at 16% 10%, rgb(108 92 231 / 26%) 0px, transparent 72%),
+      radial-gradient(45% 45% at 90% 16%, rgb(0 184 148 / 11%) 0px, transparent 72%),
+      radial-gradient(50% 45% at 78% 100%, rgb(255 179 128 / 7%) 0px, transparent 72%),
+      radial-gradient(60% 45% at 30% 105%, rgb(108 92 231 / 14%) 0px, transparent 72%);
   }
   .hero-dots {
     background-image: radial-gradient(rgb(108 92 231 / 14%) 1px, transparent 1px);
@@ -269,10 +273,10 @@
       radial-gradient(at 85% 10%, rgb(0 184 148 / 7%) 0px, transparent 55%);
   }
 
-  /* Varannan sektion i ljust läge får en djupare grå ton, så att sidan får rytm i
+  /* Varannan sektion i ljust läge får en något djupare varm ton, så att sidan får rytm i
      stället för en enda vit yta. Mörkt läge behåller sin bakgrund. */
   :root:not(.dark) .section-alt {
-    background-color: #EBEEF4;
+    background-color: #F4EFE7;
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 70%);
   }
 
@@ -326,35 +330,35 @@
   /* I ljust läge räcker inte kanten för att skilja ett vitt kort från en ljusgrå yta.
      Två lager skugga ger korten tyngd, och hover lyfter med en svag lila ton. */
   :root:not(.dark) .panel {
-    border-color: #DDE1EA;
-    box-shadow: 0 1px 2px rgb(11 17 32 / 5%), 0 10px 28px -14px rgb(11 17 32 / 14%);
+    border-color: #E7E1D7;
+    box-shadow: 0 1px 2px rgb(52 38 26 / 5%), 0 10px 28px -14px rgb(52 38 26 / 14%);
   }
   /* Menyn och kortens inre ytor i ljust läge: en egen ton och kant, annars flyter de
      ihop med det vita kortet de ligger i */
   :root:not(.dark) .site-header {
-    background-color: rgb(255 255 255 / 94%);
-    box-shadow: 0 1px 0 #DDE1EA, 0 8px 24px -18px rgb(11 17 32 / 22%);
+    background-color: rgb(255 254 251 / 94%);
+    box-shadow: 0 1px 0 #E7E1D7, 0 8px 24px -18px rgb(52 38 26 / 22%);
   }
   :root:not(.dark) .inset-surface {
-    background-color: #F1F3F8;
-    border-color: #DDE1EA;
+    background-color: #F4F0E9;
+    border-color: #E7E1D7;
   }
   :root:not(.dark) .panel-hover:hover {
-    box-shadow: 0 2px 4px rgb(11 17 32 / 5%), 0 20px 40px -18px rgb(108 92 231 / 32%);
+    box-shadow: 0 2px 4px rgb(52 38 26 / 5%), 0 20px 40px -18px rgb(108 92 231 / 32%);
   }
 
   /* Scen bakom produktutsnitten: prickrutnät och en lila glöd i ljust läge, och ett
      kort som ligger tydligt ovanpå. Mörkt läge använder sin egen muted-yta. */
   :root:not(.dark) .mockup-stage {
-    background-color: #F1F3F8;
+    background-color: #F4EFE7;
     background-image:
       radial-gradient(60% 70% at 50% 40%, rgb(108 92 231 / 9%), transparent 70%),
       radial-gradient(rgb(108 92 231 / 12%) 1px, transparent 1px);
     background-size: auto, 22px 22px;
   }
   :root:not(.dark) .mockup-card {
-    border-color: #DDE1EA;
-    box-shadow: 0 1px 2px rgb(11 17 32 / 6%), 0 18px 36px -18px rgb(76 62 190 / 30%);
+    border-color: #E7E1D7;
+    box-shadow: 0 1px 2px rgb(52 38 26 / 6%), 0 18px 36px -18px rgb(76 62 190 / 30%);
   }
 
   /* Långsamt pulserande röd glöd, för demots resultat vid mycket låg matchning */

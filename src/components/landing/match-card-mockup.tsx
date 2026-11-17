@@ -26,7 +26,7 @@ export function MatchCardMockup() {
   return (
     <div className="relative mx-auto w-full max-w-[36rem]">
       {/* Huvudkortet */}
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#141B2D]/90 shadow-[0_30px_80px_-30px_rgb(0_0_0/80%),inset_0_1px_0_rgb(255_255_255/6%)] backdrop-blur-xl">
+      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#1C1B28]/90 shadow-[0_30px_80px_-30px_rgb(0_0_0/80%),inset_0_1px_0_rgb(255_255_255/6%)] backdrop-blur-xl">
         {/* Ljuskant upptill, som på ett riktigt glasfönster */}
         <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-[#A99DFB]/50 to-transparent" />
         <div className="flex items-center gap-1.5 border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
@@ -135,7 +135,7 @@ export function MatchCardMockup() {
       {/* Båda sidor av samma matchning: jobbsökarens notis till vänster, rekryterarens
           rangordnade lista till höger. De överlappar bara kortets nedre kant. */}
       <div className="relative z-10 -mt-4 hidden items-start justify-between gap-4 sm:-mx-6 sm:flex">
-        <div className="w-64 rounded-xl border border-white/10 bg-[#0F1626]/95 p-3 shadow-2xl backdrop-blur-xl">
+        <div className="w-64 rounded-xl border border-white/10 bg-[#171622]/95 p-3 shadow-2xl backdrop-blur-xl">
           <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-white/50">
             <Bell className="h-3 w-3 text-[#5EEAD4]" aria-hidden />
             Jobbsökaren · ny matchning
@@ -149,7 +149,7 @@ export function MatchCardMockup() {
           </div>
         </div>
 
-        <div className="w-60 rounded-xl border border-white/10 bg-[#0F1626]/95 p-3 shadow-2xl backdrop-blur-xl">
+        <div className="w-60 rounded-xl border border-white/10 bg-[#171622]/95 p-3 shadow-2xl backdrop-blur-xl">
           <p className="mb-2 text-[11px] font-medium text-white/50">Rekryteraren · rangordnade sökande</p>
           <div className="space-y-1.5">
             {ranked.map((r, i) => (

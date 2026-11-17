@@ -445,7 +445,7 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
-                <Button asChild size="lg" className="h-11 w-full bg-mint text-[#0B1120] shadow-lg shadow-mint/25 hover:bg-mint/90">
+                <Button asChild size="lg" className="h-11 w-full bg-mint text-[#13121C] shadow-lg shadow-mint/25 hover:bg-mint/90">
                   <Link href="/register?roll=rekryterare"><Briefcase className="mr-2 h-4 w-4" aria-hidden />Publicera en annons</Link>
                 </Button>
                 <p className="mt-2.5 text-center text-xs text-muted-foreground">Gratis att publicera och matcha</p>
