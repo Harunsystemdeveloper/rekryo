@@ -1,7 +1,7 @@
 'use client'
 
 import { Check, AlertTriangle, MapPin, Bell, ArrowRight, Lock, Star, CalendarPlus, SlidersHorizontal, EyeOff, Pause, Play } from 'lucide-react'
-import { usePlayback, useCountUp } from '@/components/landing/use-playback'
+import { usePlayback, useCountUp, reveal } from '@/components/landing/use-playback'
 
 // Produktmockup för heron, uppspelad som en kort skärminspelning: poängen räknas fram,
 // skälen dyker upp, rekryteraren shortlistar och båda sidor får besked. Den ligger alltid på det mörka hero-bandet, så färgerna
@@ -15,11 +15,6 @@ import { usePlayback, useCountUp } from '@/components/landing/use-playback'
 // 1 poäng och staplar, 2–4 skälen, 5 anteckningen, 6 muspekaren, 7 klicket,
 // 8 shortlistad, 9 jobbsökarens notis, 10 rekryterarens lista
 const TIMELINE = [500, 1900, 2400, 2900, 3900, 5000, 6100, 6500, 7300, 7900]
-
-// Mjuk intoning för det som dyker upp under inspelningen
-function reveal(on: boolean) {
-  return `transition-all duration-500 ease-out ${on ? 'translate-y-0 opacity-100' : 'translate-y-1.5 opacity-0'}`
-}
 
 const SCORE = 87
 const RADIUS = 34

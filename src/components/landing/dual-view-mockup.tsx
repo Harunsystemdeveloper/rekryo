@@ -1,11 +1,18 @@
+'use client'
+
 import { Check, AlertTriangle, Lock, Search, BarChart3, MapPin, Sparkles, Star, SlidersHorizontal, EyeOff, UserCheck, ChevronDown } from 'lucide-react'
 import { ScoreRing } from '@/components/match/score-ring'
+import { usePlayback, useCountUp, reveal } from '@/components/landing/use-playback'
 
 // Samma matchning sedd från båda håll, byggd med appens egna komponenter och färger så
 // att den ser ut som produkten i båda temana. Innehållet speglar den riktiga matchningen:
 // samma fyra delpoäng som AI:n returnerar (src/lib/ai/claude.ts), kompetensgap och
 // rekryterarens överstyrning. Företaget och kandidaterna är påhittade. Rekryteraren ser
-// namnen, AI:n gör det inte.
+// namnen, AI:n gör det inte. Vyerna spelas upp en gång, sida vid sida, när de syns: samma
+// poäng räknas fram i båda, sedan förklaringen till var och en.
+
+// 1 poängen, 2 skälen, 3 kompetensgapet, 4 AI-bedömningen, 5 fler sökande
+const TIMELINE = [300, 1500, 1900, 2300, 2700]
 
 const categories = [
   { label: 'Kompetens', value: 92 },
@@ -39,8 +46,11 @@ function ViewLabel({ icon: Icon, children, tone }: { icon: typeof Search; childr
 }
 
 export function DualViewMockup() {
+  const { ref, step, animated } = usePlayback(TIMELINE)
+  const score = useCountUp(87, step >= 1, animated, 1200)
+
   return (
-    <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+    <div ref={ref} className="grid gap-6 lg:grid-cols-2 lg:gap-8">
       {/* Jobbsökarens vy */}
       <figure className="flex min-w-0 flex-col">
         <ViewLabel icon={Search} tone="primary">Jobbsökaren ser</ViewLabel>
@@ -58,14 +68,14 @@ export function DualViewMockup() {
             </div>
 
             <div className="flex items-center gap-4 rounded-xl border border-border bg-muted/30 p-4">
-              <ScoreRing score={87} size="lg" />
-              <div className="min-w-0">
+              <ScoreRing score={score} size="lg" />
+              <div className={`min-w-0 ${reveal(step >= 2)}`}>
                 <p className="text-sm font-semibold text-mint-foreground">Stark matchning</p>
                 <p className="mt-1 text-sm leading-snug text-muted-foreground">Du uppfyller 5 av 6 krav och har mer erfarenhet än tjänsten kräver.</p>
               </div>
             </div>
 
-            <div>
+            <div className={reveal(step >= 2)}>
               <p className="mb-2 text-xs font-semibold">Varför du matchar</p>
               <ul className="space-y-2 text-[13px] leading-snug">
                 <li className="flex gap-2"><Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-mint-foreground" />Akutsjukvård, triage och läkemedelshantering finns i ditt CV</li>
@@ -73,7 +83,7 @@ export function DualViewMockup() {
               </ul>
             </div>
 
-            <div className="rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-3.5">
+            <div className={`rounded-xl border border-amber-500/25 bg-amber-500/[0.06] p-3.5 ${reveal(step >= 3)}`}>
               <p className="flex items-center gap-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
                 <AlertTriangle className="h-3.5 w-3.5" />Det här saknas
               </p>
@@ -99,7 +109,7 @@ export function DualViewMockup() {
           <WindowChrome url="rekryo.com/rekryterare/kandidater" />
           <div className="space-y-5 p-5 sm:p-6">
             <div className="flex items-start gap-4">
-              <ScoreRing score={87} size="md" />
+              <ScoreRing score={score} size="md" />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-semibold">Amira Hassan</p>
@@ -112,20 +122,23 @@ export function DualViewMockup() {
             </div>
 
             <div className="grid grid-cols-2 gap-x-5 gap-y-3">
-              {categories.map(c => (
+              {categories.map((c, i) => (
                 <div key={c.label}>
                   <div className="mb-1.5 flex items-baseline justify-between text-xs">
                     <span className="text-muted-foreground">{c.label}</span>
                     <span className="font-medium tabular-nums">{c.value}</span>
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                    <div className={`h-full rounded-full ${c.value >= 75 ? 'bg-mint' : 'bg-primary'}`} style={{ width: `${c.value}%` }} />
+                    <div
+                      className={`h-full rounded-full transition-[width] duration-1000 ease-out ${c.value >= 75 ? 'bg-mint' : 'bg-primary'}`}
+                      style={{ width: step >= 1 ? `${c.value}%` : '0%', transitionDelay: `${i * 120}ms` }}
+                    />
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="rounded-xl border border-primary/15 bg-primary/5 p-3.5">
+            <div className={`rounded-xl border border-primary/15 bg-primary/5 p-3.5 ${reveal(step >= 4)}`}>
               <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
                 <Sparkles className="h-3.5 w-3.5" />AI-bedömning
                 <span className="ml-auto font-normal text-muted-foreground">för 2 tim sedan</span>
@@ -142,7 +155,7 @@ export function DualViewMockup() {
               </span>
             </div>
 
-            <div>
+            <div className={reveal(step >= 5)}>
               <p className="mb-2 text-xs font-semibold">Fler sökande</p>
               <div className="divide-y divide-border rounded-xl border border-border">
                 {[

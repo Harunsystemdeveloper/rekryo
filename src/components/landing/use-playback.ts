@@ -53,6 +53,11 @@ export function usePlayback(times: number[], { loop = false, loopAfter = 0 } = {
   return { ref, step: animated ? current : last, playing, animated, toggle }
 }
 
+// Mjuk intoning för det som dyker upp under en uppspelning
+export function reveal(on: boolean) {
+  return `transition-all duration-500 ease-out ${on ? 'translate-y-0 opacity-100' : 'translate-y-1.5 opacity-0'}`
+}
+
 // Räknar upp en siffra mot målet medan `active` är sant. Utan uppspelning visas
 // slutvärdet direkt.
 export function useCountUp(target: number, active: boolean, animated: boolean, duration = 1100) {
