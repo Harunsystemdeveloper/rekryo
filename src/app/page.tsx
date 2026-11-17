@@ -17,7 +17,7 @@ import {
   Target, Users, TrendingUp, Shield,
   ArrowRight, CheckCircle, Zap,
   FileText, BarChart3, MessageSquare,
-  Building2, TrendingDown, Search, UserPlus, Upload, Briefcase
+  Search, Upload, Briefcase
 } from 'lucide-react'
 
 // Två märkesfärger, inte en regnbåge: lila och mint växlar i ett medvetet mönster.
@@ -67,9 +67,9 @@ const features = [
 
 
 const steps = [
-  { step: '01', icon: UserPlus, title: 'Skapa konto', desc: 'Välj om du söker jobb eller anställer. Det tar under en minut och kostar ingenting.' },
-  { step: '02', icon: FileText, title: 'Ladda upp CV eller annons', desc: 'Rekryo läser igenom det och plockar ut det som spelar roll: kompetenser, erfarenhet och krav.' },
-  { step: '03', icon: Target, title: 'Se hur väl det passar', desc: 'Ett poäng från 0 till 100, med en förklaring av vad som stämmer, vad som saknas och vad du kan göra åt det.' },
+  { step: '1', title: 'Skapa konto', desc: 'Välj om du söker jobb eller anställer. Det tar under en minut och kostar ingenting.' },
+  { step: '2', title: 'Ladda upp CV eller annons', desc: 'Rekryo läser igenom det och plockar ut det som spelar roll: kompetenser, erfarenhet och krav.' },
+  { step: '3', title: 'Se hur väl det passar', desc: 'Ett poäng från 0 till 100, med en förklaring av vad som stämmer, vad som saknas och vad du kan göra åt det.' },
 ]
 
 export default function HomePage() {
@@ -123,14 +123,14 @@ export default function HomePage() {
             </Link>
 
             {/* Paradoxen i två stora siffror, med källa */}
-            <dl className="grid max-w-lg grid-cols-2 gap-3">
-              <div className="rounded-xl border border-border bg-card p-4 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none">
+            <dl className="grid max-w-lg grid-cols-2 gap-8 border-t border-foreground/10 pt-6 dark:border-white/10">
+              <div>
                 <dt className="sr-only">Arbetsgivare med kompetensbrist</dt>
                 <dd className="text-4xl font-semibold tabular-nums tracking-tight text-foreground dark:text-white">76%</dd>
                 <dd className="mt-2 text-sm leading-snug text-muted-foreground dark:text-white/60">av svenska arbetsgivare hittar inte rätt kompetens</dd>
                 <dd className="mt-1 text-xs text-muted-foreground/70 dark:text-white/35">ManpowerGroup</dd>
               </div>
-              <div className="rounded-xl border border-border bg-card p-4 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/[0.04] dark:shadow-none">
+              <div>
                 <dt className="sr-only">Nyexaminerade under studiemedelsnivån</dt>
                 <dd className="text-4xl font-semibold tabular-nums tracking-tight text-foreground dark:text-white">1 av 4</dd>
                 <dd className="mt-2 text-sm leading-snug text-muted-foreground dark:text-white/60">nyexaminerade akademiker tjänar under studiemedelsnivån</dd>
@@ -179,9 +179,7 @@ export default function HomePage() {
           <div className="mb-6 grid gap-6 lg:grid-cols-2">
             <div className="panel p-7 sm:p-8">
               <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <TrendingDown className="h-5 w-5" aria-hidden />
-                </div>
+                <span className="h-2.5 w-2.5 rounded-full bg-primary" aria-hidden />
                 <h3 className="text-lg font-semibold">Den som söker jobb</h3>
               </div>
               <dl className="space-y-5">
@@ -206,9 +204,7 @@ export default function HomePage() {
 
             <div className="panel p-7 sm:p-8">
               <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Building2 className="h-5 w-5" aria-hidden />
-                </div>
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-500" aria-hidden />
                 <h3 className="text-lg font-semibold">Den som anställer</h3>
               </div>
               <dl className="space-y-5">
@@ -259,12 +255,7 @@ export default function HomePage() {
             {steps.map((s, i) => (
               <ScrollReveal key={s.step} delay={i * 100} className={['', 'md:mt-10', 'md:mt-5'][i]}>
                 <li className="panel panel-hover flex h-full flex-col p-7">
-                  <div className="mb-6 flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                      <s.icon className="h-5 w-5" aria-hidden />
-                    </div>
-                    <span className="text-sm font-semibold tabular-nums text-muted-foreground/70">{s.step}</span>
-                  </div>
+                  <span className="mb-4 text-5xl font-semibold leading-none tracking-tight text-primary/25" aria-hidden>{s.step}</span>
                   <h3 className="mb-2 text-lg font-semibold">{s.title}</h3>
                   <p className="mb-7 flex-1 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
 
@@ -364,7 +355,6 @@ export default function HomePage() {
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Jobbsökare: lila genomgående */}
             <div className="panel panel-hover flex flex-col overflow-hidden">
-              <div className="h-1 bg-gradient-to-r from-primary via-primary/70 to-primary/10" aria-hidden />
               <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
                 <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Dina bästa matchningar</p>
@@ -422,7 +412,6 @@ export default function HomePage() {
 
             {/* Rekryterare: mint genomgående */}
             <div className="panel panel-hover flex flex-col overflow-hidden">
-              <div className="h-1 bg-gradient-to-r from-mint via-mint/70 to-mint/10" aria-hidden />
               <div className="mockup-stage border-b border-border bg-muted/40 p-6 sm:p-8 lg:min-h-[24rem]" aria-hidden>
                 <div className="mockup-card rounded-xl border border-border bg-card p-4 sm:p-5">
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Sökande · Undersköterska, akutmottagning</p>

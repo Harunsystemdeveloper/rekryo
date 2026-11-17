@@ -60,22 +60,21 @@ export function TrustSection() {
           <AuditLogMockup />
         </ScrollReveal>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* En luftig lista i stället för sex likadana kort */}
+        <ul className="grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
           {pillars.map((p, i) => (
-            <ScrollReveal key={p.title} delay={i * 60}>
-              <div className="panel panel-hover h-full p-7">
-                <div className="mb-5 flex items-center justify-between gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-mint/10 text-mint-foreground">
-                    <p.icon className="h-5 w-5" aria-hidden />
-                  </div>
-                  <span className="rounded-full border border-border px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">{p.tag}</span>
-                </div>
-                <h3 className="mb-2 text-base font-semibold">{p.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{p.text}</p>
-              </div>
-            </ScrollReveal>
+            <li key={p.title} className="border-t border-border py-7">
+              <ScrollReveal delay={(i % 3) * 60}>
+                <h3 className="mb-2 flex items-center gap-2 text-base font-semibold">
+                  <p.icon className="h-4 w-4 flex-shrink-0 text-mint-foreground" aria-hidden />
+                  {p.title}
+                </h3>
+                <p className="text-sm leading-[1.7] text-muted-foreground">{p.text}</p>
+                <p className="mt-3 text-xs text-muted-foreground/80">{p.tag}</p>
+              </ScrollReveal>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   )
