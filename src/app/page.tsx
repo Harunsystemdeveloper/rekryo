@@ -355,9 +355,9 @@ export default function HomePage() {
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Dina bästa matchningar</p>
                   <div className="space-y-3.5">
                     {[
-                      { title: 'Undersköterska, akutmottagning', company: 'Nordvik Vård AB', score: 87 },
-                      { title: 'Vårdadministratör', company: 'Region Mälardalen', score: 74 },
-                      { title: 'Kundtjänst, vårdguiden', company: 'Hälsolinjen', score: 61 },
+                      { title: 'Undersköterska, akutmottagning', company: 'Nordvik Vård AB · publicerad i dag', score: 87 },
+                      { title: 'Vårdadministratör', company: 'Region Mälardalen · 3 dagar sedan', score: 74 },
+                      { title: 'Kundtjänst, vårdguiden', company: 'Hälsolinjen · 1 vecka sedan', score: 61 },
                     ].map((job, i) => (
                       <div key={job.title}>
                         <div className="mb-1.5 flex items-baseline justify-between gap-3">
@@ -413,12 +413,12 @@ export default function HomePage() {
                   <p className="mb-4 text-xs font-medium text-muted-foreground">Sökande · Undersköterska, akutmottagning</p>
                   <div className="space-y-2">
                     {[
-                      { initials: 'AL', name: 'Anna L.', score: 87, status: 'Shortlistad', tone: 'bg-mint/15 text-mint-foreground' },
-                      { initials: 'ES', name: 'Erik S.', score: 81, status: 'Granskad', tone: 'bg-primary/10 text-primary' },
-                      { initials: 'MK', name: 'Maria K.', score: 74, status: 'Ny', tone: 'bg-muted text-muted-foreground' },
+                      { initials: 'AH', name: 'Amira Hassan', score: 87, status: 'Shortlistad', tone: 'bg-mint/15 text-mint-foreground', avatar: 'bg-primary/15 text-primary' },
+                      { initials: 'JB', name: 'Jonas Berg', score: 81, status: 'Granskad', tone: 'bg-primary/10 text-primary', avatar: 'bg-mint/15 text-mint-foreground' },
+                      { initials: 'LS', name: 'Linnea Sundqvist', score: 74, status: 'Ny', tone: 'bg-muted text-muted-foreground', avatar: 'bg-amber-500/15 text-amber-700 dark:text-amber-300' },
                     ].map((c, i) => (
                       <div key={c.initials} className={`flex items-center gap-3 rounded-lg px-3 py-2.5 ${i === 0 ? 'bg-primary/[0.06] ring-1 ring-primary/20' : ''}`}>
-                        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full gradient-primary text-[11px] font-semibold text-white">{c.initials}</span>
+                        <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${c.avatar}`}>{c.initials}</span>
                         <span className="flex-1 truncate text-sm font-medium">{c.name}</span>
                         <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${c.tone}`}>{c.status}</span>
                         <span className="w-7 text-right text-sm font-semibold tabular-nums">{c.score}</span>

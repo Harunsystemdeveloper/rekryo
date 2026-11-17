@@ -3,7 +3,8 @@ import { Check, AlertTriangle, MapPin, Bell, ArrowRight, Lock, Star, CalendarPlu
 // Statisk produktmockup för heron. Den ligger alltid på det mörka hero-bandet, så färgerna
 // är satta direkt i stället för via temat. Innehållet speglar den riktiga matchningen:
 // samma fyra delpoäng som AI:n returnerar (src/lib/ai/claude.ts) och samma struktur med
-// uppfyllda krav och kompetensgap. Företaget och kandidaterna är påhittade.
+// uppfyllda krav och kompetensgap. Företaget och kandidaterna är påhittade. AI:n ser
+// aldrig namnen, men rekryteraren gör det, så listan och anteckningen visar riktiga namn.
 
 const SCORE = 87
 const RADIUS = 34
@@ -16,10 +17,11 @@ const categories = [
   { label: 'Mjuka kompetenser', value: 76 },
 ]
 
+// Varje kandidat får en egen dämpad avatarfärg, som i en riktig lista
 const ranked = [
-  { id: 'K-1042', score: 87 },
-  { id: 'K-0981', score: 81 },
-  { id: 'K-1107', score: 74 },
+  { name: 'Amira Hassan', initials: 'AH', score: 87, avatar: 'bg-[#3A2F5C] text-[#CFC7FF]' },
+  { name: 'Jonas Berg', initials: 'JB', score: 81, avatar: 'bg-[#2C4A42] text-[#A8E6D4]' },
+  { name: 'Linnea Sundqvist', initials: 'LS', score: 74, avatar: 'bg-[#4A3A2C] text-[#F2D3B3]' },
 ]
 
 export function MatchCardMockup() {
@@ -89,8 +91,8 @@ export function MatchCardMockup() {
                   <span className="text-white/60">{c.label}</span>
                   <span className="font-medium tabular-nums text-white">{c.value}</span>
                 </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.07] shadow-[inset_0_1px_1px_rgb(0_0_0/30%)]">
-                  <div className="h-full rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#8B7CF6] shadow-[0_0_10px_rgb(139_124_246/45%)]" style={{ width: `${c.value}%` }} />
+                <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
+                  <div className="h-full rounded-full bg-gradient-to-r from-[#6C5CE7] to-[#8B7CF6]" style={{ width: `${c.value}%` }} />
                 </div>
               </div>
             ))}
@@ -117,6 +119,12 @@ export function MatchCardMockup() {
             </ul>
           </div>
 
+          {/* Rekryterarens egen anteckning, det mänskliga lagret ovanpå AI:ns bedömning */}
+          <div className="-rotate-[0.6deg] rounded-lg border border-[#F2D3B3]/15 bg-[#F2D3B3]/[0.06] px-3.5 py-2.5">
+            <p className="text-[11px] text-white/40">Din anteckning · i går 16:42</p>
+            <p className="mt-1 text-[13px] leading-snug text-white/80">Ring Amira på tisdag. Fråga om TakeCare, hon har kört Cosmic och brukar lära sig nya system snabbt.</p>
+          </div>
+
           {/* Åtgärder som i kandidatlistan: AI:n föreslår, rekryteraren agerar */}
           <div className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-4">
             <span className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#6C5CE7] px-3 text-xs font-medium text-white shadow-[0_4px_14px_-4px_rgb(108_92_231/70%)]">
@@ -139,6 +147,7 @@ export function MatchCardMockup() {
           <p className="mb-2 flex items-center gap-1.5 text-[11px] font-medium text-white/50">
             <Bell className="h-3 w-3 text-[#5EEAD4]" aria-hidden />
             Jobbsökaren · ny matchning
+            <span className="ml-auto font-normal text-white/35">4 min</span>
           </p>
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-[#2DD4AE] text-sm font-semibold tabular-nums text-white">{SCORE}</span>
@@ -153,9 +162,9 @@ export function MatchCardMockup() {
           <p className="mb-2 text-[11px] font-medium text-white/50">Rekryteraren · rangordnade sökande</p>
           <div className="space-y-1.5">
             {ranked.map((r, i) => (
-              <div key={r.id} className={`flex items-center gap-2 rounded-lg px-2 py-1.5 ${i === 0 ? 'bg-[#6C5CE7]/15' : ''}`}>
-                <span className="w-4 text-[11px] tabular-nums text-white/40">{i + 1}</span>
-                <span className="flex-1 text-xs text-white/80">Kandidat {r.id}</span>
+              <div key={r.name} className={`flex items-center gap-2 rounded-lg px-2 py-1.5 ${i === 0 ? 'bg-[#6C5CE7]/15' : ''}`}>
+                <span className={`flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full text-[9px] font-semibold ${r.avatar}`}>{r.initials}</span>
+                <span className="flex-1 truncate text-xs text-white/80">{r.name}</span>
                 <span className={`text-xs font-semibold tabular-nums ${i === 0 ? 'text-[#A99DFB]' : 'text-white/55'}`}>{r.score}</span>
               </div>
             ))}

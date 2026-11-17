@@ -4,7 +4,8 @@ import { ScoreRing } from '@/components/match/score-ring'
 // Samma matchning sedd från båda håll, byggd med appens egna komponenter och färger så
 // att den ser ut som produkten i båda temana. Innehållet speglar den riktiga matchningen:
 // samma fyra delpoäng som AI:n returnerar (src/lib/ai/claude.ts), kompetensgap och
-// rekryterarens överstyrning. Företaget och kandidaten är påhittade.
+// rekryterarens överstyrning. Företaget och kandidaterna är påhittade. Rekryteraren ser
+// namnen, AI:n gör det inte.
 
 const categories = [
   { label: 'Kompetens', value: 92 },
@@ -101,12 +102,12 @@ export function DualViewMockup() {
               <ScoreRing score={87} size="md" />
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <p className="font-semibold">Kandidat K-1042</p>
+                  <p className="font-semibold">Amira Hassan</p>
                   <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 px-2 py-0.5 text-[11px] font-medium text-mint-foreground">
                     <Star className="h-3 w-3 fill-current" />Shortlistad
                   </span>
                 </div>
-                <p className="mt-0.5 text-sm text-muted-foreground">Undersköterska · 4 års erfarenhet · Uppsala</p>
+                <p className="mt-0.5 text-sm text-muted-foreground">Undersköterska · 4 års erfarenhet · sökte i går</p>
               </div>
             </div>
 
@@ -127,6 +128,7 @@ export function DualViewMockup() {
             <div className="rounded-xl border border-primary/15 bg-primary/5 p-3.5">
               <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-primary">
                 <Sparkles className="h-3.5 w-3.5" />AI-bedömning
+                <span className="ml-auto font-normal text-muted-foreground">för 2 tim sedan</span>
               </p>
               <p className="text-[13px] leading-snug">Stark inom akutsjukvård och triage. Saknar erfarenhet av TakeCare, som går att lära sig under introduktionen.</p>
             </div>
@@ -144,11 +146,12 @@ export function DualViewMockup() {
               <p className="mb-2 text-xs font-semibold">Fler sökande</p>
               <div className="divide-y divide-border rounded-xl border border-border">
                 {[
-                  { id: 'K-0981', meta: '6 års erfarenhet', score: 81 },
-                  { id: 'K-1107', meta: '2 års erfarenhet', score: 74 },
+                  { name: 'Jonas Berg', initials: 'JB', meta: '6 års erfarenhet', score: 81, avatar: 'bg-mint/15 text-mint-foreground' },
+                  { name: 'Linnea Sundqvist', initials: 'LS', meta: '2 års erfarenhet', score: 74, avatar: 'bg-amber-500/15 text-amber-700 dark:text-amber-300' },
                 ].map(c => (
-                  <div key={c.id} className="flex items-center gap-3 px-3.5 py-2.5 text-sm">
-                    <span className="flex-1 truncate">Kandidat {c.id}<span className="ml-2 text-xs text-muted-foreground">{c.meta}</span></span>
+                  <div key={c.name} className="flex items-center gap-3 px-3.5 py-2.5 text-sm">
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${c.avatar}`}>{c.initials}</span>
+                    <span className="flex-1 truncate">{c.name}<span className="ml-2 text-xs text-muted-foreground">{c.meta}</span></span>
                     <span className="font-semibold tabular-nums">{c.score}</span>
                   </div>
                 ))}
