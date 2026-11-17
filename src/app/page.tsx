@@ -95,7 +95,7 @@ export default function HomePage() {
               {' '}är trasig.
             </h1>
 
-            <p className="mb-9 max-w-xl text-pretty text-lg leading-[1.7] text-muted-foreground dark:text-white/65">
+            <p className="mb-9 max-w-xl text-pretty text-lg leading-[1.7] text-foreground/75 sm:text-[1.2rem] dark:text-white/70">
               Rekryo läser ditt CV ungefär som en erfaren rekryterare skulle göra och säger ärligt
               hur väl du passar ett jobb, och vad som saknas. Den som anställer får samma förklaring
               och tar själv besluten.
@@ -152,7 +152,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="Kompetensparadoxen"
-            title="Två sidor som letar efter varandra"
+            title={<>Två sidor <span className="text-muted-foreground">som letar efter varandra</span></>}
             description="Nyexaminerade skickar ansökan efter ansökan utan att höra något. Samtidigt sitter arbetsgivare med tjänster de inte får tillsatta. Båda gör sitt bästa. Det är kopplingen mellan dem som inte fungerar."
           />
 
@@ -179,11 +179,12 @@ export default function HomePage() {
                   </div>
                 ))}
               </dl>
-              <blockquote className="mt-7 border-l-2 border-primary/40 pl-4">
-                <p className="text-sm italic leading-relaxed text-foreground/85">
-                  &rdquo;Ett enormt stort slöseri när studenter som investerat flera år i sina utbildningar inte lyckas komma i arbete.&rdquo;
+              <blockquote className="relative mt-8 pl-8">
+                <span className="absolute -top-3 left-0 text-5xl font-semibold leading-none text-primary/30" aria-hidden>&rdquo;</span>
+                <p className="text-base leading-[1.65] text-foreground/85">
+                  Ett enormt stort slöseri när studenter som investerat flera år i sina utbildningar inte lyckas komma i arbete.
                 </p>
-                <footer className="mt-2 text-xs text-muted-foreground">Colin Andersson, Saco studentråd</footer>
+                <footer className="mt-2 text-sm text-muted-foreground">Colin Andersson, Saco studentråd</footer>
               </blockquote>
             </div>
 
@@ -238,7 +239,7 @@ export default function HomePage() {
       {/* ── Så fungerar det: tre steg, vart och ett med ett litet utsnitt av produkten ── */}
       <section className="px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
-          <SectionHeader align="left" eyebrow="Så går det till" title="Tre steg, och ungefär fem minuter" />
+          <SectionHeader align="left" eyebrow="Så går det till" title={<>Tre steg, <span className="text-muted-foreground">och ungefär fem minuter</span></>} />
 
           <ol className="grid gap-6 md:grid-cols-3 md:items-start">
             {steps.map((s, i) => (
@@ -318,7 +319,7 @@ export default function HomePage() {
               <SectionHeader
                 align="left"
                 eyebrow="Vad Rekryo gör"
-                title="Mindre gissande, för båda sidor"
+                title={<>Mindre gissande, <span className="text-muted-foreground">för båda sidor</span></>}
                 description="Från första CV:t till intervjun, med samma tanke hela vägen: du ska alltid kunna se varför."
               />
             </div>
@@ -464,7 +465,7 @@ export default function HomePage() {
       {/* ── FAQ ── */}
       <section className="section-alt px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-2xl">
-          <SectionHeader eyebrow="Vanliga frågor" title="Det här brukar folk undra" />
+          <SectionHeader eyebrow="Vanliga frågor" title={<>Det här <span className="text-muted-foreground">brukar folk undra</span></>} />
           <Accordion className="space-y-3">
             {[
               {
