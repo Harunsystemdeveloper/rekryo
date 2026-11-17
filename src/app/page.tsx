@@ -74,7 +74,7 @@ const steps = [
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="grain flex flex-col min-h-screen bg-background">
       <Navbar />
 
       {/* ── Hero: budskap och två ingångar till vänster, produkten själv till höger ── */}
@@ -148,7 +148,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Paradoxen: samma problem sett från två håll ── */}
-      <section id="problemet" className="scroll-mt-20 border-t border-border px-6 py-20 lg:py-24">
+      <section id="problemet" className="scroll-mt-20 px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="Kompetensparadoxen"
@@ -220,7 +220,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Övergång från problem till lösning: samma matchning sedd från båda håll ── */}
-      <section className="border-t border-border hero-mesh px-6 py-20 lg:py-24">
+      <section className="hero-mesh px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <ScrollReveal>
             <SectionHeader
@@ -236,7 +236,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Så fungerar det: tre steg, vart och ett med ett litet utsnitt av produkten ── */}
-      <section className="border-t border-border px-6 py-20 lg:py-24">
+      <section className="px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader align="left" eyebrow="Så går det till" title="Tre steg, och ungefär fem minuter" />
 
@@ -285,7 +285,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Live Demo ── */}
-      <section id="demo" className="section-alt relative scroll-mt-20 overflow-hidden border-t border-border bg-muted/30 px-6 py-20 lg:py-24">
+      <section id="demo" className="section-alt relative scroll-mt-20 overflow-hidden px-6 py-20 lg:py-24">
         <div className="pointer-events-none absolute inset-x-0 top-0 -z-0 h-80 bg-[radial-gradient(60%_100%_at_50%_0%,rgb(108_92_231/14%),transparent)]" aria-hidden />
         <div className="relative mx-auto max-w-6xl">
           <ScrollReveal>
@@ -311,7 +311,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Features ── */}
-      <section className="border-t border-border px-6 py-20 lg:py-24">
+      <section className="px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
             <div className="lg:sticky lg:top-28 lg:self-start">
@@ -338,7 +338,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Två perspektiv: samma designspråk, var sin produktvy ── */}
-      <section className="section-alt border-t border-border px-6 py-20 lg:py-24">
+      <section className="section-alt px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <SectionHeader
             eyebrow="För båda sidor"
@@ -462,7 +462,7 @@ export default function HomePage() {
       <TrustSection />
 
       {/* ── FAQ ── */}
-      <section className="section-alt border-t border-border bg-muted/30 px-6 py-20 lg:py-24">
+      <section className="section-alt px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-2xl">
           <SectionHeader eyebrow="Vanliga frågor" title="Det här brukar folk undra" />
           <Accordion className="space-y-3">
