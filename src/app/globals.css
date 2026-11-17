@@ -279,6 +279,26 @@
     background-color: rgb(255 244 232 / 2.5%);
   }
 
+  /* Färgplatta bakom heron-produkten: tre mjuka färgfält som flyter ihop, som en
+     målad fotobakgrund, i stället för att produkten svävar fritt på sidan */
+  .cinema-plate {
+    position: relative;
+    background-color: #F1EBE2;
+    background-image:
+      radial-gradient(85% 70% at 0% 0%, rgb(201 190 248 / 75%), transparent 62%),
+      radial-gradient(70% 65% at 100% 8%, rgb(176 230 212 / 60%), transparent 60%),
+      radial-gradient(90% 75% at 85% 100%, rgb(250 205 172 / 70%), transparent 62%);
+    box-shadow: inset 0 0 0 1px rgb(52 38 26 / 6%), 0 30px 70px -40px rgb(76 62 190 / 35%);
+  }
+  .dark .cinema-plate {
+    background-color: #1A1825;
+    background-image:
+      radial-gradient(85% 70% at 0% 0%, rgb(108 92 231 / 30%), transparent 62%),
+      radial-gradient(70% 65% at 100% 8%, rgb(0 184 148 / 14%), transparent 60%),
+      radial-gradient(90% 75% at 85% 100%, rgb(255 170 120 / 12%), transparent 62%);
+    box-shadow: inset 0 0 0 1px rgb(255 244 232 / 7%), 0 30px 70px -40px rgb(0 0 0 / 70%);
+  }
+
   /* Svag papperstextur över startsidan, så att ytorna inte ser helt digitalt släta ut.
      Bruset ritas av en SVG-turbulens och ligger över allt utan att ta emot klick. */
   .grain::after {

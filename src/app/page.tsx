@@ -139,7 +139,8 @@ export default function HomePage() {
             </dl>
           </div>
 
-          <div className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200 lg:pl-4">
+          {/* Produkten på en mjuk färgplatta, som ett inramat filmklipp */}
+          <div className="cinema-plate animate-in fade-in slide-in-from-bottom-6 rounded-[2rem] px-4 pb-5 pt-8 duration-1000 delay-200 sm:px-10 sm:pb-7 sm:pt-12">
             <MatchCardMockup />
           </div>
         </div>
