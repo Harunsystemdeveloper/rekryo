@@ -416,14 +416,29 @@
   }
 
   /* ScrollReveal utility */
+  /* Innehållet tonar in ur en lätt oskärpa, som när en kamera ställer skärpan, i stället
+     för att bara glida upp. Rörelsen är kortare och lugnare än tidigare. */
   .sr-hidden {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1);
+    transform: translateY(16px);
+    filter: blur(6px);
+    transition:
+      opacity 0.9s cubic-bezier(0.16,1,0.3,1),
+      transform 0.9s cubic-bezier(0.16,1,0.3,1),
+      filter 0.9s cubic-bezier(0.16,1,0.3,1);
   }
   .sr-visible {
     opacity: 1;
     transform: translateY(0);
+    filter: blur(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sr-hidden {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition: none;
+    }
   }
 
   /* Number slot machine flip */
