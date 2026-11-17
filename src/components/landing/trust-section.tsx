@@ -2,7 +2,6 @@ import { ShieldCheck, UserCheck, ScrollText, EyeOff, Scale, Download } from 'luc
 import { SectionHeader } from '@/components/landing/section-header'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { AuditLogMockup } from '@/components/landing/audit-log-mockup'
-import { TrustBadges } from '@/components/landing/trust-badges'
 
 // Varje punkt motsvarar något som faktiskt finns i koden, inte en ambition:
 // delpoäng och motivering (match_breakdown), loggad överstyrning (override-score),
@@ -56,8 +55,6 @@ export function TrustSection() {
           title="AI som du kan granska"
           description="AI i rekrytering räknas som högrisk enligt EU:s AI-förordning, och det med rätta. Därför har vi byggt in förklaringar, mänsklig kontroll och spårbarhet från första början."
         />
-
-        <TrustBadges className="-mt-4 mb-10 justify-center" />
 
         <ScrollReveal className="mb-6">
           <AuditLogMockup />

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { ParadoxStats } from '@/components/paradox-stats'
@@ -16,15 +15,15 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Target, Users, TrendingUp, Shield,
-  ArrowRight, CheckCircle, Zap, Sparkles,
+  ArrowRight, CheckCircle, Zap,
   FileText, BarChart3, MessageSquare,
   Building2, TrendingDown, Search, UserPlus, Upload, Briefcase
 } from 'lucide-react'
 
 // Två märkesfärger, inte en regnbåge: lila och mint växlar i ett medvetet mönster.
 const brandTone = {
-  primary: { accent: 'text-primary', accentBg: 'bg-primary/10' },
-  mint: { accent: 'text-mint-foreground', accentBg: 'bg-mint/10' },
+  primary: { accent: 'text-primary' },
+  mint: { accent: 'text-mint-foreground' },
 }
 
 const features = [
@@ -85,10 +84,10 @@ export default function HomePage() {
 
         <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-[1fr_1.15fr] lg:gap-12">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <Badge variant="secondary" className="mb-7 gap-1.5 border border-primary/20 bg-primary/[0.06] px-3.5 py-1.5 text-xs font-medium text-foreground/80 backdrop-blur-sm dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80">
-              <Sparkles className="h-3 w-3 text-primary dark:text-[#A99DFB]" />
+            <p className="mb-7 flex items-center gap-2.5 text-sm font-medium text-muted-foreground dark:text-white/60">
+              <span className="h-2 w-2 rounded-full bg-mint shadow-[0_0_0_4px_rgb(0_184_148/15%)]" aria-hidden />
               Gjord för den svenska arbetsmarknaden
-            </Badge>
+            </p>
 
             <h1 className="mb-7 text-balance text-5xl font-semibold leading-[1.06] tracking-[-0.03em] text-foreground sm:text-6xl lg:text-[3.3rem] xl:text-[3.75rem] dark:text-white">
               Kompetensen finns.{' '}
@@ -239,11 +238,11 @@ export default function HomePage() {
       {/* ── Så fungerar det: tre steg, vart och ett med ett litet utsnitt av produkten ── */}
       <section className="border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
-          <SectionHeader eyebrow="Så går det till" title="Tre steg, och ungefär fem minuter" />
+          <SectionHeader align="left" eyebrow="Så går det till" title="Tre steg, och ungefär fem minuter" />
 
-          <ol className="grid gap-6 md:grid-cols-3">
+          <ol className="grid gap-6 md:grid-cols-3 md:items-start">
             {steps.map((s, i) => (
-              <ScrollReveal key={s.step} delay={i * 100}>
+              <ScrollReveal key={s.step} delay={i * 100} className={['', 'md:mt-10', 'md:mt-5'][i]}>
                 <li className="panel panel-hover flex h-full flex-col p-7">
                   <div className="mb-6 flex items-center justify-between">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -314,23 +313,26 @@ export default function HomePage() {
       {/* ── Features ── */}
       <section className="border-t border-border px-6 py-20 lg:py-24">
         <div className="mx-auto max-w-6xl">
-          <SectionHeader
-            eyebrow="Vad Rekryo gör"
-            title="Mindre gissande, för båda sidor"
-            description="Från första CV:t till intervjun, med samma tanke hela vägen: du ska alltid kunna se varför."
-          />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((f, i) => (
-              <ScrollReveal key={f.title} delay={i * 80}>
-                <div className="panel panel-hover h-full p-7">
-                  <div className={`mb-6 flex h-11 w-11 items-center justify-center rounded-xl ${f.accentBg}`}>
-                    <f.icon className={`h-5 w-5 ${f.accent}`} aria-hidden />
-                  </div>
-                  <h3 className="mb-2 text-base font-semibold">{f.title}</h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">{f.description}</p>
-                </div>
-              </ScrollReveal>
-            ))}
+          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+            <div className="lg:sticky lg:top-28 lg:self-start">
+              <SectionHeader
+                align="left"
+                eyebrow="Vad Rekryo gör"
+                title="Mindre gissande, för båda sidor"
+                description="Från första CV:t till intervjun, med samma tanke hela vägen: du ska alltid kunna se varför."
+              />
+            </div>
+            <ul className="grid gap-x-10 sm:grid-cols-2">
+              {features.map((f, i) => (
+                <li key={f.title} className="border-t border-border py-7">
+                  <ScrollReveal delay={(i % 2) * 80}>
+                    <f.icon className={`mb-4 h-5 w-5 ${f.accent}`} aria-hidden />
+                    <h3 className="mb-2 text-base font-semibold">{f.title}</h3>
+                    <p className="text-sm leading-[1.7] text-muted-foreground">{f.description}</p>
+                  </ScrollReveal>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -542,7 +544,6 @@ export default function HomePage() {
               Har du redan ett konto?{' '}
               <Link href="/login" className="font-medium text-white/80 underline-offset-4 hover:underline">Logga in</Link>
             </p>
-            <TrustBadges variant="onDark" className="mt-8 justify-center" />
           </div>
         </div>
       </section>
